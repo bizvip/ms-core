@@ -20,7 +20,7 @@ trait ModelMacroTrait
     /**
      * 注册自定义方法.
      */
-    private function registerUserDataScope()
+    private function registerUserDataScope(): void
     {
         // 数据权限方法
         $model = $this;
@@ -175,7 +175,7 @@ trait ModelMacroTrait
      * Description:注册常用自定义方法
      * User:mike.
      */
-    private function registerBase()
+    private function registerBase(): void
     {
         // 添加andFilterWhere()方法
         Builder::macro('andFilterWhere', function ($key, $operator, $value = null) {

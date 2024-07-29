@@ -32,7 +32,7 @@ class SaveAspect extends AbstractAspect
      * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
-    public function process(ProceedingJoinPoint $proceedingJoinPoint)
+    public function process(ProceedingJoinPoint $proceedingJoinPoint): mixed
     {
         /** @var MineModel $instance */
         $instance = $proceedingJoinPoint->getInstance();
@@ -41,10 +41,7 @@ class SaveAspect extends AbstractAspect
             try {
                 $user = user();
                 // 设置创建人
-                if ($instance instanceof MineModel
-                    && in_array($instance->getDataScopeField(), $instance->getFillable())
-                    && is_null($instance[$instance->getDataScopeField()])
-                ) {
+                if ($instance instanceof MineModel && in_array($instance->getDataScopeField(), $instance->getFillable()) && is_null($instance[$instance->getDataScopeField()])) {
                     $user->check();
                     $instance[$instance->getDataScopeField()] = $user->getId();
                 }
@@ -58,12 +55,10 @@ class SaveAspect extends AbstractAspect
             }
         }
         // 生成雪花ID 或者 UUID
-        if ($instance instanceof MineModel
-            && ! $instance->incrementing
-            && empty($instance->{$instance->getKeyName()})
-        ) {
+        if ($instance instanceof MineModel && !$instance->incrementing && empty($instance->{$instance->getKeyName()})) {
             $instance->setPrimaryKeyValue($instance->getPrimaryKeyType() === 'int' ? snowflake_id() : uuid());
         }
+
         return $proceedingJoinPoint->process();
     }
 }
