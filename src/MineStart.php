@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Composer\InstalledVersions;
@@ -30,23 +29,11 @@ class MineStart extends ServerStartCallback
 
     protected function welcome(): string
     {
-        $projectBasePath = realpath(
-            dirname(
-                InstalledVersions::getInstallPath('xmo/mine-core'),
-                2
-            )
-        );
-        if (
-            env('WELCOME_FILE')
-            && file_exists(
-                $projectBasePath .
-                DIRECTORY_SEPARATOR .
-                env('WELCOME_FILE')
-            )
-        ) {
-            $welcome = file_get_contents($projectBasePath .
-                DIRECTORY_SEPARATOR .
-                env('WELCOME_FILE'));
+        $projectBasePath = realpath(dirname(InstalledVersions::getInstallPath('bizvip/ms-core'), 2));
+        if (env('WELCOME_FILE') && file_exists($projectBasePath.DIRECTORY_SEPARATOR.env('WELCOME_FILE'))) {
+            $welcome = file_get_contents(
+                $projectBasePath.DIRECTORY_SEPARATOR.env('WELCOME_FILE')
+            );
         } else {
             $welcome = '
 /---------------------- welcome to use -----------------------\
@@ -59,10 +46,7 @@ class MineStart extends ServerStartCallback
 \_____________  Copyright MineAdmin 2021 ~ %y  _____________|
             ';
         }
-        return str_replace([
-            '%y',
-        ], [
-            date('Y'),
-        ], $welcome);
+
+        return str_replace(['%y',], [date('Y'),], $welcome);
     }
 }
