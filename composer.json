@@ -75,7 +75,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Bizvip\\": "src/"
+            "Mine\\": "src/"
         }
     },
     "autoload-dev": {
@@ -87,7 +87,7 @@
     },
     "extra": {
         "hyperf": {
-            "config": "Bizvip\\ConfigProvider"
+            "config": "Mine\\ConfigProvider"
         }
     },
     "scripts": {
