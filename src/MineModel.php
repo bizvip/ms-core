@@ -36,7 +36,6 @@ class MineModel extends Model
      * 状态
      */
     public const ENABLE = 1;
-
     public const DISABLE = 2;
 
     /**
