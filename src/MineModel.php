@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\DbConnection\Model\Model;
@@ -55,7 +54,7 @@ class MineModel extends Model
 
     /**
      * 设置主键的值
-     * @param int|string $value
+     * @param  int|string  $value
      */
     public function setPrimaryKeyValue($value): void
     {
@@ -90,6 +89,7 @@ class MineModel extends Model
     public function setDataScopeField(string $name): self
     {
         $this->dataScopeField = $name;
+
         return $this;
     }
 }
