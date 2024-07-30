@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab\Mutex;
 
 use Mine\Crontab\MineCrontab;

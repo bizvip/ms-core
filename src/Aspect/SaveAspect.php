@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -60,7 +59,9 @@ class SaveAspect extends AbstractAspect
         }
         // 生成雪花ID 或者 UUID
         if ($instance instanceof MineModel && !$instance->incrementing && empty($instance->{$instance->getKeyName()})) {
-            $instance->setPrimaryKeyValue($instance->getPrimaryKeyType() === 'int' ? snowflake_id() : uuid());
+            $instance->setPrimaryKeyValue(
+                $instance->getPrimaryKeyType() === 'int' ? snowflake_id() : uuid()
+            );
         }
 
         return $proceedingJoinPoint->process();

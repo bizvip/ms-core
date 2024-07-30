@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
@@ -68,7 +67,7 @@ class InstallProjectCommand extends MineCommand
     {
         /* @var Mine $mine */
         $this->line("Installation of local modules is about to begin...\n", 'comment');
-        $mine = make(Mine::class);
+        $mine    = make(Mine::class);
         $modules = $mine->getModuleInfo();
         foreach ($modules as $name => $info) {
             $this->call('mine:migrate-run', ['name' => $name, '--force' => 'true']);
@@ -82,12 +81,12 @@ class InstallProjectCommand extends MineCommand
 
     protected function setOthers(): void
     {
-        $this->line(PHP_EOL . ' MineAdmin set others items...' . PHP_EOL, 'comment');
+        $this->line(PHP_EOL.' MineAdmin set others items...'.PHP_EOL, 'comment');
         $this->call('mine:update');
         $this->call('mine:jwt-gen', ['--jwtSecret' => 'JWT_SECRET']);
         $this->call('mine:jwt-gen', ['--jwtSecret' => 'JWT_API_SECRET']);
 
-        if (! file_exists(BASE_PATH . '/config/autoload/mineadmin.php')) {
+        if (!file_exists(BASE_PATH.'/config/autoload/mineadmin.php')) {
             $this->call('vendor:publish', ['package' => 'xmo/mine']);
         }
 
@@ -95,7 +94,7 @@ class InstallProjectCommand extends MineCommand
 
         // 下载前端代码
         if ($downloadFrontCode) {
-            $this->line(PHP_EOL . ' Now about to start downloading the front-end code' . PHP_EOL, 'comment');
+            $this->line(PHP_EOL.' Now about to start downloading the front-end code'.PHP_EOL, 'comment');
             if (\shell_exec('which git')) {
                 \system('git clone https://gitee.com/mineadmin/mineadmin-vue.git ./web/');
             } else {
@@ -116,32 +115,32 @@ class InstallProjectCommand extends MineCommand
 
         // 创建超级管理员
         $superAdminId = Db::table('system_user')->insertGetId([
-            'username' => 'superAdmin',
-            'password' => password_hash('admin123', PASSWORD_DEFAULT),
-            'user_type' => '100',
-            'nickname' => '创始人',
-            'email' => 'admin@adminmine.com',
-            'phone' => '16858888988',
-            'signed' => '广阔天地，大有所为',
-            'dashboard' => 'statistics',
+            'username'   => 'superAdmin',
+            'password'   => password_hash('admin123', PASSWORD_DEFAULT),
+            'user_type'  => '100',
+            'nickname'   => '创始人',
+            'email'      => 'admin@adminmine.com',
+            'phone'      => '16858888988',
+            'signed'     => '广阔天地，大有所为',
+            'dashboard'  => 'statistics',
             'created_by' => 0,
             'updated_by' => 0,
-            'status' => 1,
+            'status'     => 1,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
         // 创建管理员角色
         $superRoleId = Db::table('system_role')->insertGetId([
-            'name' => '超级管理员（创始人）',
-            'code' => 'superAdmin',
+            'name'       => '超级管理员（创始人）',
+            'code'       => 'superAdmin',
             'data_scope' => 0,
-            'sort' => 0,
+            'sort'       => 0,
             'created_by' => env('SUPER_ADMIN', 0),
             'updated_by' => 0,
-            'status' => 1,
+            'status'     => 1,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
-            'remark' => '系统内置角色，不可删除',
+            'remark'     => '系统内置角色，不可删除',
         ]);
         Db::table('system_user_role')->insertGetId([
             'user_id' => $superAdminId,
@@ -151,21 +150,25 @@ class InstallProjectCommand extends MineCommand
 SUPER_ADMIN={$superAdminId}
 ADMIN_ROLE={$superAdminId}
 ENV;
-        file_put_contents(BASE_PATH . '/.env', $envConfig, FILE_APPEND);
+        file_put_contents(BASE_PATH.'/.env', $envConfig, FILE_APPEND);
     }
 
     protected function finish(): void
     {
         $i = 5;
-        $this->output->write(PHP_EOL . $this->getGreenText('The installation is almost complete'), false);
+        $this->output->write(PHP_EOL.$this->getGreenText('The installation is almost complete'), false);
         while ($i > 0) {
             $this->output->write($this->getGreenText('.'), false);
             --$i;
             sleep(1);
         }
-        $this->line(PHP_EOL . sprintf('%s
+        $this->line(
+            PHP_EOL.sprintf(
+                '%s
 MineAdmin Version: %s
 default username: superAdmin
-default password: admin123', $this->getInfo(), Mine::getVersion()), 'comment');
+default password: admin123', $this->getInfo(), Mine::getVersion()
+            ), 'comment'
+        );
     }
 }

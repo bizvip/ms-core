@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Traits;
 
 use Hyperf\Database\Model\Collection;
@@ -39,6 +38,7 @@ trait ServiceTrait
             $params['select'] = explode(',', $params['select']);
         }
         $params['recycle'] = false;
+
         return $this->mapper->getList($params, $isScope);
     }
 
@@ -51,6 +51,7 @@ trait ServiceTrait
             $params['select'] = explode(',', $params['select']);
         }
         $params['recycle'] = true;
+
         return $this->mapper->getList($params, $isScope);
     }
 
@@ -62,6 +63,7 @@ trait ServiceTrait
         if ($params['select'] ?? null) {
             $params['select'] = explode(',', $params['select']);
         }
+
         return $this->mapper->getPageList($params, $isScope);
     }
 
@@ -74,6 +76,7 @@ trait ServiceTrait
             $params['select'] = explode(',', $params['select']);
         }
         $params['recycle'] = true;
+
         return $this->mapper->getPageList($params, $isScope);
     }
 
@@ -86,6 +89,7 @@ trait ServiceTrait
             $params['select'] = explode(',', $params['select']);
         }
         $params['recycle'] = false;
+
         return $this->mapper->getTreeList($params, $isScope);
     }
 
@@ -98,6 +102,7 @@ trait ServiceTrait
             $params['select'] = explode(',', $params['select']);
         }
         $params['recycle'] = true;
+
         return $this->mapper->getTreeList($params, $isScope);
     }
 
@@ -118,6 +123,7 @@ trait ServiceTrait
             foreach ($collects as $collect) {
                 $this->mapper->save($collect);
             }
+
             return true;
         });
     }
@@ -164,7 +170,7 @@ trait ServiceTrait
      */
     public function delete(array $ids): bool
     {
-        return ! empty($ids) && $this->mapper->delete($ids);
+        return !empty($ids) && $this->mapper->delete($ids);
     }
 
     /**
@@ -188,7 +194,7 @@ trait ServiceTrait
      */
     public function realDelete(array $ids): bool
     {
-        return ! empty($ids) && $this->mapper->realDelete($ids);
+        return !empty($ids) && $this->mapper->realDelete($ids);
     }
 
     /**
@@ -196,7 +202,7 @@ trait ServiceTrait
      */
     public function recovery(array $ids): bool
     {
-        return ! empty($ids) && $this->mapper->recovery($ids);
+        return !empty($ids) && $this->mapper->recovery($ids);
     }
 
     /**
@@ -204,7 +210,7 @@ trait ServiceTrait
      */
     public function disable(array $ids, string $field = 'status'): bool
     {
-        return ! empty($ids) && $this->mapper->disable($ids, $field);
+        return !empty($ids) && $this->mapper->disable($ids, $field);
     }
 
     /**
@@ -212,7 +218,7 @@ trait ServiceTrait
      */
     public function enable(array $ids, string $field = 'status'): bool
     {
-        return ! empty($ids) && $this->mapper->enable($ids, $field);
+        return !empty($ids) && $this->mapper->enable($ids, $field);
     }
 
     /**
@@ -220,7 +226,8 @@ trait ServiceTrait
      */
     public function changeStatus(mixed $id, string $value, string $filed = 'status'): bool
     {
-        return $value == MineModel::ENABLE ? $this->mapper->enable([$id], $filed) : $this->mapper->disable([$id], $filed);
+        return $value == MineModel::ENABLE ? $this->mapper->enable([$id], $filed)
+            : $this->mapper->disable([$id], $filed);
     }
 
     /**
@@ -271,24 +278,24 @@ trait ServiceTrait
         $collect = $this->handleArraySearch(collect($this->getArrayData($params)), $params);
 
         $pageSize = MineModel::PAGE_SIZE;
-        $page = 1;
+        $page     = 1;
 
         if ($params[$pageName] ?? false) {
-            $page = (int) $params[$pageName];
+            $page = (int)$params[$pageName];
         }
 
         if ($params['pageSize'] ?? false) {
-            $pageSize = (int) $params['pageSize'];
+            $pageSize = (int)$params['pageSize'];
         }
 
         $data = $collect->forPage($page, $pageSize)->toArray();
 
         return [
-            'items' => $this->getCurrentArrayPageBefore($data, $params),
+            'items'    => $this->getCurrentArrayPageBefore($data, $params),
             'pageInfo' => [
-                'total' => $collect->count(),
+                'total'       => $collect->count(),
                 'currentPage' => $page,
-                'totalPage' => ceil($collect->count() / $pageSize),
+                'totalPage'   => ceil($collect->count() / $pageSize),
             ],
         ];
     }
@@ -300,6 +307,7 @@ trait ServiceTrait
     {
         $remoteOption = $params['remoteOption'] ?? [];
         unset($params['remoteOption']);
+
         return $this->mapper->getRemoteList(array_merge($params, $remoteOption));
     }
 
@@ -318,6 +326,7 @@ trait ServiceTrait
     protected function getCurrentArrayPageBefore(array &$data, array $params = []): array
     {
         sort($data);
+
         return $data;
     }
 

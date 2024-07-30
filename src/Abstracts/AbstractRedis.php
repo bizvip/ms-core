@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Abstracts;
 
 use Hyperf\Redis\Redis;
@@ -36,11 +35,9 @@ abstract class AbstractRedis
      */
     protected LoggerInterface $logger;
 
-    public function __construct(
-        Redis $redis,
-        LoggerInterface $logger
-    ) {
-        $this->redis = $redis;
+    public function __construct(Redis $redis, LoggerInterface $logger)
+    {
+        $this->redis  = $redis;
         $this->logger = $logger;
         $this->prefix = \Hyperf\Config\config('cache.default.prefix');
     }
@@ -70,6 +67,6 @@ abstract class AbstractRedis
      */
     public function getKey(string $key): ?string
     {
-        return empty($key) ? null : ($this->prefix . trim($this->typeName, ':') . ':' . $key);
+        return empty($key) ? null : ($this->prefix.trim($this->typeName, ':').':'.$key);
     }
 }

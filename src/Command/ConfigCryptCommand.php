@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
@@ -39,27 +38,31 @@ class ConfigCryptCommand extends MineCommand
     public function handle()
     {
         $value = $this->input->getArgument('value');
-        $key = config('mineadmin.config_encryption_key', '');
+        $key   = config('mineadmin.config_encryption_key', '');
         if (empty($key)) {
             $this->line('Not found mineadmin.config_encryption_key config.', 'error');
+
             return self::FAILURE;
         }
 
         $key = @base64_decode($key);
         if (empty($key)) {
             $this->line('key content error.', 'error');
+
             return self::FAILURE;
         }
 
         $iv = config('mineadmin.config_encryption_iv', '');
         if (empty($iv)) {
             $this->line('Not found mineadmin.config_encryption_iv config.', 'error');
+
             return self::FAILURE;
         }
 
         $iv = @base64_decode($iv);
         if (empty($iv)) {
             $this->line('iv content error.', 'error');
+
             return self::FAILURE;
         }
 
@@ -67,10 +70,11 @@ class ConfigCryptCommand extends MineCommand
 
         if (empty($encrypt)) {
             $this->line('iv or key content error.please regen', 'error');
+
             return self::FAILURE;
         }
 
-        $this->info('config crypt string is: ENC(' . $encrypt . ')');
+        $this->info('config crypt string is: ENC('.$encrypt.')');
     }
 
     protected function getArguments()

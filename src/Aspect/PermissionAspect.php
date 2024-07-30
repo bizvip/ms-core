@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -50,13 +49,10 @@ class PermissionAspect extends AbstractAspect
     /**
      * PermissionAspect constructor.
      */
-    public function __construct(
-        UserServiceInterface $service,
-        MineRequest $request,
-        LoginUser $loginUser
-    ) {
-        $this->service = $service;
-        $this->request = $request;
+    public function __construct(UserServiceInterface $service, MineRequest $request, LoginUser $loginUser)
+    {
+        $this->service   = $service;
+        $this->request   = $request;
         $this->loginUser = $loginUser;
     }
 
@@ -99,7 +95,7 @@ class PermissionAspect extends AbstractAspect
         if (preg_match_all('#{(.*?)}#U', $codeString, $matches)) {
             if (isset($matches[1])) {
                 foreach ($matches[1] as $name) {
-                    $codeString = str_replace('{' . $name . '}', $this->request->route($name), $codeString);
+                    $codeString = str_replace('{'.$name.'}', $this->request->route($name), $codeString);
                 }
             }
         }
@@ -111,17 +107,17 @@ class PermissionAspect extends AbstractAspect
                 }
             }
             throw new NoPermissionException(
-                t('system.no_permission') . ' -> [ ' . $this->request->getPathInfo() . ' ]'
+                t('system.no_permission').' -> [ '.$this->request->getPathInfo().' ]'
             );
         }
 
         if ($where === 'AND') {
             foreach (explode(',', $codeString) as $code) {
                 $code = trim($code);
-                if (! in_array($code, $codes)) {
+                if (!in_array($code, $codes)) {
                     $service = container()->get(MenuServiceInterface::class);
                     throw new NoPermissionException(
-                        t('system.no_permission') . ' -> [ ' . $service->findNameByCode($code) . ' ]'
+                        t('system.no_permission').' -> [ '.$service->findNameByCode($code).' ]'
                     );
                 }
             }

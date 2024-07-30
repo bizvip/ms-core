@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -49,8 +48,7 @@ class ResubmitAspect extends AbstractAspect
         $key = md5(sprintf('%s-%s-%s', $request->ip(), $request->getPathInfo(), $request->getMethod()));
 
         $lockRedis = new MineLockRedis(
-            make(Redis::class),
-            make(LoggerFactory::class)->get('Mine Redis Lock')
+            make(Redis::class), make(LoggerFactory::class)->get('Mine Redis Lock')
         );
         $lockRedis->setTypeName('resubmit');
 

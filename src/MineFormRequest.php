@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\HttpServer\Router\Dispatched;
@@ -25,16 +24,14 @@ class MineFormRequest extends FormRequest
     public function messages(): array
     {
         return array_merge(
-            $this->callNextFunction('common', __FUNCTION__),
-            $this->callNextFunction($this->getAction(), __FUNCTION__)
+            $this->callNextFunction('common', __FUNCTION__), $this->callNextFunction($this->getAction(), __FUNCTION__)
         );
     }
 
     public function attributes(): array
     {
         return array_merge(
-            $this->callNextFunction('common', __FUNCTION__),
-            $this->callNextFunction($this->getAction(), __FUNCTION__)
+            $this->callNextFunction('common', __FUNCTION__), $this->callNextFunction($this->getAction(), __FUNCTION__)
         );
     }
 
@@ -44,8 +41,7 @@ class MineFormRequest extends FormRequest
     public function rules(): array
     {
         return array_merge(
-            $this->callNextFunction('common', __FUNCTION__),
-            $this->callNextFunction($this->getAction(), __FUNCTION__)
+            $this->callNextFunction('common', __FUNCTION__), $this->callNextFunction($this->getAction(), __FUNCTION__)
         );
     }
 
@@ -54,7 +50,8 @@ class MineFormRequest extends FormRequest
         if (is_null($prefix)) {
             return [];
         }
-        $callName = $prefix . ucfirst($function);
+        $callName = $prefix.ucfirst($function);
+
         return method_exists($this, $callName) ? \Hyperf\Support\call([$this, $callName]) : [];
     }
 
@@ -76,6 +73,7 @@ class MineFormRequest extends FormRequest
                 return explode('::', $callback)[1] ?? null;
             }
         }
+
         return null;
     }
 

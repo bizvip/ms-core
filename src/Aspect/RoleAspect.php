@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -50,13 +49,10 @@ class RoleAspect extends AbstractAspect
     /**
      * RoleAspect constructor.
      */
-    public function __construct(
-        UserServiceInterface $service,
-        MineRequest $request,
-        LoginUser $loginUser
-    ) {
-        $this->service = $service;
-        $this->request = $request;
+    public function __construct(UserServiceInterface $service, MineRequest $request, LoginUser $loginUser)
+    {
+        $this->service   = $service;
+        $this->request   = $request;
         $this->loginUser = $loginUser;
     }
 
@@ -104,17 +100,17 @@ class RoleAspect extends AbstractAspect
                 }
             }
             throw new NoPermissionException(
-                t('system.no_role') . ' -> [ ' . $codeString . ' ]'
+                t('system.no_role').' -> [ '.$codeString.' ]'
             );
         }
 
         if ($where === 'AND') {
             foreach (explode(',', $codeString) as $code) {
                 $code = trim($code);
-                if (! in_array($code, $roles)) {
+                if (!in_array($code, $roles)) {
                     $service = container()->get(RoleServiceInterface::class);
                     throw new NoPermissionException(
-                        t('system.no_role') . ' -> [ ' . $service->findNameByCode($code) . ' ]'
+                        t('system.no_role').' -> [ '.$service->findNameByCode($code).' ]'
                     );
                 }
             }

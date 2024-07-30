@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab\Mutex;
 
 use Hyperf\Redis\RedisFactory;
@@ -29,10 +28,11 @@ class RedisTaskMutex implements TaskMutex
      */
     public function create(MineCrontab $crontab): bool
     {
-        return (bool) $this->redisFactory->get($crontab->getMutexPool())->set(
-            $this->getMutexName($crontab),
-            $crontab->getName(),
-            ['NX', 'EX' => $crontab->getMutexExpires()]
+        return (bool)$this->redisFactory->get($crontab->getMutexPool())->set(
+            $this->getMutexName($crontab), $crontab->getName(), [
+                'NX',
+                'EX' => $crontab->getMutexExpires(),
+            ]
         );
     }
 
@@ -41,7 +41,7 @@ class RedisTaskMutex implements TaskMutex
      */
     public function exists(MineCrontab $crontab): bool
     {
-        return (bool) $this->redisFactory->get($crontab->getMutexPool())->exists(
+        return (bool)$this->redisFactory->get($crontab->getMutexPool())->exists(
             $this->getMutexName($crontab)
         );
     }
@@ -58,6 +58,6 @@ class RedisTaskMutex implements TaskMutex
 
     protected function getMutexName(MineCrontab $crontab): string
     {
-        return 'framework' . DIRECTORY_SEPARATOR . 'crontab-' . sha1($crontab->getName() . $crontab->getRule());
+        return 'framework'.DIRECTORY_SEPARATOR.'crontab-'.sha1($crontab->getName().$crontab->getRule());
     }
 }

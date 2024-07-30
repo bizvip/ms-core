@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -17,4 +16,6 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
  * @Target("CLASS")
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ExcelData extends AbstractAnnotation {}
+class ExcelData extends AbstractAnnotation
+{
+}

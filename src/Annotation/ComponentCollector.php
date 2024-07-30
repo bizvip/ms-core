@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Annotation;
 
@@ -21,9 +13,9 @@ use Hyperf\Di\MetadataCollector;
 class ComponentCollector extends MetadataCollector
 {
     protected static array $container = [
-        'component' => [],
+        'component'     => [],
         'postConstruct' => [],
-        'override' => [],
+        'override'      => [],
     ];
 
     public static function collectComponent(string $class): void
@@ -46,6 +38,7 @@ class ComponentCollector extends MetadataCollector
         if ($component) {
             return static::$container['component'][$component] ?? null;
         }
+
         return static::$container['component'];
     }
 
@@ -54,6 +47,7 @@ class ComponentCollector extends MetadataCollector
         if ($component) {
             return static::$container['postConstruct'][$component] ?? null;
         }
+
         return static::$container['postConstruct'];
     }
 
@@ -62,6 +56,7 @@ class ComponentCollector extends MetadataCollector
         if ($component) {
             return static::$container['override'][$component] ?? null;
         }
+
         return static::$container['override'];
     }
 }

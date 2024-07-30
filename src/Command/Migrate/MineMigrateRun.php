@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command\Migrate;
 
 use Hyperf\Command\Annotation\Command;
@@ -33,7 +32,6 @@ class MineMigrateRun extends BaseCommand
 
     /**
      * The migrator instance.
-     *
      * @var Migrator
      */
     protected $migrator;
@@ -57,7 +55,7 @@ class MineMigrateRun extends BaseCommand
      */
     public function handle()
     {
-        if (! $this->confirmToProceed()) {
+        if (!$this->confirmToProceed()) {
             return;
         }
 
@@ -68,16 +66,15 @@ class MineMigrateRun extends BaseCommand
         // Next, we will check to see if a path option has been defined. If it has
         // we will use the path relative to the root of this installation folder
         // so that migrations may be run for any path within the applications.
-        $this->migrator->setOutput($this->output)
-            ->run($this->getMigrationPaths(), [
-                'pretend' => $this->input->getOption('pretend'),
-                'step' => $this->input->getOption('step'),
-            ]);
+        $this->migrator->setOutput($this->output)->run($this->getMigrationPaths(), [
+            'pretend' => $this->input->getOption('pretend'),
+            'step'    => $this->input->getOption('step'),
+        ]);
 
         // Finally, if the "seed" option has been given, we will re-run the database
         // seed task to re-populate the database, which is convenient when adding
         // a migration and a seed at the same time, as it is only this command.
-        if ($this->input->getOption('seed') && ! $this->input->getOption('pretend')) {
+        if ($this->input->getOption('seed') && !$this->input->getOption('pretend')) {
             $this->call('db:seed', ['--force' => true]);
         }
     }
@@ -86,12 +83,32 @@ class MineMigrateRun extends BaseCommand
     {
         return [
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use'],
-            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production'],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The path to the migrations files to be executed'],
-            ['realpath', null, InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths'],
+            [
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Force the operation to run when in production',
+            ],
+            [
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The path to the migrations files to be executed',
+            ],
+            [
+                'realpath',
+                null,
+                InputOption::VALUE_NONE,
+                'Indicate any provided migration file paths are pre-resolved absolute paths',
+            ],
             ['pretend', null, InputOption::VALUE_NONE, 'Dump the SQL queries that would be run'],
             ['seed', null, InputOption::VALUE_NONE, 'Indicates if the seed task should be re-run'],
-            ['step', null, InputOption::VALUE_NONE, 'Force the migrations to be run so they can be rolled back individually'],
+            [
+                'step',
+                null,
+                InputOption::VALUE_NONE,
+                'Force the migrations to be run so they can be rolled back individually',
+            ],
         ];
     }
 
@@ -102,7 +119,7 @@ class MineMigrateRun extends BaseCommand
     {
         $this->migrator->setConnection($this->input->getOption('database') ?? 'default');
 
-        if (! $this->migrator->repositoryExists()) {
+        if (!$this->migrator->repositoryExists()) {
             $this->call('migrate:install', array_filter([
                 '--database' => $this->input->getOption('database'),
             ]));
@@ -121,6 +138,6 @@ class MineMigrateRun extends BaseCommand
      */
     protected function getMigrationPath(): string
     {
-        return BASE_PATH . '/app/' . ucfirst($this->module) . '/Database/Migrations';
+        return BASE_PATH.'/app/'.ucfirst($this->module).'/Database/Migrations';
     }
 }

@@ -5,14 +5,7 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
+
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Context\Context;
 use Hyperf\Contract\StdoutLoggerInterface;
@@ -30,7 +23,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
-if (! function_exists('container')) {
+if (!function_exists('container')) {
     /**
      * 获取容器实例.
      */
@@ -40,7 +33,7 @@ if (! function_exists('container')) {
     }
 }
 
-if (! function_exists('redis')) {
+if (!function_exists('redis')) {
     /**
      * 获取Redis实例.
      * @throws ContainerExceptionInterface
@@ -52,7 +45,7 @@ if (! function_exists('redis')) {
     }
 }
 
-if (! function_exists('console')) {
+if (!function_exists('console')) {
     /**
      * 获取控制台输出实例.
      * @throws ContainerExceptionInterface
@@ -64,7 +57,7 @@ if (! function_exists('console')) {
     }
 }
 
-if (! function_exists('logger')) {
+if (!function_exists('logger')) {
     /**
      * 获取日志实例.
      * @throws ContainerExceptionInterface
@@ -76,7 +69,7 @@ if (! function_exists('logger')) {
     }
 }
 
-if (! function_exists('user')) {
+if (!function_exists('user')) {
     /**
      * 获取当前登录用户实例.
      */
@@ -86,7 +79,7 @@ if (! function_exists('user')) {
     }
 }
 
-if (! function_exists('format_size')) {
+if (!function_exists('format_size')) {
     /**
      * 格式化大小.
      */
@@ -95,27 +88,30 @@ if (! function_exists('format_size')) {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         $index = 0;
         for ($i = 0; $size >= 1024 && $i < 5; ++$i) {
-            $size /= 1024;
+            $size  /= 1024;
             $index = $i;
         }
-        return round($size, 2) . $units[$index];
+
+        return round($size, 2).$units[$index];
     }
 }
 
-if (! function_exists('lang')) {
+if (!function_exists('lang')) {
     /**
      * 获取当前语言
      */
     function lang(): string
     {
-        $acceptLanguage = container()
-            ->get(RequestInterface::class)
+        $acceptLanguage = container()->get(RequestInterface::class)
             ->getHeaderLine('accept-language');
-        return str_replace('-', '_', ! empty($acceptLanguage) ? explode(',', $acceptLanguage)[0] : 'zh_CN');
+
+        return str_replace(
+            '-', '_', !empty($acceptLanguage) ? explode(',', $acceptLanguage)[0] : 'zh_CN'
+        );
     }
 }
 
-if (! function_exists('t')) {
+if (!function_exists('t')) {
     /**
      * 多语言函数.
      * @throws ContainerExceptionInterface
@@ -127,10 +123,10 @@ if (! function_exists('t')) {
     }
 }
 
-if (! function_exists('mine_collect')) {
+if (!function_exists('mine_collect')) {
     /**
      * 创建一个Mine的集合类.
-     * @param null|mixed $value
+     * @param  null|mixed  $value
      */
     function mine_collect($value = null): MineCollection
     {
@@ -138,18 +134,18 @@ if (! function_exists('mine_collect')) {
     }
 }
 
-if (! function_exists('context_set')) {
+if (!function_exists('context_set')) {
     /**
      * 设置上下文数据.
-     * @param mixed $data
+     * @param  mixed  $data
      */
     function context_set(string $key, $data): bool
     {
-        return (bool) Context::set($key, $data);
+        return (bool)Context::set($key, $data);
     }
 }
 
-if (! function_exists('context_get')) {
+if (!function_exists('context_get')) {
     /**
      * 获取上下文数据.
      * @return mixed
@@ -160,7 +156,7 @@ if (! function_exists('context_get')) {
     }
 }
 
-if (! function_exists('app_verify')) {
+if (!function_exists('app_verify')) {
     /**
      * 获取APP应用请求实例.
      */
@@ -170,17 +166,17 @@ if (! function_exists('app_verify')) {
     }
 }
 
-if (! function_exists('snowflake_id')) {
+if (!function_exists('snowflake_id')) {
     /**
      * 生成雪花ID.
      */
     function snowflake_id(): string
     {
-        return (string) container()->get(SnowflakeIdGenerator::class)->generate();
+        return (string)container()->get(SnowflakeIdGenerator::class)->generate();
     }
 }
 
-if (! function_exists('uuid')) {
+if (!function_exists('uuid')) {
     /**
      * 生成UUID.
      */
@@ -190,7 +186,7 @@ if (! function_exists('uuid')) {
     }
 }
 
-if (! function_exists('event')) {
+if (!function_exists('event')) {
     /**
      * 事件调度快捷方法.
      * @throws ContainerExceptionInterface
@@ -202,7 +198,7 @@ if (! function_exists('event')) {
     }
 }
 
-if (! function_exists('blank')) {
+if (!function_exists('blank')) {
     /**
      * 判断给定的值是否为空.
      */
@@ -228,12 +224,12 @@ if (! function_exists('blank')) {
     }
 }
 
-if (! function_exists('filled')) {
+if (!function_exists('filled')) {
     /**
      * 判断给定的值是否不为空.
      */
     function filled(mixed $value): bool
     {
-        return ! blank($value);
+        return !blank($value);
     }
 }

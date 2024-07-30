@@ -7,14 +7,6 @@
 /** @noinspection PhpIllegalStringOffsetInspection */
 /* @noinspection PhpSignatureMismatchDuringInheritanceInspection */
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -52,11 +44,12 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract): MapperGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         $this->setNamespace($this->tablesContract->getNamespace());
+
         return $this->placeholderReplace();
     }
 
@@ -66,16 +59,17 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
     public function generator(): void
     {
         $module = Str::title(
-            $this->tablesContract->getModuleName()[0]
-        ) .
-            mb_substr($this->tablesContract->getModuleName(), 1);
+                $this->tablesContract->getModuleName()[0]
+            ).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Mapper/";
+            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Mapper/";
         } else {
-            $path = BASE_PATH . "/app/{$module}/Mapper/";
+            $path = BASE_PATH."/app/{$module}/Mapper/";
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
-        $this->filesystem->put($path . "{$this->getClassName()}.php", $this->replace()->getCodeContent());
+        $this->filesystem->put(
+            $path."{$this->getClassName()}.php", $this->replace()->getCodeContent()
+        );
     }
 
     /**
@@ -123,7 +117,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . $this->getType() . '/mapper.stub';
+        return $this->getStubDir().$this->getType().'/mapper.stub';
     }
 
     /**
@@ -139,11 +133,11 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): MapperGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -189,7 +183,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\Mapper';
+        return $this->getNamespace().'\Mapper';
     }
 
     /**
@@ -197,7 +191,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->tablesContract->getMenuName() . 'Mapper类';
+        return $this->tablesContract->getMenuName().'Mapper类';
     }
 
     /**
@@ -215,7 +209,7 @@ UseNamespace;
      */
     protected function getClassName(): string
     {
-        return $this->getBusinessName() . 'Mapper';
+        return $this->getBusinessName().'Mapper';
     }
 
     /**
@@ -235,8 +229,10 @@ UseNamespace;
             if ($this->tablesContract->getoptions()['tree_id'] ?? false) {
                 return $this->tablesContract->getOptions()['tree_id'];
             }
+
             return 'id';
         }
+
         return '';
     }
 
@@ -249,8 +245,10 @@ UseNamespace;
             if ($this->tablesContract->getoptions()['tree_pid'] ?? false) {
                 return $this->tablesContract->getoptions()['tree_pid'];
             }
+
             return 'parent_id';
         }
+
         return '';
     }
 
@@ -263,8 +261,10 @@ UseNamespace;
             if ($this->tablesContract->getoptions()['tree_name'] ?? false) {
                 return $this->tablesContract->getoptions()['tree_name'];
             }
+
             return 'name';
         }
+
         return '';
     }
 
@@ -278,7 +278,7 @@ UseNamespace;
         //            ->where('table_id', $this->tablesContract->id)
         //            ->where('is_query', self::YES)
         //            ->get(['column_name', 'column_comment', 'query_type'])->toArray();
-        $columns = $this->tablesContract->getColumns();
+        $columns    = $this->tablesContract->getColumns();
         $phpContent = '';
         foreach ($columns as $column) {
             $phpContent .= $this->getSearchCode($column);

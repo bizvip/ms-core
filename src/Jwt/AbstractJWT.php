@@ -13,7 +13,6 @@ use Xmo\JWTAuth\Exception\JWTException;
 use Xmo\JWTAuth\Util\JWTUtil;
 use Psr\Container\ContainerInterface;
 
-
 abstract class AbstractJWT implements JWTInterface
 {
     /**
@@ -42,7 +41,7 @@ abstract class AbstractJWT implements JWTInterface
     private $symmetryAlgs = [
         'HS256',
         'HS384',
-        'HS512'
+        'HS512',
     ];
 
     // 非对称算法名称
@@ -85,14 +84,22 @@ abstract class AbstractJWT implements JWTInterface
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->config = $this->container->get(ConfigInterface::class);
+        $this->config    = $this->container->get(ConfigInterface::class);
 
         // 合并场景配置，并且兼容2.0.6以下的配置
         $config = $this->config->get($this->configPrefix);
-        if (empty($config['supported_algs'])) $config['supported_algs'] = $this->supportedAlgs;
-        if (empty($config['symmetry_algs'])) $config['symmetry_algs'] = $this->symmetryAlgs;
-        if (empty($config['asymmetric_algs'])) $config['asymmetric_algs'] = $this->asymmetricAlgs;
-        if (empty($config['blacklist_prefix'])) $config['blacklist_prefix'] = 'mineadmin_jwt';
+        if (empty($config['supported_algs'])) {
+            $config['supported_algs'] = $this->supportedAlgs;
+        }
+        if (empty($config['symmetry_algs'])) {
+            $config['symmetry_algs'] = $this->symmetryAlgs;
+        }
+        if (empty($config['asymmetric_algs'])) {
+            $config['asymmetric_algs'] = $this->asymmetricAlgs;
+        }
+        if (empty($config['blacklist_prefix'])) {
+            $config['blacklist_prefix'] = 'mineadmin_jwt';
+        }
         $scenes = $config['scene'];
         unset($config['scene']);
         foreach ($scenes as $key => $scene) {
@@ -102,12 +109,13 @@ abstract class AbstractJWT implements JWTInterface
     }
 
     /**
-     * @param ContainerInterface $container
+     * @param  ContainerInterface  $container
      * @return $this
      */
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+
         return $this;
     }
 
@@ -121,11 +129,12 @@ abstract class AbstractJWT implements JWTInterface
 
     /**
      * 设置场景值
-     * @param string $scene
+     * @param  string  $scene
      */
     public function setScene(string $scene)
     {
         $this->scene = $scene;
+
         return $this;
     }
 
@@ -139,18 +148,19 @@ abstract class AbstractJWT implements JWTInterface
     }
 
     /**
-     * @param string $scene
-     * @param null   $value
+     * @param  string  $scene
+     * @param  null  $value
      * @return $this
      */
     public function setSceneConfig(string $scene = 'default', $value = null)
     {
         $this->config->set("{$this->configPrefix}.{$this->scenePrefix}.{$scene}", $value);
+
         return $this;
     }
 
     /**
-     * @param string $scene
+     * @param  string  $scene
      * @return mixed
      */
     public function getSceneConfig(string $scene = 'default')
@@ -159,7 +169,7 @@ abstract class AbstractJWT implements JWTInterface
     }
 
     /**
-     * @param bool $independentTokenVerify
+     * @param  bool  $independentTokenVerify
      * @return bool
      */
     public function getIndependentTokenVerify(bool $independentTokenVerify = false): bool

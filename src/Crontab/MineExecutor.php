@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab;
 
 use Carbon\Carbon;
@@ -72,25 +71,25 @@ class MineExecutor
      */
     public function execute(MineCrontab $crontab, bool $run = false): ?bool
     {
-        if ((! $crontab instanceof MineCrontab || ! $crontab->getExecuteTime()) && ! $run) {
+        if ((!$crontab instanceof MineCrontab || !$crontab->getExecuteTime()) && !$run) {
             return null;
         }
         $diff = 0;
-        ! $run && $diff = $crontab->getExecuteTime()->diffInRealSeconds(new Carbon());
+        !$run && $diff = $crontab->getExecuteTime()->diffInRealSeconds(new Carbon());
         $callback = null;
         switch ($crontab->getType()) {
             case self::CLASS_CRONTAB:
-                $class = $crontab->getCallback();
-                $method = 'execute';
+                $class      = $crontab->getCallback();
+                $method     = 'execute';
                 $parameters = $crontab->getParameter() ?: null;
                 if ($class && class_exists($class) && method_exists($class, $method)) {
                     $callback = function () use ($class, $method, $parameters, $crontab) {
                         $runnable = function () use ($class, $method, $parameters, $crontab) {
                             try {
-                                $result = true;
-                                $res = null;
+                                $result   = true;
+                                $res      = null;
                                 $instance = make($class);
-                                if (! empty($parameters)) {
+                                if (!empty($parameters)) {
                                     $res = $instance->{$method}($parameters);
                                 } else {
                                     $res = $instance->{$method}();
@@ -98,7 +97,10 @@ class MineExecutor
                             } catch (\Throwable $throwable) {
                                 $result = false;
                             } finally {
-                                $this->logResult($crontab, $result, isset($throwable) ? $throwable->getMessage() : $res);
+                                $this->logResult(
+                                    $crontab, $result, isset($throwable) ? $throwable->getMessage()
+                                    : $res
+                                );
                             }
                         };
 
@@ -107,11 +109,15 @@ class MineExecutor
                 }
                 break;
             case self::COMMAND_CRONTAB:
-                $command = ['command' => $crontab->getCallback()];
-                $parametersInfo = ['parameters' => json_decode($crontab->getParameter() ?: '[]', true)];
-                $input = make(ArrayInput::class, array_merge($command, $parametersInfo));
-                $output = make(NullOutput::class);
-                $application = $this->container->get(ApplicationInterface::class);
+                $command        = ['command' => $crontab->getCallback()];
+                $parametersInfo = [
+                    'parameters' => json_decode(
+                        $crontab->getParameter() ?: '[]', true
+                    ),
+                ];
+                $input          = make(ArrayInput::class, array_merge($command, $parametersInfo));
+                $output         = make(NullOutput::class);
+                $application    = $this->container->get(ApplicationInterface::class);
                 $application->setAutoExit(false);
                 $callback = function () use ($application, $input, $output, $crontab, $command) {
                     $runnable = function () use ($application, $input, $output, $crontab, $command) {
@@ -123,19 +129,18 @@ class MineExecutor
                 break;
             case self::URL_CRONTAB:
                 $clientFactory = $this->container->get(ClientFactory::class);
-                $client = $clientFactory->create();
-                $callback = function () use ($client, $crontab) {
+                $client        = $clientFactory->create();
+                $callback      = function () use ($client, $crontab) {
                     $runnable = function () use ($client, $crontab) {
                         try {
                             $response = $client->get($crontab->getCallback());
-                            $result = $response->getStatusCode() === 200;
+                            $result   = $response->getStatusCode() === 200;
                         } catch (\Throwable $throwable) {
                             $result = false;
                         }
                         $this->logResult(
-                            $crontab,
-                            $result,
-                            (! $result && isset($response)) ? $response->getBody() : ''
+                            $crontab, $result, (!$result && isset($response)) ? $response->getBody()
+                            : ''
                         );
                     };
                     $this->decorateRunnable($crontab, $runnable)();
@@ -150,7 +155,9 @@ class MineExecutor
                         } catch (\Throwable $throwable) {
                             $result = false;
                         }
-                        $this->logResult($crontab, $result, isset($throwable) ? $throwable->getMessage() : '');
+                        $this->logResult(
+                            $crontab, $result, isset($throwable) ? $throwable->getMessage() : ''
+                        );
                     };
                     $this->decorateRunnable($crontab, $runnable)();
                 };
@@ -166,8 +173,9 @@ class MineExecutor
         return function () use ($crontab, $runnable) {
             $taskMutex = $this->getTaskMutex();
 
-            if ($taskMutex->exists($crontab) || ! $taskMutex->create($crontab)) {
+            if ($taskMutex->exists($crontab) || !$taskMutex->create($crontab)) {
                 $this->logger->info(sprintf('Crontab task [%s] skipped execution at %s.', $crontab->getName(), date('Y-m-d H:i:s')));
+
                 return;
             }
 
@@ -181,11 +189,12 @@ class MineExecutor
 
     protected function getTaskMutex(): TaskMutex
     {
-        if (! $this->taskMutex) {
+        if (!$this->taskMutex) {
             $this->taskMutex = $this->container->has(TaskMutex::class)
                 ? $this->container->get(TaskMutex::class)
                 : $this->container->get(RedisTaskMutex::class);
         }
+
         return $this->taskMutex;
     }
 
@@ -194,8 +203,9 @@ class MineExecutor
         return function () use ($crontab, $runnable) {
             $taskMutex = $this->getServerMutex();
 
-            if (! $taskMutex->attempt($crontab)) {
+            if (!$taskMutex->attempt($crontab)) {
                 $this->logger->info(sprintf('Crontab task [%s] skipped execution at %s.', $crontab->getName(), date('Y-m-d H:i:s')));
+
                 return;
             }
 
@@ -205,11 +215,12 @@ class MineExecutor
 
     protected function getServerMutex(): ServerMutex
     {
-        if (! $this->serverMutex) {
+        if (!$this->serverMutex) {
             $this->serverMutex = $this->container->has(ServerMutex::class)
                 ? $this->container->get(ServerMutex::class)
                 : $this->container->get(RedisServerMutex::class);
         }
+
         return $this->serverMutex;
     }
 
@@ -236,14 +247,14 @@ class MineExecutor
             }
         }
         $logService = $this->container->get(CrontabLogServiceInterface::class);
-        $data = [
-            'crontab_id' => $crontab->getCrontabId(),
-            'name' => $crontab->getName(),
-            'target' => $crontab->getCallback(),
-            'parameter' => $crontab->getParameter(),
+        $data       = [
+            'crontab_id'     => $crontab->getCrontabId(),
+            'name'           => $crontab->getName(),
+            'target'         => $crontab->getCallback(),
+            'parameter'      => $crontab->getParameter(),
             'exception_info' => $result,
-            'status' => $isSuccess ? MineModel::ENABLE : MineModel::DISABLE,
-            'created_at' => date('Y-m-d H:i:s'),
+            'status'         => $isSuccess ? MineModel::ENABLE : MineModel::DISABLE,
+            'created_at'     => date('Y-m-d H:i:s'),
         ];
         $logService->save($data);
     }

@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command\Creater;
 
 use Hyperf\Command\Annotation\Command;
@@ -31,38 +30,35 @@ class CreateFormRequest extends MineCommand
         $this->setHelp('run "php bin/hyperf.php mine:module <module_name> <name>"');
         $this->setDescription('Generate validate form request class file');
         $this->addArgument(
-            'module_name',
-            InputArgument::REQUIRED,
-            'input module name'
+            'module_name', InputArgument::REQUIRED, 'input module name'
         );
 
         $this->addArgument(
-            'name',
-            InputArgument::REQUIRED,
-            'input FormRequest class file name'
+            'name', InputArgument::REQUIRED, 'input FormRequest class file name'
         );
     }
 
     public function handle()
     {
         $this->module = ucfirst(trim($this->input->getArgument('module_name')));
-        $this->name = ucfirst(trim($this->input->getArgument('name')));
+        $this->name   = ucfirst(trim($this->input->getArgument('name')));
 
         $fs = new Filesystem();
 
         try {
             $content = str_replace(
-                ['{MODULE_NAME}', '{CLASS_NAME}'],
-                [$this->module, $this->name],
-                $fs->get($this->getStub('form_request'))
+                ['{MODULE_NAME}', '{CLASS_NAME}'], [
+                $this->module,
+                $this->name,
+            ], $fs->get($this->getStub('form_request'))
             );
         } catch (FileNotFoundException $e) {
             $this->error($e->getMessage());
             exit;
         }
 
-        $fs->put($this->getModulePath() . $this->name . 'FormRequest.php', $content);
+        $fs->put($this->getModulePath().$this->name.'FormRequest.php', $content);
 
-        $this->info('<info>[INFO] Created request:</info> ' . $this->name . 'FormRequest.php');
+        $this->info('<info>[INFO] Created request:</info> '.$this->name.'FormRequest.php');
     }
 }

@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Contract;
 
@@ -29,15 +21,15 @@ interface PageDaoContract
 {
     /**
      * 列表查询.
-     * @param array|Param $params 查询条件
-     * @param int $page 页码
-     * @param int $size 页数
+     * @param  array|Param  $params  查询条件
+     * @param  int  $page            页码
+     * @param  int  $size            页数
      */
     public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface;
 
     /**
      * 查询总记录数.
-     * @param array|Param $params 查询条件
+     * @param  array|Param  $params  查询条件
      */
     public function count(mixed $params = null): int;
 
@@ -54,7 +46,7 @@ interface PageDaoContract
     public function getById(mixed $id): Collection;
 
     /**
-     * @param mixed|Param $params
+     * @param  mixed|Param  $params
      */
     public function handleSearch(Builder $query, mixed $params = null): Builder;
 }

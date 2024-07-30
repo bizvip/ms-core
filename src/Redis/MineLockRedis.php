@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Redis;
 
 use Hyperf\Coroutine\Coroutine;
@@ -40,7 +39,7 @@ class MineLockRedis extends AbstractRedis implements MineRedisInterface
      */
     public function run(\Closure $closure, string $key, int $expired, int $timeout = 0, float $sleep = 0.1): bool
     {
-        if (! $this->lock($key, $expired, $timeout, $sleep)) {
+        if (!$this->lock($key, $expired, $timeout, $sleep)) {
             return false;
         }
 
@@ -50,7 +49,10 @@ class MineLockRedis extends AbstractRedis implements MineRedisInterface
         try {
             \Hyperf\Support\call($closure);
         } catch (\Throwable $e) {
-            $this->getLogger()->error(t('mineadmin.redis_lock_error'), [$e->getMessage(), $e->getTrace()]);
+            $this->getLogger()->error(t('mineadmin.redis_lock_error'), [
+                $e->getMessage(),
+                $e->getTrace(),
+            ]);
             throw new NormalStatusException(t('mineadmin.redis_lock_error'), 500);
         } finally {
             $this->freed($key);
@@ -66,7 +68,7 @@ class MineLockRedis extends AbstractRedis implements MineRedisInterface
      */
     public function check(string $key): bool
     {
-        return (bool) $this->getRedis()->exists($this->getKey($key));
+        return (bool)$this->getRedis()->exists($this->getKey($key));
     }
 
     /**

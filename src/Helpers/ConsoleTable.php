@@ -1,18 +1,10 @@
 <?php
-
 /******************************************************************************
  * Copyright (c) 2006-2024. Archer++. All rights reserved.                    *
  * Author ORCID: https://orcid.org/0009-0003-8150-367X                        *
  ******************************************************************************/
+
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Helper;
 
@@ -58,57 +50,57 @@ class ConsoleTable
      * 表格样式定义.
      */
     protected array $format = [
-        'compact' => [],
-        'default' => [
-            'top' => ['+', '-', '+', '+'],
-            'cell' => ['|', ' ', '|', '|'],
-            'middle' => ['+', '-', '+', '+'],
-            'bottom' => ['+', '-', '+', '+'],
-            'cross-top' => ['+', '-', '-', '+'],
+        'compact'    => [],
+        'default'    => [
+            'top'          => ['+', '-', '+', '+'],
+            'cell'         => ['|', ' ', '|', '|'],
+            'middle'       => ['+', '-', '+', '+'],
+            'bottom'       => ['+', '-', '+', '+'],
+            'cross-top'    => ['+', '-', '-', '+'],
             'cross-bottom' => ['+', '-', '-', '+'],
         ],
-        'markdown' => [
-            'top' => [' ', ' ', ' ', ' '],
-            'cell' => ['|', ' ', '|', '|'],
-            'middle' => ['|', '-', '|', '|'],
-            'bottom' => [' ', ' ', ' ', ' '],
-            'cross-top' => ['|', ' ', ' ', '|'],
+        'markdown'   => [
+            'top'          => [' ', ' ', ' ', ' '],
+            'cell'         => ['|', ' ', '|', '|'],
+            'middle'       => ['|', '-', '|', '|'],
+            'bottom'       => [' ', ' ', ' ', ' '],
+            'cross-top'    => ['|', ' ', ' ', '|'],
             'cross-bottom' => ['|', ' ', ' ', '|'],
         ],
         'borderless' => [
-            'top' => ['=', '=', ' ', '='],
-            'cell' => [' ', ' ', ' ', ' '],
-            'middle' => ['=', '=', ' ', '='],
-            'bottom' => ['=', '=', ' ', '='],
-            'cross-top' => ['=', '=', ' ', '='],
+            'top'          => ['=', '=', ' ', '='],
+            'cell'         => [' ', ' ', ' ', ' '],
+            'middle'       => ['=', '=', ' ', '='],
+            'bottom'       => ['=', '=', ' ', '='],
+            'cross-top'    => ['=', '=', ' ', '='],
             'cross-bottom' => ['=', '=', ' ', '='],
         ],
-        'box' => [
-            'top' => ['┌', '─', '┬', '┐'],
-            'cell' => ['│', ' ', '│', '│'],
-            'middle' => ['├', '─', '┼', '┤'],
-            'bottom' => ['└', '─', '┴', '┘'],
-            'cross-top' => ['├', '─', '┴', '┤'],
+        'box'        => [
+            'top'          => ['┌', '─', '┬', '┐'],
+            'cell'         => ['│', ' ', '│', '│'],
+            'middle'       => ['├', '─', '┼', '┤'],
+            'bottom'       => ['└', '─', '┴', '┘'],
+            'cross-top'    => ['├', '─', '┴', '┤'],
             'cross-bottom' => ['├', '─', '┬', '┤'],
         ],
         'box-double' => [
-            'top' => ['╔', '═', '╤', '╗'],
-            'cell' => ['║', ' ', '│', '║'],
-            'middle' => ['╠', '─', '╪', '╣'],
-            'bottom' => ['╚', '═', '╧', '╝'],
-            'cross-top' => ['╠', '═', '╧', '╣'],
+            'top'          => ['╔', '═', '╤', '╗'],
+            'cell'         => ['║', ' ', '│', '║'],
+            'middle'       => ['╠', '─', '╪', '╣'],
+            'bottom'       => ['╚', '═', '╧', '╝'],
+            'cross-top'    => ['╠', '═', '╧', '╣'],
             'cross-bottom' => ['╠', '═', '╤', '╣'],
         ],
     ];
 
     /**
      * 设置表格头信息 以及对齐方式.
-     * @param array $header 要输出的Header信息
-     * @param int $align 对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * @param  array  $header  要输出的Header信息
+     * @param  int  $align     对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      */
     public function setHeader(array $header, int $align = 1): void
     {
-        $this->header = $header;
+        $this->header      = $header;
         $this->headerAlign = $align;
 
         $this->checkColWidth($header);
@@ -116,12 +108,12 @@ class ConsoleTable
 
     /**
      * 设置输出表格数据 及对齐方式.
-     * @param array $rows 要输出的表格数据（二维数组）
-     * @param int $align 对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * @param  array  $rows  要输出的表格数据（二维数组）
+     * @param  int  $align   对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      */
     public function setRows(array $rows, int $align = 1): void
     {
-        $this->rows = $rows;
+        $this->rows      = $rows;
         $this->cellAlign = $align;
 
         foreach ($rows as $row) {
@@ -131,19 +123,20 @@ class ConsoleTable
 
     /**
      * 设置全局单元格对齐方式.
-     * @param int $align 对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * @param  int  $align  对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      * @return $this
      */
     public function setCellAlign(int $align = 1)
     {
         $this->cellAlign = $align;
+
         return $this;
     }
 
     /**
      * 增加一行表格数据.
-     * @param mixed $row 行数据
-     * @param bool $first 是否在开头插入
+     * @param  mixed  $row   行数据
+     * @param  bool  $first  是否在开头插入
      */
     public function addRow($row, bool $first = false): void
     {
@@ -158,7 +151,7 @@ class ConsoleTable
 
     /**
      * 设置输出表格的样式.
-     * @param string $style 样式名
+     * @param  string  $style  样式名
      */
     public function setStyle(string $style): void
     {
@@ -167,30 +160,30 @@ class ConsoleTable
 
     /**
      * 输出表格
-     * @param array $dataList 表格数据
+     * @param  array  $dataList  表格数据
      */
     public function render(array $dataList = []): string
     {
-        if (! empty($dataList)) {
+        if (!empty($dataList)) {
             $this->setRows($dataList);
         }
 
         // 输出头部
         $content = $this->renderHeader();
-        $style = $this->getStyle('cell');
+        $style   = $this->getStyle('cell');
 
-        if (! empty($this->rows)) {
+        if (!empty($this->rows)) {
             foreach ($this->rows as $row) {
                 if (is_string($row) && $row === '-') {
                     $content .= $this->renderSeparator('middle');
                 } elseif (is_scalar($row)) {
                     $content .= $this->renderSeparator('cross-top');
-                    $width = 3 * (count($this->colWidth) - 1) + array_reduce($this->colWidth, function ($a, $b) {
-                        return $a + $b;
-                    });
-                    $array = str_pad($row, $width);
+                    $width   = 3 * (count($this->colWidth) - 1) + array_reduce($this->colWidth, function ($a, $b) {
+                            return $a + $b;
+                        });
+                    $array   = str_pad($row, $width);
 
-                    $content .= $style[0] . ' ' . $array . ' ' . $style[3] . PHP_EOL;
+                    $content .= $style[0].' '.$array.' '.$style[3].PHP_EOL;
                     $content .= $this->renderSeparator('cross-bottom');
                 } else {
                     $array = [];
@@ -199,13 +192,13 @@ class ConsoleTable
                         $width = $this->colWidth[$key];
                         // form https://github.com/symfony/console/blob/20c9821c8d1c2189f287dcee709b2f86353ea08f/Helper/Table.php#L467
                         // str_pad won't work properly with multi-byte strings, we need to fix the padding
-                        if (false !== $encoding = mb_detect_encoding((string) $val, null, true)) {
-                            $width += strlen((string) $val) - mb_strwidth((string) $val, $encoding);
+                        if (false !== $encoding = mb_detect_encoding((string)$val, null, true)) {
+                            $width += strlen((string)$val) - mb_strwidth((string)$val, $encoding);
                         }
-                        $array[] = ' ' . str_pad((string) $val, $width, ' ', $this->cellAlign);
+                        $array[] = ' '.str_pad((string)$val, $width, ' ', $this->cellAlign);
                     }
 
-                    $content .= $style[0] . implode(' ' . $style[2], $array) . ' ' . $style[3] . PHP_EOL;
+                    $content .= $style[0].implode(' '.$style[2], $array).' '.$style[3].PHP_EOL;
                 }
             }
         }
@@ -217,14 +210,14 @@ class ConsoleTable
 
     /**
      * 检查列数据的显示宽度.
-     * @param mixed $row 行数据
+     * @param  mixed  $row  行数据
      */
     protected function checkColWidth($row): void
     {
         if (is_array($row)) {
             foreach ($row as $key => $cell) {
-                $width = mb_strwidth((string) $cell);
-                if (! isset($this->colWidth[$key]) || $width > $this->colWidth[$key]) {
+                $width = mb_strwidth((string)$cell);
+                if (!isset($this->colWidth[$key]) || $width > $this->colWidth[$key]) {
                     $this->colWidth[$key] = $width;
                 }
             }
@@ -233,7 +226,7 @@ class ConsoleTable
 
     /**
      * 输出分隔行.
-     * @param string $pos 位置
+     * @param  string  $pos  位置
      */
     protected function renderSeparator(string $pos): string
     {
@@ -244,7 +237,7 @@ class ConsoleTable
             $array[] = str_repeat($style[1], $width + 2);
         }
 
-        return $style[0] . implode($style[2], $array) . $style[3] . PHP_EOL;
+        return $style[0].implode($style[2], $array).$style[3].PHP_EOL;
     }
 
     /**
@@ -252,17 +245,17 @@ class ConsoleTable
      */
     protected function renderHeader(): string
     {
-        $style = $this->getStyle('cell');
+        $style   = $this->getStyle('cell');
         $content = $this->renderSeparator('top');
 
         foreach ($this->header as $key => $header) {
-            $array[] = ' ' . str_pad($header, $this->colWidth[$key], $style[1], $this->headerAlign);
+            $array[] = ' '.str_pad($header, $this->colWidth[$key], $style[1], $this->headerAlign);
         }
 
-        if (! empty($array)) {
-            $content .= $style[0] . implode(' ' . $style[2], $array) . ' ' . $style[3] . PHP_EOL;
+        if (!empty($array)) {
+            $content .= $style[0].implode(' '.$style[2], $array).' '.$style[3].PHP_EOL;
 
-            if (! empty($this->rows)) {
+            if (!empty($this->rows)) {
                 $content .= $this->renderSeparator('middle');
             }
         }

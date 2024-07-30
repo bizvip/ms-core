@@ -10,10 +10,10 @@ declare(strict_types=1);
  * Please view the LICENSE file that was distributed with this source code,
  * For the full copyright and license information.
  * Thank you very much for using MineAdmin.
- *
  * @Author X.Mo<root@imoi.cn>
  * @Link   https://gitee.com/xmo/MineAdmin
  */
+
 namespace Mine\Translatable;
 
 use Mine\Translatable\Contracts\LocalesInterface;
@@ -26,12 +26,12 @@ class ConfigProvider
             'dependencies' => [
                 LocalesInterface::class => Locales::class,
             ],
-            'publish' => [
+            'publish'      => [
                 [
-                    'id' => 'config',
+                    'id'          => 'config',
                     'description' => 'The config for xmo/mine-translatable.',
-                    'source' => __DIR__ . '/../publish/translatable.php',
-                    'destination' => BASE_PATH . '/config/autoload/translatable.php',
+                    'source'      => __DIR__.'/../publish/translatable.php',
+                    'destination' => BASE_PATH.'/config/autoload/translatable.php',
                 ],
             ],
         ];

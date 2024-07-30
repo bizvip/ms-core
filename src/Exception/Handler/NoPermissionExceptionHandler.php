@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Exception\Handler;
 
 use Hyperf\Codec\Json;
@@ -28,18 +27,19 @@ class NoPermissionExceptionHandler extends ExceptionHandler
         $this->stopPropagation();
         $format = [
             'requestId' => RequestIdHolder::getId(),
-            'path' => container()->get(MineRequest::class)->getUri()->getPath(),
-            'success' => false,
-            'message' => $throwable->getMessage(),
-            'code' => MineCode::NO_PERMISSION,
+            'path'      => container()->get(MineRequest::class)->getUri()->getPath(),
+            'success'   => false,
+            'message'   => $throwable->getMessage(),
+            'code'      => MineCode::NO_PERMISSION,
         ];
+
         return $response->withHeader('Server', 'MineAdmin')
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader('Access-Control-Allow-Headers', 'accept-language,authorization,lang,uid,token,Keep-Alive,User-Agent,Cache-Control,Content-Type')
-            ->withAddedHeader('content-type', 'application/json; charset=utf-8')
-            ->withStatus(403)->withBody(new SwooleStream(Json::encode($format)));
+            ->withAddedHeader('content-type', 'application/json; charset=utf-8')->withStatus(403)
+            ->withBody(new SwooleStream(Json::encode($format)));
     }
 
     public function isValid(\Throwable $throwable): bool

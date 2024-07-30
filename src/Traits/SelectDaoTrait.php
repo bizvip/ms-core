@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Traits;
 
@@ -32,24 +24,21 @@ trait SelectDaoTrait
     public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
     {
         return $this->handleSearch(
-            $this->handleSelect($this->preQuery()),
-            $params
+            $this->handleSelect($this->preQuery()), $params
         )->paginate(perPage: $size, page: $page);
     }
 
     public function count(mixed $params = null): int
     {
         return $this->handleSearch(
-            $this->preQuery(),
-            $params
+            $this->preQuery(), $params
         )->count();
     }
 
     public function list(mixed $params = null): Collection
     {
         return $this->handleSearch(
-            $this->handleSelect($this->preQuery()),
-            $params
+            $this->handleSelect($this->preQuery()), $params
         )->get();
     }
 
@@ -80,7 +69,6 @@ trait SelectDaoTrait
      */
     protected function preQuery(): Builder
     {
-        return $this
-            ->getModelQuery();
+        return $this->getModelQuery();
     }
 }

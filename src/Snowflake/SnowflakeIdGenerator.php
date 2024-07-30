@@ -5,7 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-
 /**
  *                       __
  *   ____   __  __  ____/ /
@@ -35,9 +34,9 @@ class SnowflakeIdGenerator implements IdGeneratorInterface
 
     public function __construct()
     {
-        $configuration = new Configuration();
-        $config = ApplicationContext::getContainer()->get(ConfigInterface::class);
-        $beginSecond = $config->get('snowflake.begin_second', MetaGeneratorInterface::DEFAULT_BEGIN_SECOND);
+        $configuration       = new Configuration();
+        $config              = ApplicationContext::getContainer()->get(ConfigInterface::class);
+        $beginSecond         = $config->get('snowflake.begin_second', MetaGeneratorInterface::DEFAULT_BEGIN_SECOND);
         $this->metaGenerator = make(RedisMilliSecondMetaGenerator::class, [
             $configuration,
             $beginSecond,
@@ -51,25 +50,21 @@ class SnowflakeIdGenerator implements IdGeneratorInterface
     {
         $meta = $this->meta($meta);
 
-        $interval = $meta->getTimeInterval() << $this->config->getTimestampLeftShift();
+        $interval     = $meta->getTimeInterval() << $this->config->getTimestampLeftShift();
         $dataCenterId = $meta->getDataCenterId() << $this->config->getDataCenterIdShift();
-        $workerId = $meta->getWorkerId() << $this->config->getWorkerIdShift();
+        $workerId     = $meta->getWorkerId() << $this->config->getWorkerIdShift();
 
         return $interval | $dataCenterId | $workerId | $meta->getSequence();
     }
 
     public function degenerate(int $id): Meta
     {
-        $interval = $id >> $this->config->getTimestampLeftShift();
+        $interval     = $id >> $this->config->getTimestampLeftShift();
         $dataCenterId = $id >> $this->config->getDataCenterIdShift();
-        $workerId = $id >> $this->config->getWorkerIdShift();
+        $workerId     = $id >> $this->config->getWorkerIdShift();
 
         return new Meta(
-            $interval << $this->config->getDataCenterIdBits() ^ $dataCenterId,
-            $dataCenterId << $this->config->getWorkerIdBits() ^ $workerId,
-            $workerId << $this->config->getSequenceBits() ^ $id,
-            $interval + $this->metaGenerator->getBeginTimestamp(),
-            $this->metaGenerator->getBeginTimestamp()
+            $interval << $this->config->getDataCenterIdBits() ^ $dataCenterId, $dataCenterId << $this->config->getWorkerIdBits() ^ $workerId, $workerId << $this->config->getSequenceBits() ^ $id, $interval + $this->metaGenerator->getBeginTimestamp(), $this->metaGenerator->getBeginTimestamp()
         );
     }
 

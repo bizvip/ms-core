@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
@@ -41,7 +40,7 @@ class UpdateProjectCommand extends MineCommand
     {
         parent::__construct();
         $this->migrator = $migrator;
-        $this->seed = $seed;
+        $this->seed     = $seed;
     }
 
     public function configure()
@@ -56,13 +55,13 @@ class UpdateProjectCommand extends MineCommand
      */
     public function handle()
     {
-        $modules = make(Mine::class)->getModuleInfo();
-        $basePath = BASE_PATH . '/app/';
+        $modules  = make(Mine::class)->getModuleInfo();
+        $basePath = BASE_PATH.'/app/';
         $this->migrator->setConnection('default');
 
         foreach ($modules as $name => $module) {
-            $seedPath = $basePath . $name . '/Database/Seeders/Update';
-            $migratePath = $basePath . $name . '/Database/Migrations/Update';
+            $seedPath    = $basePath.$name.'/Database/Seeders/Update';
+            $migratePath = $basePath.$name.'/Database/Migrations/Update';
 
             if (is_dir($migratePath)) {
                 $this->migrator->run([$migratePath]);

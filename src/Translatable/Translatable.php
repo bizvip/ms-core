@@ -10,10 +10,10 @@ declare(strict_types=1);
  * Please view the LICENSE file that was distributed with this source code,
  * For the full copyright and license information.
  * Thank you very much for using MineAdmin.
- *
  * @Author X.Mo<root@imoi.cn>
  * @Link   https://gitee.com/xmo/MineAdmin
  */
+
 namespace Mine\Translatable;
 
 use Hyperf\Database\Model\Collection;
@@ -32,7 +32,6 @@ use Mine\Translatable\Traits\Scopes;
  * @property string $translationForeignKey
  * @property string $localeKey
  * @property bool $useTranslationFallback
- *
  * @mixin Model
  */
 trait Translatable
@@ -85,10 +84,7 @@ trait Translatable
     {
         $attributes = parent::attributesToArray();
 
-        if (
-            (! $this->relationLoaded('translations') && ! $this->toArrayAlwaysLoadsTranslations() && is_null(self::$autoloadTranslations))
-            || self::$autoloadTranslations === false
-        ) {
+        if ((!$this->relationLoaded('translations') && !$this->toArrayAlwaysLoadsTranslations() && is_null(self::$autoloadTranslations)) || self::$autoloadTranslations === false) {
             return $attributes;
         }
 
@@ -106,14 +102,14 @@ trait Translatable
     }
 
     /**
-     * @param null|array|string $locales The locales to be deleted
+     * @param  null|array|string  $locales  The locales to be deleted
      */
     public function deleteTranslations($locales = null): void
     {
         if ($locales === null) {
             $translations = $this->translations()->get();
         } else {
-            $locales = (array) $locales;
+            $locales      = (array)$locales;
             $translations = $this->translations()->whereIn($this->getLocaleKey(), $locales)->get();
         }
 
@@ -127,19 +123,14 @@ trait Translatable
     public function fill(array $attributes)
     {
         foreach ($attributes as $key => $values) {
-            if (
-                $this->getLocalesHelper()->has($key)
-                && is_array($values)
-            ) {
+            if ($this->getLocalesHelper()->has($key) && is_array($values)) {
                 $this->getTranslationOrNew($key)->fill($values);
                 unset($attributes[$key]);
             } else {
                 [$attribute, $locale] = $this->getAttributeAndLocale($key);
 
-                if (
-                    $this->getLocalesHelper()->has($locale)
-                    && $this->isTranslationAttribute($attribute)
-                ) {
+                if ($this->getLocalesHelper()
+                        ->has($locale) && $this->isTranslationAttribute($attribute)) {
                     $this->getTranslationOrNew($locale)->fill([$attribute => $values]);
                     unset($attributes[$key]);
                 }
@@ -201,9 +192,9 @@ trait Translatable
     public function getTranslation(?string $locale = null, bool $withFallback = null): ?Model
     {
         $configFallbackLocale = $this->getFallbackLocale();
-        $locale = $locale ?: $this->locale();
-        $withFallback = $withFallback === null ? $this->useFallback() : $withFallback;
-        $fallbackLocale = $this->getFallbackLocale($locale);
+        $locale               = $locale ?: $this->locale();
+        $withFallback         = $withFallback === null ? $this->useFallback() : $withFallback;
+        $fallbackLocale       = $this->getFallbackLocale($locale);
 
         if ($translation = $this->getTranslationByLocaleKey($locale)) {
             return $translation;
@@ -214,11 +205,7 @@ trait Translatable
                 return $translation;
             }
 
-            if (
-                is_string($configFallbackLocale)
-                && $fallbackLocale !== $configFallbackLocale
-                && $translation = $this->getTranslationByLocaleKey($configFallbackLocale)
-            ) {
+            if (is_string($configFallbackLocale) && $fallbackLocale !== $configFallbackLocale && $translation = $this->getTranslationByLocaleKey($configFallbackLocale)) {
                 return $translation;
             }
         }
@@ -227,11 +214,7 @@ trait Translatable
             $configuredLocales = $this->getLocalesHelper()->all();
 
             foreach ($configuredLocales as $configuredLocale) {
-                if (
-                    $locale !== $configuredLocale
-                    && $fallbackLocale !== $configuredLocale
-                    && $translation = $this->getTranslationByLocaleKey($configuredLocale)
-                ) {
+                if ($locale !== $configuredLocale && $fallbackLocale !== $configuredLocale && $translation = $this->getTranslationByLocaleKey($configuredLocale)) {
                     return $translation;
                 }
             }
@@ -348,13 +331,13 @@ trait Translatable
     {
         $saved = true;
 
-        if (! $this->relationLoaded('translations')) {
+        if (!$this->relationLoaded('translations')) {
             return $saved;
         }
 
         foreach ($this->translations as $translation) {
             if ($saved && $this->isTranslationDirty($translation)) {
-                if (! empty($connectionName = $this->getConnectionName())) {
+                if (!empty($connectionName = $this->getConnectionName())) {
                     $translation->setConnection($connectionName);
                 }
 
@@ -422,13 +405,7 @@ trait Translatable
     {
         $translation = $this->getTranslation($locale);
 
-        if (
-            (
-                ! $translation instanceof Model
-                || $this->isEmptyTranslatableAttribute($attribute, $translation->{$attribute})
-            )
-            && $this->usePropertyFallback()
-        ) {
+        if ((!$translation instanceof Model || $this->isEmptyTranslatableAttribute($attribute, $translation->{$attribute})) && $this->usePropertyFallback()) {
             $translation = $this->getTranslation($this->getFallbackLocale(), false);
         }
 
@@ -441,11 +418,7 @@ trait Translatable
 
     private function getTranslationByLocaleKey(string $key): ?Model
     {
-        if (
-            $this->relationLoaded('translation')
-            && $this->translation
-            && $this->translation->getAttribute($this->getLocaleKey()) == $key
-        ) {
+        if ($this->relationLoaded('translation') && $this->translation && $this->translation->getAttribute($this->getLocaleKey()) == $key) {
             return $this->translation;
         }
 
@@ -463,7 +436,7 @@ trait Translatable
             return $this->useTranslationFallback;
         }
 
-        return (bool) config('translatable.use_fallback');
+        return (bool)config('translatable.use_fallback');
     }
 
     private function usePropertyFallback(): bool

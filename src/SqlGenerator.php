@@ -7,14 +7,6 @@
 /** @noinspection PhpExpressionResultUnusedInspection */
 /* @noinspection PhpSignatureMismatchDuringInheritanceInspection */
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -53,12 +45,12 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract, int $adminId): SqlGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->adminId = $adminId;
-        $this->filesystem = make(Filesystem::class);
-        if (empty($tablesContract->getModuleName())
-            || empty($tablesContract->getMenuName())) {
+        $this->adminId        = $adminId;
+        $this->filesystem     = make(Filesystem::class);
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
+
         return $this->placeholderReplace();
     }
 
@@ -68,8 +60,8 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $path = BASE_PATH . "/runtime/generate/{$this->getShortBusinessName()}Menu.sql";
-        $this->filesystem->makeDirectory(BASE_PATH . '/runtime/generate/', 0755, true, true);
+        $path = BASE_PATH."/runtime/generate/{$this->getShortBusinessName()}Menu.sql";
+        $this->filesystem->makeDirectory(BASE_PATH.'/runtime/generate/', 0755, true, true);
         $this->filesystem->put($path, $this->placeholderReplace()->getCodeContent());
 
         if ($this->tablesContract->build_menu === self::YES) {
@@ -92,11 +84,11 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     public function getShortBusinessName(): string
     {
-        return Str::camel(str_replace(
-            Str::lower($this->tablesContract->getModuleName()),
-            '',
-            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->table_name)
-        ));
+        return Str::camel(
+            str_replace(
+                Str::lower($this->tablesContract->getModuleName()), '', str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->table_name)
+            )
+        );
     }
 
     /**
@@ -120,7 +112,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . '/Sql/main.stub';
+        return $this->getStubDir().'/Sql/main.stub';
     }
 
     /**
@@ -137,11 +129,11 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): SqlGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -185,7 +177,8 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
 
     protected function getLoadMenu(): string
     {
-        $menus = $this->tablesContract->getGenerateMenus() ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
+        $menus       = $this->tablesContract->getGenerateMenus()
+            ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
         $ignoreMenus = ['realDelete', 'recovery', 'changeStatus', 'numberOperation'];
 
         foreach ($ignoreMenus as $menu) {
@@ -194,12 +187,13 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
             }
         }
 
-        $sql = '';
-        $path = $this->getStubDir() . '/Sql/';
+        $sql  = '';
+        $path = $this->getStubDir().'/Sql/';
         foreach ($menus as $menu) {
-            $content = $this->filesystem->sharedGet($path . $menu . '.stub');
-            $sql .= $content;
+            $content = $this->filesystem->sharedGet($path.$menu.'.stub');
+            $sql     .= $content;
         }
+
         return $sql;
     }
 
@@ -216,7 +210,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTableName(): string
     {
-        return env('DB_PREFIX', '') . 'system_menu';
+        return env('DB_PREFIX', '').'system_menu';
     }
 
     /**
@@ -226,11 +220,12 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
     {
         if ($this->tablesContract->getBelongMenuId() !== 0) {
             $model = $this->tablesContract->getSystemMenuFind(function (Builder $query) {
-                return $query->where('id', $this->tablesContract->getBelongMenuId())
-                    ->first();
+                return $query->where('id', $this->tablesContract->getBelongMenuId())->first();
             });
-            return $model->level . ',' . $model->id;
+
+            return $model->level.','.$model->id;
         }
+
         return '0';
     }
 
@@ -239,7 +234,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getCode(): string
     {
-        return Str::lower($this->tablesContract->getModuleName()) . ':' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()).':'.$this->getShortBusinessName();
     }
 
     /**
@@ -247,7 +242,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getRoute(): string
     {
-        return Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()).'/'.$this->getShortBusinessName();
     }
 
     /**
@@ -255,7 +250,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getVueTemplate(): string
     {
-        return Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName() . '/index';
+        return Str::lower($this->tablesContract->getModuleName()).'/'.$this->getShortBusinessName().'/index';
     }
 
     /**
@@ -263,6 +258,6 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getAdminId(): string
     {
-        return (string) $this->adminId;
+        return (string)$this->adminId;
     }
 }

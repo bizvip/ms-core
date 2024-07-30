@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
@@ -50,17 +49,10 @@ class ModuleCommand extends MineCommand
         $this->setHelp('run "php bin/hyperf.php mine:module --name cms --option install"');
         $this->setDescription('install command of module MineAdmin');
         $this->addOption(
-            'option',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'input "--option list" show module list, "-option install" install module or "-option uninstall" uninstall module',
-            'list'
+            'option', null, InputOption::VALUE_OPTIONAL, 'input "--option list" show module list, "-option install" install module or "-option uninstall" uninstall module', 'list'
         );
         $this->addOption(
-            'name',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'input module name or "list" command show module list',
+            'name', null, InputOption::VALUE_OPTIONAL, 'input module name or "list" command show module list',
         );
     }
 
@@ -69,8 +61,8 @@ class ModuleCommand extends MineCommand
      */
     public function handle()
     {
-        $name = $this->input->getOption('name');
-        $option = $this->input->getOption('option');
+        $name    = $this->input->getOption('name');
+        $option  = $this->input->getOption('option');
         $modules = $this->mine->getModuleInfo();
 
         // 模块名不能叫list，list是展示模块列表
@@ -92,10 +84,10 @@ class ModuleCommand extends MineCommand
         }
 
         $service = make(ModuleServiceInterface::class);
-        $name = ucfirst($name);
+        $name    = ucfirst($name);
 
         // other module
-        if (! empty($name) && isset($modules[$name])) {
+        if (!empty($name) && isset($modules[$name])) {
             if (empty($option)) {
                 $this->line($this->getRedText('Please input the operation command for the module: -o install or -o uninstall'));
                 exit;
@@ -106,22 +98,20 @@ class ModuleCommand extends MineCommand
                 $this->call('mine:seeder-run', ['name' => $name, '--force' => 'true']);
                 $this->line(
                     sprintf(
-                        ' "%s" module install complete, Please run it again "%s" command! ',
-                        $this->getGreenText($name),
-                        $this->getGreenText('php bin/hyperf.php start')
+                        ' "%s" module install complete, Please run it again "%s" command! ', $this->getGreenText($name), $this->getGreenText('php bin/hyperf.php start')
                     )
                 );
             }
 
             if ($option === 'uninstall') {
-                $input = ucfirst($name) . ' uninstall';
+                $input  = ucfirst($name).' uninstall';
                 $answer = $this->ask(sprintf('You are now ready to unload the module for safety. Please input: %s', $this->getRedText($input)));
                 if ($input !== $answer) {
                     $this->line('Input error');
                     exit;
                 }
 
-                if (! $this->confirmToProceed()) {
+                if (!$this->confirmToProceed()) {
                     $this->line('A delete is already being performed');
                     exit;
                 }
@@ -131,7 +121,7 @@ class ModuleCommand extends MineCommand
                     $this->migrator->setOutput($this->output);
                     $path = $this->getUninstallPath($name);
                     $this->migrator->rollback([$path]);
-                    is_dir($path . '/Update') && $this->migrator->rollback([$path . '/Update']);
+                    is_dir($path.'/Update') && $this->migrator->rollback([$path.'/Update']);
                 }
 
                 $service->deleteModule($name);
@@ -145,6 +135,6 @@ class ModuleCommand extends MineCommand
 
     protected function getUninstallPath(string $moduleName): string
     {
-        return BASE_PATH . '/app/' . $moduleName . '/Database/Migrations';
+        return BASE_PATH.'/app/'.$moduleName.'/Database/Migrations';
     }
 }

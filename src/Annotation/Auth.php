@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -18,7 +17,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class Auth extends AbstractAnnotation
 {
     /**
-     * @param string $scene 场景名
+     * @param  string  $scene  场景名
      */
-    public function __construct(public string $scene = 'default') {}
+    public function __construct(public string $scene = 'default') { }
 }

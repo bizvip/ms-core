@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Context\Context;
@@ -42,17 +41,14 @@ class UpdateAspect extends AbstractAspect
     {
         $instance = $proceedingJoinPoint->getInstance();
         // 更新更改人
-        if ($instance instanceof MineModel
-            && in_array('updated_by', $instance->getFillable())
-            && config('mineadmin.data_scope_enabled')
-            && Context::has(ServerRequestInterface::class)
-            && container()->get(MineRequest::class)->getHeaderLine('authorization')
-        ) {
+        if ($instance instanceof MineModel && in_array('updated_by', $instance->getFillable()) && config('mineadmin.data_scope_enabled') && Context::has(ServerRequestInterface::class) && container()
+                ->get(MineRequest::class)->getHeaderLine('authorization')) {
             try {
                 $instance->updated_by = user()->getId();
             } catch (\Throwable $e) {
             }
         }
+
         return $proceedingJoinPoint->process();
     }
 }

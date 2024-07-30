@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -21,5 +20,5 @@ class OperationLog extends AbstractAnnotation
      * 菜单名称.
      * @var null|string
      */
-    public function __construct(public ?string $menuName = null) {}
+    public function __construct(public ?string $menuName = null) { }
 }

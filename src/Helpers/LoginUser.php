@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Helper;
 
@@ -36,7 +28,7 @@ class LoginUser
 
     /**
      * LoginUser constructor.
-     * @param string $scene 场景，默认为default
+     * @param  string  $scene  场景，默认为default
      */
     public function __construct(string $scene = 'default')
     {
@@ -101,7 +93,8 @@ class LoginUser
      */
     public function getUserRole(array $columns = ['id', 'name', 'code']): array
     {
-        return container()->get(UserServiceInterface::class)->read($this->getId(), ['id'])->roles()->get($columns)->toArray();
+        return container()->get(UserServiceInterface::class)->read($this->getId(), ['id'])->roles()
+            ->get($columns)->toArray();
     }
 
     /**
@@ -109,7 +102,8 @@ class LoginUser
      */
     public function getUserPost(array $columns = ['id', 'name', 'code']): array
     {
-        return container()->get(UserServiceInterface::class)->read($this->getId(), ['id'])->posts()->get($columns)->toArray();
+        return container()->get(UserServiceInterface::class)->read($this->getId(), ['id'])->posts()
+            ->get($columns)->toArray();
     }
 
     /**
@@ -117,7 +111,8 @@ class LoginUser
      */
     public function getUserDept(array $columns = ['id', 'name']): array
     {
-        return container()->get(UserServiceInterface::class)->read($this->getId(), ['id'])->depts()->get($columns)->toArray();
+        return container()->get(UserServiceInterface::class)->read($this->getId(), ['id'])->depts()
+            ->get($columns)->toArray();
     }
 
     /**
@@ -144,9 +139,11 @@ class LoginUser
     public function isAdminRole(): bool
     {
         $container = container();
+
         return in_array(
-            $container->get(RoleServiceInterface::class)->read((int) env('ADMIN_ROLE'), ['code'])->code,
-            $container->get(UserServiceInterface::class)->getInfo()['roles']
+            $container->get(RoleServiceInterface::class)
+                ->read((int)env('ADMIN_ROLE'), ['code'])->code, $container->get(UserServiceInterface::class)
+            ->getInfo()['roles']
         );
     }
 

@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Helper;
 
@@ -34,7 +26,7 @@ class SensitiveWordFilter
      */
     public function loadDictData(?\Closure $closure = null): self
     {
-        $key = config('cache.default.prefix') . ':sensitiveWords';
+        $key   = config('cache.default.prefix').':sensitiveWords';
         $redis = redis();
 
         if ($redis->exists($key)) {
@@ -60,6 +52,7 @@ class SensitiveWordFilter
     public function setDict(array $dict): self
     {
         $this->dict = $dict;
+
         return $this;
     }
 
@@ -76,7 +69,7 @@ class SensitiveWordFilter
         $wordArr = $this->splitStr($words);
         $curNode = &$this->dict;
         foreach ($wordArr as $char) {
-            if (! isset($curNode)) {
+            if (!isset($curNode)) {
                 $curNode[$char] = [];
             }
             $curNode = &$curNode[$char];
@@ -87,36 +80,34 @@ class SensitiveWordFilter
 
     /**
      * 过滤文本.
-     *
-     * @param string $str 原始文本
-     * @param string $replace 敏感字替换字符
-     * @param int $skipDistance 严格程度: 检测时允许跳过的间隔
-     *
+     * @param  string  $str        原始文本
+     * @param  string  $replace    敏感字替换字符
+     * @param  int  $skipDistance  严格程度: 检测时允许跳过的间隔
      * @return string 返回过滤后的文本
      */
     public function filter(string $str, string $replace = '*', int $skipDistance = 0): string
     {
         $maxDistance = max($skipDistance, 0) + 1;
-        $strArr = $this->splitStr($str);
-        $length = count($strArr);
+        $strArr      = $this->splitStr($str);
+        $length      = count($strArr);
         for ($i = 0; $i < $length; ++$i) {
             $char = $strArr[$i];
 
-            if (! isset($this->dict[$char])) {
+            if (!isset($this->dict[$char])) {
                 continue;
             }
 
-            $curNode = &$this->dict[$char];
-            $dist = 0;
+            $curNode    = &$this->dict[$char];
+            $dist       = 0;
             $matchIndex = [$i];
             for ($j = $i + 1; $j < $length && $dist < $maxDistance; ++$j) {
-                if (! isset($curNode[$strArr[$j]])) {
+                if (!isset($curNode[$strArr[$j]])) {
                     ++$dist;
                     continue;
                 }
 
                 $matchIndex[] = $j;
-                $curNode = &$curNode[$strArr[$j]];
+                $curNode      = &$curNode[$strArr[$j]];
             }
 
             // 匹配
@@ -127,6 +118,7 @@ class SensitiveWordFilter
                 $i = max($matchIndex);
             }
         }
+
         return implode('', $strArr);
     }
 
@@ -135,13 +127,14 @@ class SensitiveWordFilter
      */
     public function checkText(array|string $strArr): bool
     {
-        $strArr = is_array($strArr) ? $strArr : $this->splitStr($strArr);
+        $strArr  = is_array($strArr) ? $strArr : $this->splitStr($strArr);
         $curNode = &$this->dict;
         foreach ($strArr as $char) {
-            if (! isset($curNode[$char])) {
+            if (!isset($curNode[$char])) {
                 return false;
             }
         }
+
         return $curNode['end'] ?? false;
     }
 

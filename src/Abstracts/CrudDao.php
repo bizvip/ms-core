@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Abstracts;
 
@@ -31,7 +23,8 @@ use Mine\Traits\UpdateDaoTrait;
  * @implements PageDaoContract<T>
  * @implements SaveOrUpdateDaoContract<T>
  */
-abstract class CrudDao extends BaseDao implements PageDaoContract, UpdateDaoContract, SaveOrUpdateDaoContract, DeleteDaoContract
+abstract class CrudDao extends BaseDao implements PageDaoContract, UpdateDaoContract,
+                                                  SaveOrUpdateDaoContract, DeleteDaoContract
 {
     use UpdateDaoTrait;
     use SaveOrUpdateDaoTrait;

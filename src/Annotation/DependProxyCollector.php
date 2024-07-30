@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Annotation;
 
@@ -37,12 +29,13 @@ class DependProxyCollector extends MetadataCollector
         }
         $dependencies = [];
         foreach (self::$container as $collector) {
-            $targets = $collector->values;
+            $targets    = $collector->values;
             $definition = $collector->provider;
             foreach ($targets as $target) {
                 $dependencies[$target] = $definition;
             }
         }
+
         return $dependencies;
     }
 
@@ -52,7 +45,7 @@ class DependProxyCollector extends MetadataCollector
             return;
         }
         foreach (self::$container as $collector) {
-            $targets = $collector->values;
+            $targets    = $collector->values;
             $definition = $collector->provider;
             foreach ($targets as $target) {
                 $closure($target, $definition);

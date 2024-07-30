@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab;
 
 use Hyperf\Contract\StdoutLoggerInterface;
@@ -56,8 +55,8 @@ class MineCrontabProcess extends AbstractProcess
     {
         parent::__construct($container);
         $this->scheduler = $container->get(MineCrontabScheduler::class);
-        $this->strategy = $container->get(MineCrontabStrategy::class);
-        $this->logger = $container->get(StdoutLoggerInterface::class);
+        $this->strategy  = $container->get(MineCrontabStrategy::class);
+        $this->logger    = $container->get(StdoutLoggerInterface::class);
     }
 
     public function bind($server): void
@@ -68,7 +67,7 @@ class MineCrontabProcess extends AbstractProcess
 
     /**
      * 是否自启进程.
-     * @param Coroutine\Server|Server $server
+     * @param  Coroutine\Server|Server  $server
      */
     public function isEnable($server): bool
     {
@@ -85,7 +84,7 @@ class MineCrontabProcess extends AbstractProcess
         while (ProcessManager::isRunning()) {
             $this->sleep();
             $crontabs = $this->scheduler->schedule();
-            while (! $crontabs->isEmpty()) {
+            while (!$crontabs->isEmpty()) {
                 /**
                  * @var MineCrontab $crontab
                  */
@@ -98,8 +97,8 @@ class MineCrontabProcess extends AbstractProcess
     private function sleep()
     {
         $current = date('s', time());
-        $sleep = 60 - $current;
-        $this->logger->debug('MineAdmin Crontab dispatcher sleep ' . $sleep . 's.');
+        $sleep   = 60 - $current;
+        $this->logger->debug('MineAdmin Crontab dispatcher sleep '.$sleep.'s.');
         $sleep > 0 && Coroutine::sleep($sleep);
     }
 }

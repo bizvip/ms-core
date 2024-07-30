@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Traits;
 
 use Hyperf\Contract\LengthAwarePaginatorInterface;
@@ -45,11 +44,9 @@ trait MapperTrait
     public function getPageList(?array $params, bool $isScope = true, string $pageName = 'page'): array
     {
         $paginate = $this->listQuerySetting($params, $isScope)->paginate(
-            (int) ($params['pageSize'] ?? $this->model::PAGE_SIZE),
-            ['*'],
-            $pageName,
-            (int) ($params[$pageName] ?? 1)
+            (int)($params['pageSize'] ?? $this->model::PAGE_SIZE), ['*'], $pageName, (int)($params[$pageName] ?? 1)
         );
+
         return $this->setPaginate($paginate, $params);
     }
 
@@ -57,30 +54,32 @@ trait MapperTrait
      * 远程通用列表查询
      * 主要服务于远程下拉菜单使用，其功能也支持单选、复选、级联选择等组件的使用，但下拉菜单组件适配最好。
      * 接口支持分页、不分页、模型关联、条件过滤、排序、分组，数据权限等一系列功能.
-     *
      * 声明提示：该接口虽然方便快捷，但由于参数是前端传入，后端对接口仅在控制器做了登录检查，有一定的安全性影响，需谨慎使用。
      */
     public function getRemoteList(?array $params): array
     {
-        if (! config('mineadmin.remote_api_enabled')) {
+        if (!config('mineadmin.remote_api_enabled')) {
             throw new MineException('系统未启用【远程通用列表查询】', 500);
         }
         /* @var $model MineModel */
         $model = $this->getModel();
         $query = null;
-        if (! empty($params['relations']) && is_array($params['relations'])) {
+        if (!empty($params['relations']) && is_array($params['relations'])) {
             foreach ($params['relations'] as $item) {
                 $this->dynamicRelations($model, $item);
                 /* @var $query Builder */
-                $query = $model->with([$item['name'] => function ($query) use ($item) {
-                    $paramsWhere = [];
-                    if (! empty($item['filter']) && is_array($item['filter'])) {
-                        foreach ($item['filter'] as $name => $where) {
-                            $paramsWhere[$name] = $where;
+                $query = $model->with([
+                    $item['name'] => function ($query) use ($item) {
+                        $paramsWhere = [];
+                        if (!empty($item['filter']) && is_array($item['filter'])) {
+                            foreach ($item['filter'] as $name => $where) {
+                                $paramsWhere[$name] = $where;
+                            }
                         }
-                    }
-                    return $this->emptyBuildQuery($paramsWhere, $query);
-                }]);
+
+                        return $this->emptyBuildQuery($paramsWhere, $query);
+                    },
+                ]);
             }
         }
 
@@ -90,20 +89,20 @@ trait MapperTrait
         }
 
         $paramsWhere = [];
-        if (! empty($params['filter']) && is_array($params['filter'])) {
+        if (!empty($params['filter']) && is_array($params['filter'])) {
             foreach ($params['filter'] as $name => $where) {
                 $paramsWhere[$name] = $where;
             }
         }
         $query = $this->emptyBuildQuery($paramsWhere, $query);
 
-        if (! empty($params['sort']) && is_array($params['sort'])) {
+        if (!empty($params['sort']) && is_array($params['sort'])) {
             foreach ($params['sort'] as $name => $sortType) {
                 $query->orderBy($name, $sortType);
             }
         }
 
-        if (! empty($params['group']) && is_array($params['group'])) {
+        if (!empty($params['group']) && is_array($params['group'])) {
             foreach ($params['group'] as $name) {
                 $query->groupBy($name);
             }
@@ -116,6 +115,7 @@ trait MapperTrait
         if (isset($params['openPage']) && $params['openPage']) {
             $pageName = $params['pageName'] ?? 'page';
             $pageSize = $params['pageSize'] ?? $this->model::PAGE_SIZE;
+
             return $this->setPaginate($query->paginate($pageSize, $params['select'] ?? ['*'], $pageName, $params[$pageName] ?? 1), $params);
         }
 
@@ -130,11 +130,12 @@ trait MapperTrait
     public function setPaginate(LengthAwarePaginatorInterface $paginate, array $params = []): array
     {
         return [
-            'items' => method_exists($this, 'handlePageItems') ? $this->handlePageItems($paginate->items(), $params) : $paginate->items(),
+            'items'    => method_exists($this, 'handlePageItems')
+                ? $this->handlePageItems($paginate->items(), $params) : $paginate->items(),
             'pageInfo' => [
-                'total' => $paginate->total(),
+                'total'       => $paginate->total(),
                 'currentPage' => $paginate->currentPage(),
-                'totalPage' => $paginate->lastPage(),
+                'totalPage'   => $paginate->lastPage(),
             ],
         ];
     }
@@ -142,16 +143,12 @@ trait MapperTrait
     /**
      * 获取树列表.
      */
-    public function getTreeList(
-        ?array $params = null,
-        bool $isScope = true,
-        string $id = 'id',
-        string $parentField = 'parent_id',
-        string $children = 'children'
-    ): array {
-        $params['_mineadmin_tree'] = true;
+    public function getTreeList(?array $params = null, bool $isScope = true, string $id = 'id', string $parentField = 'parent_id', string $children = 'children'): array
+    {
+        $params['_mineadmin_tree']     = true;
         $params['_mineadmin_tree_pid'] = $parentField;
-        $data = $this->listQuerySetting($params, $isScope)->get();
+        $data                          = $this->listQuerySetting($params, $isScope)->get();
+
         return $data->toTree([], $data[0]->{$parentField} ?? 0, $id, $parentField, $children);
     }
 
@@ -160,7 +157,8 @@ trait MapperTrait
      */
     public function listQuerySetting(?array $params, bool $isScope): Builder
     {
-        $query = (($params['recycle'] ?? false) === true) ? $this->model::onlyTrashed() : $this->model::query();
+        $query = (($params['recycle'] ?? false) === true) ? $this->model::onlyTrashed()
+            : $this->model::query();
 
         if ($params['select'] ?? false) {
             $query->select($this->filterQueryAttributes($params['select']));
@@ -212,7 +210,7 @@ trait MapperTrait
         $model = new $this->model();
         $attrs = $model->getFillable();
         foreach ($fields as $key => $field) {
-            if (! in_array(trim($field), $attrs) && mb_strpos(str_replace('AS', 'as', $field), 'as') === false) {
+            if (!in_array(trim($field), $attrs) && mb_strpos(str_replace('AS', 'as', $field), 'as') === false) {
                 unset($fields[$key]);
             } else {
                 $fields[$key] = trim($field);
@@ -222,6 +220,7 @@ trait MapperTrait
             unset($fields[array_search($model->getKeyName(), $fields)]);
         }
         $model = null;
+
         return (count($fields) < 1) ? ['*'] : $fields;
     }
 
@@ -233,7 +232,7 @@ trait MapperTrait
         $model = new $this->model();
         $attrs = $model->getFillable();
         foreach ($data as $name => $val) {
-            if (! in_array($name, $attrs)) {
+            if (!in_array($name, $attrs)) {
                 unset($data[$name]);
             }
         }
@@ -250,6 +249,7 @@ trait MapperTrait
     {
         $this->filterExecuteAttributes($data, $this->getModel()->incrementing);
         $model = $this->model::create($data);
+
         return $model->{$model->getKeyName()};
     }
 
@@ -304,6 +304,7 @@ trait MapperTrait
     public function delete(array $ids): bool
     {
         $this->model::destroy($ids);
+
         return true;
     }
 
@@ -313,6 +314,7 @@ trait MapperTrait
     public function update(mixed $id, array $data): bool
     {
         $this->filterExecuteAttributes($data, true);
+
         return $this->model::find($id)->update($data) > 0;
     }
 
@@ -322,6 +324,7 @@ trait MapperTrait
     public function updateByCondition(array $condition, array $data): bool
     {
         $this->filterExecuteAttributes($data, true);
+
         return $this->model::query()->where($condition)->update($data) > 0;
     }
 
@@ -334,6 +337,7 @@ trait MapperTrait
             $model = $this->model::withTrashed()->find($id);
             $model && $model->forceDelete();
         }
+
         return true;
     }
 
@@ -343,6 +347,7 @@ trait MapperTrait
     public function recovery(array $ids): bool
     {
         $this->model::withTrashed()->whereIn((new $this->model())->getKeyName(), $ids)->restore();
+
         return true;
     }
 
@@ -351,7 +356,9 @@ trait MapperTrait
      */
     public function disable(array $ids, string $field = 'status'): bool
     {
-        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)->update([$field => $this->model::DISABLE]);
+        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)
+            ->update([$field => $this->model::DISABLE]);
+
         return true;
     }
 
@@ -360,7 +367,9 @@ trait MapperTrait
      */
     public function enable(array $ids, string $field = 'status'): bool
     {
-        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)->update([$field => $this->model::ENABLE]);
+        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)
+            ->update([$field => $this->model::ENABLE]);
+
         return true;
     }
 
@@ -384,7 +393,7 @@ trait MapperTrait
 
     /**
      * 闭包通用查询设置.
-     * @param null|\Closure $closure 传入的闭包查询
+     * @param  null|\Closure  $closure  传入的闭包查询
      */
     public function settingClosure(?\Closure $closure = null): Builder
     {
@@ -397,7 +406,7 @@ trait MapperTrait
 
     /**
      * 闭包通用方式查询一条数据.
-     * @param array|string[] $column
+     * @param  array|string[]  $column
      * @return null|Builder|Model
      */
     public function one(?\Closure $closure = null, array $column = ['*'])
@@ -407,7 +416,7 @@ trait MapperTrait
 
     /**
      * 闭包通用方式查询数据集合.
-     * @param array|string[] $column
+     * @param  array|string[]  $column
      */
     public function get(?\Closure $closure = null, array $column = ['*']): array
     {
@@ -450,11 +459,11 @@ trait MapperTrait
 
     /**
      * 搜索参数注入.
-     * @param mixed $params
+     * @param  mixed  $params
      */
     public function paramsEmptyQuery($params, array $where = [], mixed $query = null): mixed
     {
-        if (! $query) {
+        if (!$query) {
             $query = $this->model::query();
         }
 
@@ -484,9 +493,9 @@ trait MapperTrait
 
             /**
              * 标量类型获取.
-             * @param mixed $field
-             * @param mixed $operator
-             * @param mixed $value
+             * @param  mixed  $field
+             * @param  mixed  $operator
+             * @param  mixed  $value
              */
             public function scalarOptionHandle($field, $operator, $value): array
             {
@@ -495,9 +504,9 @@ trait MapperTrait
 
             /**
              * 数组类型处理.
-             * @param mixed $field
-             * @param mixed $operator
-             * @param mixed $value
+             * @param  mixed  $field
+             * @param  mixed  $operator
+             * @param  mixed  $value
              */
             public function arrayOptionHandle($field, $operator, $value): array
             {
@@ -509,6 +518,7 @@ trait MapperTrait
                 return $this->paramsWhere;
             }
         };
+
         return $this->emptyBuildQuery($object->getParamsWhere(), $query);
     }
 
@@ -522,7 +532,7 @@ trait MapperTrait
      */
     public function emptyBuildQuery(array $paramsWhere = [], mixed $query = null): mixed
     {
-        if (! $query) {
+        if (!$query) {
             $query = $this->model::query();
         }
         $object = new class($paramsWhere, $query) {
@@ -559,13 +569,14 @@ trait MapperTrait
                 switch ($operator) {
                     case 'like':
                     case 'like%':
-                        if (! is_scalar($value)) {
+                        if (!is_scalar($value)) {
                             throw new NormalStatusException("{$field} type error:The expectation is a string");
                         }
                         $likeMap = ['like' => '%#{val}%', 'like%' => '#{val}%'];
-                        $value = str_replace('#{val}', $value, $likeMap[$operator]);
+                        $value   = str_replace('#{val}', $value, $likeMap[$operator]);
                         break;
                 }
+
                 return [$operator, $value];
             }
 
@@ -574,12 +585,13 @@ trait MapperTrait
                 return $this->query;
             }
         };
+
         return $object->getQuery();
     }
 
     /**
      * 动态关联模型.
-     * @param $config ['name', 'model', 'type', 'localKey', 'foreignKey', 'middleTable', 'as', 'where', 'whereIn' ]
+     * @param $config  ['name', 'model', 'type', 'localKey', 'foreignKey', 'middleTable', 'as', 'where', 'whereIn' ]
      */
     public function dynamicRelations(MineModel $model, &$config): void
     {
@@ -596,20 +608,17 @@ trait MapperTrait
             }
             if ($config['type'] === 'belongsToMany') {
                 $primaryModel->belongsToMany(
-                    new $namespace(),
-                    $config['middleTable'],
-                    $config['foreignKey'],
-                    $config['localKey']
+                    new $namespace(), $config['middleTable'], $config['foreignKey'], $config['localKey']
                 );
-                if (! empty($config['as'])) {
+                if (!empty($config['as'])) {
                     $primaryModel->as($config['as']);
                 }
-                if (! empty($config['where']) && is_array($config['where'])) {
+                if (!empty($config['where']) && is_array($config['where'])) {
                     foreach ($config['where'] as $field => $value) {
                         $primaryModel->wherePivot($field, $value);
                     }
                 }
-                if (! empty($config['whereIn']) && is_array($config['whereIn'])) {
+                if (!empty($config['whereIn']) && is_array($config['whereIn'])) {
                     foreach ($config['whereIn'] as $field => $value) {
                         $primaryModel->wherePivotIn($field, $value);
                     }

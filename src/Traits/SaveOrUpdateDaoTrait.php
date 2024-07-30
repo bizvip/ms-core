@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Traits;
 
@@ -34,18 +26,15 @@ trait SaveOrUpdateDaoTrait
         $keyName = $this->getModelInstance()->getKeyName();
         if ($where === null) {
             return $this->getModel()::updateOrCreate(
-                Arr::only($data, [$keyName]),
-                $data
+                Arr::only($data, [$keyName]), $data
             );
         }
+
         return $this->getModelQuery()->updateOrCreate($where, $data);
     }
 
-    public function batchSaveOrUpdate(
-        array $data,
-        ?array $whereKeys = null,
-        int $batchSize = 0
-    ): Collection {
+    public function batchSaveOrUpdate(array $data, ?array $whereKeys = null, int $batchSize = 0): Collection
+    {
         return Db::transaction(function () use ($data, $whereKeys) {
             $result = [];
             foreach ($data as $item) {
@@ -55,11 +44,11 @@ trait SaveOrUpdateDaoTrait
                     );
                 } else {
                     $result[] = $this->saveOrUpdate(
-                        $item,
-                        Arr::only($item, $whereKeys)
+                        $item, Arr::only($item, $whereKeys)
                     );
                 }
             }
+
             return Collection::make($result);
         });
     }

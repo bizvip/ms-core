@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Abstracts;
 
 use Hyperf\Constants\ConstantsCollector;
@@ -26,22 +25,25 @@ abstract class AbstractDataResource implements DataResource
         // 如果是Enums则先解析结果再返回
         if ($this instanceof ConstResource) {
             $const = ConstantsCollector::get($this->getConst($params, $extras));
-            $data = [];
+            $data  = [];
             foreach ($const as $value => $item) {
                 $data[$item['message']] = $value;
             }
+
             return $data;
         }
+
         return [];
     }
 
     public function resource(array $params = [], array $extras = []): array
     {
-        $data = $this->data($params, $extras);
+        $data     = $this->data($params, $extras);
         $resource = [];
         foreach ($data as $field => $value) {
             $resource[] = compact('field', 'value');
         }
+
         return $resource;
     }
 }

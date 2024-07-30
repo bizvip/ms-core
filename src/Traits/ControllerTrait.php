@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Traits;
 
 use Mine\MineRequest;
@@ -33,6 +32,7 @@ trait ControllerTrait
         if (is_array($msgOrData) || is_object($msgOrData)) {
             return $this->getResponse()->success(null, $msgOrData, $code);
         }
+
         return $this->getResponse()->success(null, $data, $code);
     }
 

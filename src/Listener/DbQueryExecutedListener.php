@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Listener;
 
 use Hyperf\Collection\Arr;
@@ -30,7 +29,7 @@ class DbQueryExecutedListener implements ListenerInterface
 
     public function __construct(StdoutLoggerInterface $console, ContainerInterface $container)
     {
-        $this->logger = $container->get(LoggerFactory::class)->get('sql', 'sql');
+        $this->logger  = $container->get(LoggerFactory::class)->get('sql', 'sql');
         $this->console = $console;
     }
 
@@ -40,17 +39,17 @@ class DbQueryExecutedListener implements ListenerInterface
     }
 
     /**
-     * @param QueryExecuted $event
+     * @param  QueryExecuted  $event
      */
     public function process(object $event): void
     {
         if ($event instanceof QueryExecuted) {
-            $sql = $event->sql;
+            $sql    = $event->sql;
             $offset = 0;
-            if (! Arr::isAssoc($event->bindings)) {
+            if (!Arr::isAssoc($event->bindings)) {
                 foreach ($event->bindings as $value) {
                     $value = is_array($value) ? json_encode($value) : "'{$value}'";
-                    $sql = Str::replaceFirst('?', "{$value}", $sql, $offset);
+                    $sql   = Str::replaceFirst('?', "{$value}", $sql, $offset);
                 }
             }
             if (env('CONSOLE_SQL')) {

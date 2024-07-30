@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -32,7 +31,7 @@ class RemoteStateAspect extends AbstractAspect
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $remote = $proceedingJoinPoint->getAnnotationMetadata()->method[RemoteState::class];
-        if (! $remote->state) {
+        if (!$remote->state) {
             throw new MineException('当前功能服务已禁止使用远程通用接口', 500);
         }
 

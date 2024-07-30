@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\MetadataCollector;
@@ -26,6 +25,7 @@ class ResourceCollector extends MetadataCollector
         if (empty($class)) {
             throw new \RuntimeException(sprintf('没有找到%s,或者类[%s]没有实现ResourceService契约', $tag, $class ?? 'null'));
         }
+
         return container()->get($class);
     }
 

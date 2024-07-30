@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
@@ -36,9 +35,9 @@ class ConfigCryptGenCommand extends MineCommand
     public function handle()
     {
         $key = base64_encode(random_bytes(32));
-        $iv = base64_encode(random_bytes(openssl_cipher_iv_length('AES-128-CBC')));
+        $iv  = base64_encode(random_bytes(openssl_cipher_iv_length('AES-128-CBC')));
 
-        $this->info('config encrypt key generator successfully:' . $key);
-        $this->info('config encrypt iv generator successfully:' . $iv);
+        $this->info('config encrypt key generator successfully:'.$key);
+        $this->info('config encrypt iv generator successfully:'.$iv);
     }
 }

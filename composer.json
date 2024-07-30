@@ -96,8 +96,13 @@
   "autoload": {
     "psr-4": {
       "Mine\\": "src/",
-      "Xmo\\JWTAuth\\": "src/Jwt/"
-    }
+      "Xmo\\JWTAuth\\": "src/Jwt/",
+      "Mine\\Generator\\": "src",
+      "Mine\\Helper\\": "src/Helpers/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
@@ -119,7 +124,8 @@
       "config": [
         "Mine\\ConfigProvider",
         "Xmo\\JWTAuth\\ConfigProvider",
-        "Mine\\Translatable\\ConfigProvider"
+        "Mine\\Translatable\\ConfigProvider",
+        "Mine\\Generator\\GeneratorConfigProvider"
       ]
     }
   }

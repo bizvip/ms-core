@@ -4,12 +4,6 @@
  * Author ORCID: https://orcid.org/0009-0003-8150-367X                        *
  ******************************************************************************/
 
-/**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2019-08-01
- * Time: 22:32
- */
 namespace Xmo\JWTAuth\Middleware;
 
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
@@ -39,12 +33,12 @@ class JWTAuthSceneApplication1Middleware implements MiddlewareInterface
     public function __construct(HttpResponse $response, JWT $jwt)
     {
         $this->response = $response;
-        $this->jwt = $jwt;
+        $this->jwt      = $jwt;
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
+     * @param  ServerRequestInterface  $request
+     * @param  RequestHandlerInterface  $handler
      * @return ResponseInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \Throwable
@@ -57,7 +51,8 @@ class JWTAuthSceneApplication1Middleware implements MiddlewareInterface
         if (strlen($token) > 0) {
             $token = JWTUtil::handleToken($token);
             // 验证该token是否为application1场景配置生成的
-            if ($token !== false && $this->jwt->setScene('application1')->checkToken($token, true, true, true)) {
+            if ($token !== false && $this->jwt->setScene('application1')
+                    ->checkToken($token, true, true, true)) {
                 $isValidToken = true;
             }
         }

@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Traits;
 
@@ -34,17 +26,17 @@ trait UpdateDaoTrait
     {
         return Db::transaction(function () use ($data, $withs) {
             $modelClass = $this->getModel();
-            $withAttr = [];
+            $withAttr   = [];
             if ($withs !== null) {
                 foreach ($withs as $with) {
-                    if (! empty($data[$with])) {
+                    if (!empty($data[$with])) {
                         $withAttr[$with] = $data[$with];
                         unset($data[$with]);
                     }
                 }
             }
             $model = $modelClass::create($data);
-            if (! empty($withAttr)) {
+            if (!empty($withAttr)) {
                 foreach ($withAttr as $with => $attr) {
                     if (method_exists($model, $with)) {
                         /**
@@ -60,6 +52,7 @@ trait UpdateDaoTrait
                     }
                 }
             }
+
             return $model;
         });
     }
@@ -73,6 +66,7 @@ trait UpdateDaoTrait
                 unset($attr['__with__']);
                 $result = $this->save($data, $with);
             }
+
             return $result;
         });
     }
@@ -86,11 +80,12 @@ trait UpdateDaoTrait
     {
         Db::transaction(function () use ($data) {
             foreach ($data as $attr) {
-                if (! $this->insert($data)) {
+                if (!$this->insert($data)) {
                     throw new ServiceException('batch insert fail');
                 }
             }
         });
+
         return true;
     }
 }

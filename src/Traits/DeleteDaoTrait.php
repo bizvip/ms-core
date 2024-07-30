@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Traits;
 
@@ -31,7 +23,7 @@ trait DeleteDaoTrait
     {
         return Db::transaction(function () use ($idOrWhere, $force) {
             $modelClass = $this->getModel();
-            $query = $modelClass::query();
+            $query      = $modelClass::query();
             /**
              * @var null|bool|Model $instance
              */
@@ -51,14 +43,15 @@ trait DeleteDaoTrait
             if ($force) {
                 return $instance->forceDelete();
             }
+
             return false;
         });
     }
 
     public function delete(mixed $id): bool
     {
-        $model = $this->getModel();
-        $query = $model::query()->getModel();
+        $model   = $this->getModel();
+        $query   = $model::query()->getModel();
         $keyName = $query->getModel()->getKeyName();
         /**
          * @var null|Model $instance
@@ -76,17 +69,17 @@ trait DeleteDaoTrait
         if (empty($instance)) {
             return false;
         }
-        return $model::query()
-            ->where(
-                $keyName,
-                $instance->getKey()
-            )->delete();
+
+        return $model::query()->where(
+            $keyName, $instance->getKey()
+        )->delete();
     }
 
     public function removeByIds(array $ids): bool
     {
-        $query = $this->getModelQuery();
+        $query   = $this->getModelQuery();
         $keyName = $query->getModel()->getKeyName();
+
         return $query->whereIn($keyName, $ids)->delete();
     }
 }

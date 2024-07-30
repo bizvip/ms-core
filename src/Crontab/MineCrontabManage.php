@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab;
 
 use App\Setting\Model\SettingCrontab;
@@ -71,10 +70,9 @@ class MineCrontabManage
         //        $data = $this->redis->get($prefix . 'crontab');
 
         //        if ($data === false) {
-        $data = SettingCrontab::query()
-            ->where('status', MineModel::ENABLE)
+        $data = SettingCrontab::query()->where('status', MineModel::ENABLE)
             ->get(explode(',', 'id,name,type,target,rule,parameter'))->toArray();
-        $this->redis->set($prefix . 'crontab', serialize($data));
+        $this->redis->set($prefix.'crontab', serialize($data));
         //        } else {
         //            $data = unserialize($data);
         //        }
@@ -89,15 +87,15 @@ class MineCrontabManage
         foreach ($data as $item) {
             $crontab = new MineCrontab();
             $crontab->setCallback($item['target']);
-            $crontab->setType((string) $item['type']);
+            $crontab->setType((string)$item['type']);
             $crontab->setEnable(true);
             $crontab->setCrontabId($item['id']);
             $crontab->setName($item['name']);
             $crontab->setParameter($item['parameter'] ?: '');
             $crontab->setRule($item['rule']);
 
-            if (! $this->parser->isValid($crontab->getRule())) {
-                console()->info('Crontab task [' . $item['name'] . '] rule error, skipping execution');
+            if (!$this->parser->isValid($crontab->getRule())) {
+                console()->info('Crontab task ['.$item['name'].'] rule error, skipping execution');
                 continue;
             }
 
@@ -108,6 +106,7 @@ class MineCrontabManage
                 }
             }
         }
+
         return $list;
     }
 }

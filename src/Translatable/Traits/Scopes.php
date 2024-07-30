@@ -10,10 +10,10 @@ declare(strict_types=1);
  * Please view the LICENSE file that was distributed with this source code,
  * For the full copyright and license information.
  * Thank you very much for using MineAdmin.
- *
  * @Author X.Mo<root@imoi.cn>
  * @Link   https://gitee.com/xmo/MineAdmin
  */
+
 namespace Mine\Translatable\Traits;
 
 use Hyperf\Database\Model\Builder as ModelBuilder;
@@ -25,27 +25,23 @@ trait Scopes
 {
     public function scopeListsTranslations(ModelBuilder $query, string $translationField)
     {
-        $withFallback = $this->useFallback();
+        $withFallback     = $this->useFallback();
         $translationTable = $this->getTranslationsTable();
-        $localeKey = $this->getLocaleKey();
+        $localeKey        = $this->getLocaleKey();
 
-        $query
-            ->select($this->getTable() . '.' . $this->getKeyName(), $translationTable . '.' . $translationField)
-            ->leftJoin($translationTable, $translationTable . '.' . $this->getTranslationRelationKey(), '=', $this->getTable() . '.' . $this->getKeyName())
-            ->where($translationTable . '.' . $localeKey, $this->locale());
+        $query->select($this->getTable().'.'.$this->getKeyName(), $translationTable.'.'.$translationField)
+            ->leftJoin($translationTable, $translationTable.'.'.$this->getTranslationRelationKey(), '=', $this->getTable().'.'.$this->getKeyName())
+            ->where($translationTable.'.'.$localeKey, $this->locale());
 
         if ($withFallback) {
             $query->orWhere(function (ModelBuilder $q) use ($translationTable, $localeKey) {
-                $q
-                    ->where($translationTable . '.' . $localeKey, $this->getFallbackLocale())
-                    ->whereNotIn($translationTable . '.' . $this->getTranslationRelationKey(), function (QueryBuilder $q) use (
-                        $translationTable,
-                        $localeKey
+                $q->where($translationTable.'.'.$localeKey, $this->getFallbackLocale())
+                    ->whereNotIn($translationTable.'.'.$this->getTranslationRelationKey(), function (QueryBuilder $q) use (
+                        $translationTable, $localeKey
                     ) {
-                        $q
-                            ->select($translationTable . '.' . $this->getTranslationRelationKey())
+                        $q->select($translationTable.'.'.$this->getTranslationRelationKey())
                             ->from($translationTable)
-                            ->where($translationTable . '.' . $localeKey, $this->locale());
+                            ->where($translationTable.'.'.$localeKey, $this->locale());
                     });
             });
         }
@@ -65,19 +61,15 @@ trait Scopes
     public function scopeOrderByTranslation(ModelBuilder $query, string $translationField, string $sortMethod = 'asc')
     {
         $translationTable = $this->getTranslationsTable();
-        $localeKey = $this->getLocaleKey();
-        $table = $this->getTable();
-        $keyName = $this->getKeyName();
+        $localeKey        = $this->getLocaleKey();
+        $table            = $this->getTable();
+        $keyName          = $this->getKeyName();
 
-        return $query
-            ->with('translations')
-            ->select("{$table}.*")
+        return $query->with('translations')->select("{$table}.*")
             ->leftJoin($translationTable, function (JoinClause $join) use ($translationTable, $localeKey, $table, $keyName) {
-                $join
-                    ->on("{$translationTable}.{$this->getTranslationRelationKey()}", '=', "{$table}.{$keyName}")
+                $join->on("{$translationTable}.{$this->getTranslationRelationKey()}", '=', "{$table}.{$keyName}")
                     ->where("{$translationTable}.{$localeKey}", $this->locale());
-            })
-            ->orderBy("{$translationTable}.{$translationField}", $sortMethod);
+            })->orderBy("{$translationTable}.{$translationField}", $sortMethod);
     }
 
     public function scopeOrWhereTranslation(ModelBuilder $query, string $translationField, $value, ?string $locale = null)
@@ -107,10 +99,10 @@ trait Scopes
     public function scopeWhereTranslation(ModelBuilder $query, string $translationField, $value, ?string $locale = null, string $method = 'whereHas', string $operator = '=')
     {
         return $query->{$method}('translations', function (ModelBuilder $query) use ($translationField, $value, $locale, $operator) {
-            $query->where($this->getTranslationsTable() . '.' . $translationField, $operator, $value);
+            $query->where($this->getTranslationsTable().'.'.$translationField, $operator, $value);
 
             if ($locale) {
-                $query->where($this->getTranslationsTable() . '.' . $this->getLocaleKey(), $operator, $locale);
+                $query->where($this->getTranslationsTable().'.'.$this->getLocaleKey(), $operator, $locale);
             }
         });
     }
@@ -125,14 +117,18 @@ trait Scopes
         $query->with([
             'translations' => function (Relation $query) {
                 if ($this->useFallback()) {
-                    $locale = $this->locale();
+                    $locale                = $this->locale();
                     $countryFallbackLocale = $this->getFallbackLocale($locale); // e.g. de-DE => de
-                    $locales = array_unique([$locale, $countryFallbackLocale, $this->getFallbackLocale()]);
+                    $locales               = array_unique([
+                        $locale,
+                        $countryFallbackLocale,
+                        $this->getFallbackLocale(),
+                    ]);
 
-                    return $query->whereIn($this->getTranslationsTable() . '.' . $this->getLocaleKey(), $locales);
+                    return $query->whereIn($this->getTranslationsTable().'.'.$this->getLocaleKey(), $locales);
                 }
 
-                return $query->where($this->getTranslationsTable() . '.' . $this->getLocaleKey(), $this->locale());
+                return $query->where($this->getTranslationsTable().'.'.$this->getLocaleKey(), $this->locale());
             },
         ]);
     }

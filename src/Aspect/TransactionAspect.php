@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\DbConnection\Db;
@@ -39,10 +38,10 @@ class TransactionAspect extends AbstractAspect
             $connection = $transaction->connection;
             Db::connection($connection)->beginTransaction();
             $number = 0;
-            $retry = intval($transaction->retry);
+            $retry  = intval($transaction->retry);
             do {
                 $result = $proceedingJoinPoint->process();
-                if (! is_null($result)) {
+                if (!is_null($result)) {
                     break;
                 }
                 ++$number;
@@ -52,6 +51,7 @@ class TransactionAspect extends AbstractAspect
             Db::connection($connection)->rollBack();
             throw new MineException($e->getMessage(), 500);
         }
+
         return $result;
     }
 }

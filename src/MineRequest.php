@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\Di\Annotation\Inject;
@@ -25,7 +24,7 @@ class MineRequest extends Request
      */
     public function ip(): string
     {
-        $ip = $this->getServerParams()['remote_addr'] ?? '0.0.0.0';
+        $ip      = $this->getServerParams()['remote_addr'] ?? '0.0.0.0';
         $headers = $this->getHeaders();
 
         if (isset($headers['x-real-ip'])) {
@@ -45,8 +44,9 @@ class MineRequest extends Request
     public function getScheme(): string
     {
         if (isset($this->getHeader('X-scheme')[0])) {
-            return $this->getHeader('X-scheme')[0] . '://';
+            return $this->getHeader('X-scheme')[0].'://';
         }
+
         return 'http://';
     }
 }

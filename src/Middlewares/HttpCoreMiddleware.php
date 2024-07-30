@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Middlewares;
 
 use Hyperf\Codec\Json;
@@ -54,12 +53,12 @@ class HttpCoreMiddleware extends CoreMiddleware
     {
         $format = [
             'success' => false,
-            'code' => MineCode::NOT_FOUND,
+            'code'    => MineCode::NOT_FOUND,
             'message' => t('mineadmin.not_found'),
         ];
+
         return $this->response()->withHeader('Server', 'MineAdmin')
-            ->withAddedHeader('content-type', 'application/json; charset=utf-8')
-            ->withStatus(404)
+            ->withAddedHeader('content-type', 'application/json; charset=utf-8')->withStatus(404)
             ->withBody(new SwooleStream(Json::encode($format)));
     }
 
@@ -68,18 +67,16 @@ class HttpCoreMiddleware extends CoreMiddleware
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function handleMethodNotAllowed(
-        array $methods,
-        ServerRequestInterface $request
-    ): ResponseInterface {
+    protected function handleMethodNotAllowed(array $methods, ServerRequestInterface $request): ResponseInterface
+    {
         $format = [
             'success' => false,
-            'code' => MineCode::METHOD_NOT_ALLOW,
+            'code'    => MineCode::METHOD_NOT_ALLOW,
             'message' => t('mineadmin.allow_method', ['method' => implode(',', $methods)]),
         ];
+
         return $this->response()->withHeader('Server', 'MineAdmin')
-            ->withAddedHeader('content-type', 'application/json; charset=utf-8')
-            ->withStatus(405)
+            ->withAddedHeader('content-type', 'application/json; charset=utf-8')->withStatus(405)
             ->withBody(new SwooleStream(Json::encode($format)));
     }
 }

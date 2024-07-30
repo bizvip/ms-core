@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command\Migrate;
 
 use Hyperf\Command\Annotation\Command;
@@ -26,7 +25,6 @@ class MineMigrate extends BaseCommand
 
     /**
      * The migration creator instance.
-     *
      * @var MineMigrationCreator
      */
     protected $creator;
@@ -49,7 +47,7 @@ class MineMigrate extends BaseCommand
         // It's possible for the developer to specify the tables to modify in this
         // schema operation. The developer may also specify if this table needs
         // to be freshly created so we can create the appropriate migrations.
-        $name = 'create_' . Str::snake(trim($this->input->getArgument('name'))) . '_table';
+        $name = 'create_'.Str::snake(trim($this->input->getArgument('name'))).'_table';
 
         $this->module = $this->input->getOption('module');
 
@@ -67,7 +65,7 @@ class MineMigrate extends BaseCommand
         // If no table was given as an option but a create option is given then we
         // will use the "create" option as the table name. This allows the devs
         // to pass a table name into this option as a short-cut for creating.
-        if (! $table && is_string($create)) {
+        if (!$table && is_string($create)) {
             $table = $create;
 
             $create = true;
@@ -76,7 +74,7 @@ class MineMigrate extends BaseCommand
         // Next, we will attempt to guess the table name if this the migration has
         // "create" in the name. This will allow us to provide a convenient way
         // of creating migrations that create new tables for the application.
-        if (! $table) {
+        if (!$table) {
             [$table, $create] = TableGuesser::guess($name);
         }
 
@@ -96,11 +94,26 @@ class MineMigrate extends BaseCommand
     protected function getOptions(): array
     {
         return [
-            ['module', '-M', InputOption::VALUE_REQUIRED, 'Please enter the module to be generated'],
+            [
+                'module',
+                '-M',
+                InputOption::VALUE_REQUIRED,
+                'Please enter the module to be generated',
+            ],
             ['create', null, InputOption::VALUE_OPTIONAL, 'The table to be created'],
             ['table', null, InputOption::VALUE_OPTIONAL, 'The table to migrate'],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The location where the migration file should be created'],
-            ['realpath', null, InputOption::VALUE_NONE, 'Indicate any provided migration file paths are pre-resolved absolute paths'],
+            [
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The location where the migration file should be created',
+            ],
+            [
+                'realpath',
+                null,
+                InputOption::VALUE_NONE,
+                'Indicate any provided migration file paths are pre-resolved absolute paths',
+            ],
         ];
     }
 
@@ -110,12 +123,11 @@ class MineMigrate extends BaseCommand
     protected function writeMigration(string $name, ?string $table, bool $create): void
     {
         try {
-            $file = pathinfo($this->creator->create(
-                $name,
-                $this->getMigrationPath(),
-                $table,
-                $create
-            ), PATHINFO_FILENAME);
+            $file = pathinfo(
+                $this->creator->create(
+                    $name, $this->getMigrationPath(), $table, $create
+                ), PATHINFO_FILENAME
+            );
             $this->info("<info>[INFO] Created Migration:</info> {$file}");
         } catch (\Throwable $e) {
             $this->error("<error>[ERROR] Created Migration:</error> {$e->getMessage()}");
@@ -127,7 +139,7 @@ class MineMigrate extends BaseCommand
      */
     protected function getMigrationPath(): string
     {
-        return BASE_PATH . '/app/' . ucfirst($this->module) . '/Database/Migrations';
+        return BASE_PATH.'/app/'.ucfirst($this->module).'/Database/Migrations';
     }
 
     /**

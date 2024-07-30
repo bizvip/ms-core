@@ -24,7 +24,7 @@ class MineStart extends ServerStartCallback
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function beforeStart()
+    public function beforeStart(): void
     {
         $console = console();
         $console->info('MineAdmin start success...');
@@ -41,14 +41,8 @@ class MineStart extends ServerStartCallback
         } else {
             $welcome = '
 /---------------------- welcome to use -----------------------\
-|               _                ___       __          _      |
-|    ____ ___  (_)___  _____    /   | ____/ /___ ___  (_)___  |
-|   / __ `__ \/ / __ \/ ___/   / /| |/ __  / __ `__ \/ / __ \ |
-|  / / / / / / / / / / /__/   / ___ / /_/ / / / / / / / / / / |
-| /_/ /_/ /_/_/_/ /_/\___/   /_/  |_\__,_/_/ /_/ /_/_/_/ /_/  |
-|                                                             |
-\_____________  Copyright MineAdmin 2021 ~ %y  _____________|
-            ';
+\________  Copyright WT-Wallet by Archer++ 2024 ~ %s  ______|
+';
         }
 
         return str_replace(['%y',], [date('Y'),], $welcome);

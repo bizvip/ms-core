@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -39,7 +31,7 @@ abstract class MineGenerator
                 InstalledVersions::getInstallPath(
                     'xmo/mine-generator'
                 )
-            ) . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR
+            ).DIRECTORY_SEPARATOR.'Stubs'.DIRECTORY_SEPARATOR
         );
     }
 
@@ -59,7 +51,7 @@ abstract class MineGenerator
     }
 
     /**
-     * @param mixed $namespace
+     * @param  mixed  $namespace
      */
     public function setNamespace(string $namespace): void
     {

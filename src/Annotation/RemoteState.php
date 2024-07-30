@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -18,7 +17,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class RemoteState extends AbstractAnnotation
 {
     /**
-     * @param bool $state 状态
+     * @param  bool  $state  状态
      */
-    public function __construct(public bool $state = true) {}
+    public function __construct(public bool $state = true) { }
 }

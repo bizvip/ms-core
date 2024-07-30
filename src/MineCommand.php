@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\Command\Command as HyperfCommand;
@@ -26,27 +25,28 @@ abstract class MineCommand extends HyperfCommand
 
     protected function getGreenText($text): string
     {
-        return self::CONSOLE_GREEN_BEGIN . $text . self::CONSOLE_END;
+        return self::CONSOLE_GREEN_BEGIN.$text.self::CONSOLE_END;
     }
 
     protected function getRedText($text): string
     {
-        return self::CONSOLE_RED_BEGIN . $text . self::CONSOLE_END;
+        return self::CONSOLE_RED_BEGIN.$text.self::CONSOLE_END;
     }
 
     protected function getStub($filename): string
     {
-        return BASE_PATH . '/vendor/bizvip/ms-core/src/Command/Creater/Stubs/' . $filename . '.stub';
+        return BASE_PATH.'/vendor/bizvip/ms-core/src/Command/Creater/Stubs/'.$filename.'.stub';
     }
 
     protected function getModulePath(): string
     {
-        return BASE_PATH . '/app/' . $this->module . '/Request/';
+        return BASE_PATH.'/app/'.$this->module.'/Request/';
     }
 
     protected function getInfo(): string
     {
-        return sprintf('
+        return sprintf(
+            '
 /---------------------- welcome to use -----------------------\
 |               _                ___       __          _      |
 |    ____ ___  (_)___  _____    /   | ____/ /___ ___  (_)___  |
@@ -55,6 +55,7 @@ abstract class MineCommand extends HyperfCommand
 | /_/ /_/ /_/_/_/ /_/\___/   /_/  |_\__,_/_/ /_/ /_/_/_/ /_/  |
 |                                                             |
 \_____________  Copyright MineAdmin 2021 ~ %s  _____________|
-', date('Y'));
+', date('Y')
+        );
     }
 }

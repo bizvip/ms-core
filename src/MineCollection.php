@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\Database\Model\Collection;
@@ -35,24 +34,27 @@ class MineCollection extends Collection
         foreach ($data as $menu) {
             array_push($routers, $this->setRouter($menu));
         }
+
         return $this->toTree($routers);
     }
 
     public function setRouter(&$menu): array
     {
-        $route = ($menu['type'] == 'L' || $menu['type'] == 'I') ? $menu['route'] : '/' . $menu['route'];
+        $route = ($menu['type'] == 'L' || $menu['type'] == 'I') ? $menu['route']
+            : '/'.$menu['route'];
+
         return [
-            'id' => $menu['id'],
+            'id'        => $menu['id'],
             'parent_id' => $menu['parent_id'],
-            'name' => $menu['code'],
+            'name'      => $menu['code'],
             'component' => $menu['component'],
-            'path' => $route,
-            'redirect' => $menu['redirect'],
-            'meta' => [
-                'type' => $menu['type'],
-                'icon' => $menu['icon'],
-                'title' => $menu['name'],
-                'hidden' => ($menu['is_hidden'] === 1),
+            'path'      => $route,
+            'redirect'  => $menu['redirect'],
+            'meta'      => [
+                'type'             => $menu['type'],
+                'icon'             => $menu['icon'],
+                'title'            => $menu['name'],
+                'hidden'           => ($menu['is_hidden'] === 1),
                 'hiddenBreadcrumb' => false,
             ],
         ];
@@ -71,7 +73,7 @@ class MineCollection extends Collection
         foreach ($data as $value) {
             if ($value[$parentField] == $parentId) {
                 $child = $this->toTree($data, $value[$id], $id, $parentField, $children);
-                if (! empty($child)) {
+                if (!empty($child)) {
                     $value[$children] = $child;
                 }
                 array_push($tree, $value);
@@ -79,6 +81,7 @@ class MineCollection extends Collection
         }
 
         unset($data);
+
         return $tree;
     }
 
@@ -96,7 +99,10 @@ class MineCollection extends Collection
         } else {
             $excel = $excelDrive === 'xlsWriter' ? new XlsWriter($dto) : new PhpOffice($dto);
         }
-        return $excel->export($filename, is_null($closure) ? $this->toArray() : $closure, $callbackData);
+
+        return $excel->export(
+            $filename, is_null($closure) ? $this->toArray() : $closure, $callbackData
+        );
     }
 
     /**
@@ -113,6 +119,7 @@ class MineCollection extends Collection
         } else {
             $excel = $excelDrive === 'xlsWriter' ? new XlsWriter($dto) : new PhpOffice($dto);
         }
+
         return $excel->import($model, $closure);
     }
 }

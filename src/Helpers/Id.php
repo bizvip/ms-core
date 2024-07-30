@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Helper;
 
@@ -56,9 +48,9 @@ class Id
             throw new \Exception("datacenter Id can't be greater than {$this->maxDatacenterId} or less than 0");
         }
 
-        $this->workerId = $workerId;
+        $this->workerId     = $workerId;
         $this->datacenterId = $datacenterId;
-        $this->sequence = $sequence;
+        $this->sequence     = $sequence;
     }
 
     /**
@@ -69,7 +61,7 @@ class Id
     {
         $timestamp = $this->timeGen();
 
-        if (! is_null($workerId)) {
+        if (!is_null($workerId)) {
             $this->workerId = $workerId;
         }
 
@@ -90,10 +82,7 @@ class Id
 
         $this->lastTimestamp = $timestamp;
 
-        return (($timestamp - self::TWEPOCH) << $this->timestampLeftShift) |
-            ($this->datacenterId << $this->datacenterIdShift) |
-            ($this->workerId << $this->workerIdShift) |
-            $this->sequence;
+        return (($timestamp - self::TWEPOCH) << $this->timestampLeftShift) | ($this->datacenterId << $this->datacenterIdShift) | ($this->workerId << $this->workerIdShift) | $this->sequence;
     }
 
     protected function tilNextMillis($lastTimestamp)

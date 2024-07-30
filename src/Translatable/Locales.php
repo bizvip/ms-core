@@ -10,10 +10,10 @@ declare(strict_types=1);
  * Please view the LICENSE file that was distributed with this source code,
  * For the full copyright and license information.
  * Thank you very much for using MineAdmin.
- *
  * @Author X.Mo<root@imoi.cn>
  * @Link   https://gitee.com/xmo/MineAdmin
  */
+
 namespace Mine\Translatable;
 
 use Hyperf\Contract\ConfigInterface;
@@ -40,7 +40,7 @@ class Locales implements LocalesInterface
 
     public function __construct(ConfigInterface $config, TranslatorInterface $translator)
     {
-        $this->config = $config->get('translatable');
+        $this->config     = $config->get('translatable');
         $this->translator = $translator;
 
         $this->load();
@@ -73,7 +73,7 @@ class Locales implements LocalesInterface
 
     public function getCountryLocale(string $locale, string $country): string
     {
-        return $locale . $this->getLocaleSeparator() . $country;
+        return $locale.$this->getLocaleSeparator().$country;
     }
 
     public function getLanguageFromCountryBasedLocale(string $locale): string
@@ -127,7 +127,7 @@ class Locales implements LocalesInterface
 
     protected function load(): void
     {
-        $localesConfig = (array) ($this->config['locales'] ?? []);
+        $localesConfig = (array)($this->config['locales'] ?? []);
 
         if (empty($localesConfig)) {
             throw new LocalesNotDefinedException();
@@ -139,7 +139,7 @@ class Locales implements LocalesInterface
                 $this->locales[$key] = $key;
 
                 foreach ($locale as $country) {
-                    $countryLocale = $this->getCountryLocale($key, $country);
+                    $countryLocale                 = $this->getCountryLocale($key, $country);
                     $this->locales[$countryLocale] = $countryLocale;
                 }
             } elseif (is_string($locale)) {

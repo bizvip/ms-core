@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -14,7 +13,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Resource extends AbstractAnnotation
 {
-    public function __construct(public string $tag) {}
+    public function __construct(public string $tag) { }
 
     public function collectClass(string $className): void
     {

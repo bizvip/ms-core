@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine;
 
@@ -25,17 +17,15 @@ class ServiceConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => [
-            ],
-            'commands' => [
-            ],
-            'listeners' => [
+            'dependencies' => [],
+            'commands'     => [],
+            'listeners'    => [
                 DependProxyListener::class => PHP_INT_MAX,
             ],
             // 合并到  config/autoload/annotations.php 文件
-            'annotations' => [
+            'annotations'  => [
                 'scan' => [
-                    'paths' => [
+                    'paths'      => [
                         __DIR__,
                     ],
                     'collectors' => [

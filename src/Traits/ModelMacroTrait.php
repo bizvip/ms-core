@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Traits;
 
 use App\System\Model\SystemDept;
@@ -29,7 +28,7 @@ trait ModelMacroTrait
         // 数据权限方法
         $model = $this;
         Builder::macro('userDataScope', function (?int $userid = null) use ($model) {
-            if (! config('mineadmin.data_scope_enabled')) {
+            if (!config('mineadmin.data_scope_enabled')) {
                 return $this;
             }
 
@@ -44,7 +43,7 @@ trait ModelMacroTrait
                 return $this;
             }
 
-            if (! in_array($model->getDataScopeField(), $model->getFillable())) {
+            if (!in_array($model->getDataScopeField(), $model->getFillable())) {
                 return $this;
             }
 
@@ -63,16 +62,16 @@ trait ModelMacroTrait
 
                 public function __construct(int $userid, Builder $builder, mixed $model)
                 {
-                    $this->userid = $userid;
+                    $this->userid  = $userid;
                     $this->builder = $builder;
-                    $this->model = $model;
+                    $this->model   = $model;
                 }
 
                 public function execute(): Builder
                 {
                     $this->getUserDataScope();
-                    return empty($this->userIds)
-                        ? $this->builder
+
+                    return empty($this->userIds) ? $this->builder
                         : $this->builder->whereIn($this->model->getDataScopeField(), array_unique($this->userIds));
                 }
 
@@ -85,7 +84,7 @@ trait ModelMacroTrait
                      * @phpstan-ignore-next-line
                      */
                     $userModel = SystemUser::find($this->userid, ['id']);
-                    $roles = $userModel->roles()->get(['id', 'data_scope']);
+                    $roles     = $userModel->roles()->get(['id', 'data_scope']);
 
                     foreach ($roles as $role) {
                         switch ($role->data_scope) {
@@ -94,57 +93,56 @@ trait ModelMacroTrait
                                 break 2;
                             case SystemRole::CUSTOM_SCOPE:
                                 // 自定义数据权限
-                                $deptIds = $role->depts()->pluck('id')->toArray();
-                                $this->userIds = array_merge(
-                                    $this->userIds,
-                                    Db::table('system_user_dept')->whereIn('dept_id', $deptIds)->pluck('user_id')->toArray()
+                                $deptIds         = $role->depts()->pluck('id')->toArray();
+                                $this->userIds   = array_merge(
+                                    $this->userIds, Db::table('system_user_dept')
+                                    ->whereIn('dept_id', $deptIds)->pluck('user_id')->toArray()
                                 );
                                 $this->userIds[] = $this->userid;
                                 break;
                             case SystemRole::SELF_DEPT_SCOPE:
                                 // 本部门数据权限
-                                $deptIds = Db::table('system_user_dept')->where('user_id', $userModel->id)->pluck('dept_id')->toArray();
-                                $this->userIds = array_merge(
-                                    $this->userIds,
-                                    Db::table('system_user_dept')->whereIn('dept_id', $deptIds)->pluck('user_id')->toArray()
+                                $deptIds         = Db::table('system_user_dept')
+                                    ->where('user_id', $userModel->id)->pluck('dept_id')->toArray();
+                                $this->userIds   = array_merge(
+                                    $this->userIds, Db::table('system_user_dept')
+                                    ->whereIn('dept_id', $deptIds)->pluck('user_id')->toArray()
                                 );
                                 $this->userIds[] = $this->userid;
                                 break;
                             case SystemRole::DEPT_BELOW_SCOPE:
                                 // 本部门及子部门数据权限
-                                $parentDepts = Db::table('system_user_dept')->where('user_id', $userModel->id)->pluck('dept_id')->toArray();
-                                $ids = [];
+                                $parentDepts = Db::table('system_user_dept')
+                                    ->where('user_id', $userModel->id)->pluck('dept_id')->toArray();
+                                $ids         = [];
                                 foreach ($parentDepts as $deptId) {
                                     $ids[] = SystemDept::query()
                                         ->where(function ($query) use ($deptId) {
                                             $query->where('id', '=', $deptId)
-                                                ->orWhere('level', 'like', $deptId . ',%')
-                                                ->orWhere('level', 'like', '%,' . $deptId)
-                                                ->orWhere('level', 'like', '%,' . $deptId . ',%');
-                                        })
-                                        ->pluck('id')
-                                        ->toArray();
+                                                ->orWhere('level', 'like', $deptId.',%')
+                                                ->orWhere('level', 'like', '%,'.$deptId)
+                                                ->orWhere('level', 'like', '%,'.$deptId.',%');
+                                        })->pluck('id')->toArray();
                                 }
-                                $deptIds = array_merge($parentDepts, ...$ids);
-                                $this->userIds = array_merge(
-                                    $this->userIds,
-                                    Db::table('system_user_dept')->whereIn('dept_id', $deptIds)->pluck('user_id')->toArray()
+                                $deptIds         = array_merge($parentDepts, ...$ids);
+                                $this->userIds   = array_merge(
+                                    $this->userIds, Db::table('system_user_dept')
+                                    ->whereIn('dept_id', $deptIds)->pluck('user_id')->toArray()
                                 );
                                 $this->userIds[] = $this->userid;
                                 break;
                             case SystemRole::DEPT_BELOW_SCOPE_BY_TABLE_DEPTID:
-                                $parentDepts = Db::table('system_user_dept')->where('user_id', $userModel->id)->pluck('dept_id')->toArray();
-                                $ids = [];
+                                $parentDepts = Db::table('system_user_dept')
+                                    ->where('user_id', $userModel->id)->pluck('dept_id')->toArray();
+                                $ids         = [];
                                 foreach ($parentDepts as $deptId) {
                                     $ids[] = SystemDept::query()
                                         ->where(function ($query) use ($deptId) {
                                             $query->where('id', '=', $deptId)
-                                                ->orWhere('level', 'like', $deptId . ',%')
-                                                ->orWhere('level', 'like', '%,' . $deptId)
-                                                ->orWhere('level', 'like', '%,' . $deptId . ',%');
-                                        })
-                                        ->pluck('id')
-                                        ->toArray();
+                                                ->orWhere('level', 'like', $deptId.',%')
+                                                ->orWhere('level', 'like', '%,'.$deptId)
+                                                ->orWhere('level', 'like', '%,'.$deptId.',%');
+                                        })->pluck('id')->toArray();
                                 }
                                 $deptIds = array_merge($parentDepts, ...$ids);
 
@@ -155,12 +153,12 @@ trait ModelMacroTrait
                                 }
 
                                 // 本部门及子部门数据权限 以 当前表的dept_id作为条件
-                                if (! in_array('dept_id', $this->model->getFillable())) {
+                                if (!in_array('dept_id', $this->model->getFillable())) {
                                     break;
                                 }
 
                                 $this->builder = $this->builder->whereIn('dept_id', $deptIds);
-                                // no break
+                            // no break
                             case SystemRole::SELF_SCOPE:
                                 $this->userIds[] = $this->userid;
                                 break;
@@ -192,6 +190,7 @@ trait ModelMacroTrait
             if ($value === null) {
                 return $this->where($key, $operator);
             }
+
             return $this->where($key, $operator, $value);
         });
 
@@ -206,6 +205,7 @@ trait ModelMacroTrait
             if ($value === null) {
                 return $this->orWhere($key, $operator);
             }
+
             return $this->orWhere($key, $operator, $value);
         });
     }

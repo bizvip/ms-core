@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -18,7 +17,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class DeleteCache extends AbstractAnnotation
 {
     /**
-     * @param null|string $keys 缓存key，多个以逗号分开
+     * @param  null|string  $keys  缓存key，多个以逗号分开
      */
-    public function __construct(public ?string $keys = null) {}
+    public function __construct(public ?string $keys = null) { }
 }

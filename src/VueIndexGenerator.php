@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -51,17 +43,29 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract): VueIndexGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         $this->columns = $this->tablesContract->handleQuery(function (Builder $query) {
             return $query->where('table_id', $this->tablesContract->getId())->orderByDesc('sort')
                 ->get([
-                    'column_name', 'column_comment', 'allow_roles', 'options', 'is_required', 'is_insert',
-                    'is_edit', 'is_query', 'is_sort', 'is_pk', 'is_list', 'view_type', 'dict_type',
+                    'column_name',
+                    'column_comment',
+                    'allow_roles',
+                    'options',
+                    'is_required',
+                    'is_insert',
+                    'is_edit',
+                    'is_query',
+                    'is_sort',
+                    'is_pk',
+                    'is_list',
+                    'view_type',
+                    'dict_type',
                 ]);
         });
+
         return $this->placeholderReplace();
     }
 
@@ -71,12 +75,9 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     public function generator(): void
     {
         $module = Str::lower($this->tablesContract->getModuleName());
-        $path = BASE_PATH . "/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}/index.vue";
+        $path   = BASE_PATH."/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}/index.vue";
         $this->filesystem->makeDirectory(
-            BASE_PATH . "/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}",
-            0755,
-            true,
-            true
+            BASE_PATH."/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}", 0755, true, true
         );
         $this->filesystem->put($path, $this->replace()->getCodeContent());
     }
@@ -94,11 +95,11 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     public function getShortBusinessName(): string
     {
-        return Str::camel(str_replace(
-            Str::lower($this->tablesContract->getModuleName()),
-            '',
-            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName())
-        ));
+        return Str::camel(
+            str_replace(
+                Str::lower($this->tablesContract->getModuleName()), '', str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName())
+            )
+        );
     }
 
     /**
@@ -107,8 +108,8 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     public function getComponentType(int $type): string
     {
         return match ($type) {
-            2 => "'drawer'",
-            3 => "'tag'",
+            2       => "'drawer'",
+            3       => "'tag'",
             default => "'modal'"
         };
     }
@@ -134,7 +135,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . '/Vue/index.stub';
+        return $this->getStubDir().'/Vue/index.stub';
     }
 
     /**
@@ -150,11 +151,11 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): VueIndexGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -199,7 +200,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getCode(): string
     {
-        return Str::lower($this->tablesContract->getModuleName()) . ':' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()).':'.$this->getShortBusinessName();
     }
 
     /**
@@ -208,74 +209,77 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     protected function getOptions(): string
     {
         // 配置项
-        $options = [];
-        $options['id'] = "'" . $this->tablesContract->getTableName() . "'";
-        $options['rowSelection'] = ['showCheckedAll' => true];
-        $options['pk'] = "'" . $this->getPk() . "'";
-        $options['operationColumn'] = false;
+        $options                         = [];
+        $options['id']                   = "'".$this->tablesContract->getTableName()."'";
+        $options['rowSelection']         = ['showCheckedAll' => true];
+        $options['pk']                   = "'".$this->getPk()."'";
+        $options['operationColumn']      = false;
         $options['operationColumnWidth'] = 160;
-        $options['formOption'] = [
+        $options['formOption']           = [
             'viewType' => "'{$this->tablesContract->getComponentType()->value}'",
-            'width' => 600,
+            'width'    => 600,
         ];
         if ($this->tablesContract->getComponentType() === ComponentTypeEnum::TAG) {
-            $options['formOption']['tagId'] = "'" . ($this->tablesContract->options['tag_id'] ?? $this->tablesContract->getTableName()) . "'";
-            $options['formOption']['tagName'] = "'" . ($this->tablesContract->options['tag_name'] ?? $this->tablesContract->table_comment) . "'";
-            $options['formOption']['titleDataIndex'] = "'" . ($this->tablesContract->options['tag_view_name'] ?? $this->getPk()) . "'";
+            $options['formOption']['tagId']          = "'".($this->tablesContract->options['tag_id'] ?? $this->tablesContract->getTableName())."'";
+            $options['formOption']['tagName']        = "'".($this->tablesContract->options['tag_name'] ?? $this->tablesContract->table_comment)."'";
+            $options['formOption']['titleDataIndex'] = "'".($this->tablesContract->options['tag_view_name'] ?? $this->getPk())."'";
         }
-        $options['api'] = $this->getBusinessEnName() . '.getList';
+        $options['api'] = $this->getBusinessEnName().'.getList';
         if (Str::contains($this->tablesContract->getGenerateMenus(), 'recycle')) {
-            $options['recycleApi'] = $this->getBusinessEnName() . '.getRecycleList';
+            $options['recycleApi'] = $this->getBusinessEnName().'.getRecycleList';
         }
         if (Str::contains($this->tablesContract->getGenerateMenus(), 'save')) {
             $options['add'] = [
-                'show' => true, 'api' => $this->getBusinessEnName() . '.save',
-                'auth' => "['" . $this->getCode() . ":save']",
+                'show' => true,
+                'api'  => $this->getBusinessEnName().'.save',
+                'auth' => "['".$this->getCode().":save']",
             ];
         }
         if (Str::contains($this->tablesContract->getGenerateMenus(), 'update')) {
             $options['operationColumn'] = true;
-            $options['edit'] = [
-                'show' => true, 'api' => $this->getBusinessEnName() . '.update',
-                'auth' => "['" . $this->getCode() . ":update']",
+            $options['edit']            = [
+                'show' => true,
+                'api'  => $this->getBusinessEnName().'.update',
+                'auth' => "['".$this->getCode().":update']",
             ];
         }
         if (Str::contains($this->tablesContract->getGenerateMenus(), 'delete')) {
             $options['operationColumn'] = true;
-            $options['delete'] = [
+            $options['delete']          = [
                 'show' => true,
-                'api' => $this->getBusinessEnName() . '.deletes',
-                'auth' => "['" . $this->getCode() . ":delete']",
+                'api'  => $this->getBusinessEnName().'.deletes',
+                'auth' => "['".$this->getCode().":delete']",
             ];
             if (Str::contains($this->tablesContract->getGenerateMenus(), 'recycle')) {
-                $options['delete']['realApi'] = $this->getBusinessEnName() . '.realDeletes';
-                $options['delete']['realAuth'] = "['" . $this->getCode() . ":realDeletes']";
-                $options['recovery'] = [
+                $options['delete']['realApi']  = $this->getBusinessEnName().'.realDeletes';
+                $options['delete']['realAuth'] = "['".$this->getCode().":realDeletes']";
+                $options['recovery']           = [
                     'show' => true,
-                    'api' => $this->getBusinessEnName() . '.recoverys',
-                    'auth' => "['" . $this->getCode() . ":recovery']",
+                    'api'  => $this->getBusinessEnName().'.recoverys',
+                    'auth' => "['".$this->getCode().":recovery']",
                 ];
             }
         }
-        $requestRoute = Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName();
+        $requestRoute = Str::lower($this->tablesContract->getModuleName()).'/'.$this->getShortBusinessName();
         // 导入
         if (Str::contains($this->tablesContract->getGenerateMenus(), 'import')) {
             $options['import'] = [
-                'show' => true,
-                'url' => "'" . $requestRoute . '/import' . "'",
-                'templateUrl' => "'" . $requestRoute . '/downloadTemplate' . "'",
-                'auth' => "['" . $this->getCode() . ":import']",
+                'show'        => true,
+                'url'         => "'".$requestRoute.'/import'."'",
+                'templateUrl' => "'".$requestRoute.'/downloadTemplate'."'",
+                'auth'        => "['".$this->getCode().":import']",
             ];
         }
         // 导出
         if (Str::contains($this->tablesContract->getGenerateMenus(), 'export')) {
             $options['export'] = [
                 'show' => true,
-                'url' => "'" . $requestRoute . '/export' . "'",
-                'auth' => "['" . $this->getCode() . ":export']",
+                'url'  => "'".$requestRoute.'/export'."'",
+                'auth' => "['".$this->getCode().":export']",
             ];
         }
-        return 'const options = reactive(' . $this->jsonFormat($options, true) . ')';
+
+        return 'const options = reactive('.$this->jsonFormat($options, true).')';
     }
 
     /**
@@ -287,9 +291,9 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         $options = [];
         foreach ($this->columns as $column) {
             $tmp = [
-                'title' => $column->column_comment,
+                'title'     => $column->column_comment,
                 'dataIndex' => $column->column_name,
-                'formType' => $this->getViewType($column->view_type),
+                'formType'  => $this->getViewType($column->view_type),
             ];
             // 基础
             if ($column->is_query == self::YES) {
@@ -307,22 +311,27 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
             if ($column->is_required == self::YES) {
                 $tmp['commonRules'] = [
                     'required' => true,
-                    'message' => '请输入' . $column->column_comment,
+                    'message'  => '请输入'.$column->column_comment,
                 ];
             }
             if ($column->is_sort == self::YES) {
                 $tmp['sortable'] = [
                     'sortDirections' => ['ascend', 'descend'],
-                    'sorter' => true,
+                    'sorter'         => true,
                 ];
             }
             // 扩展项
-            if (! empty($column->options)) {
+            if (!empty($column->options)) {
                 $collection = $column->options['collection'] ?? [];
                 // 合并
                 $tmp = array_merge($tmp, $column->options);
                 // 自定义数据
-                if (in_array($column->view_type, ['checkbox', 'radio', 'select', 'transfer']) && ! empty($collection)) {
+                if (in_array($column->view_type, [
+                        'checkbox',
+                        'radio',
+                        'select',
+                        'transfer',
+                    ]) && !empty($collection)) {
                     $tmp['dict'] = ['data' => $collection, 'translation' => true];
                 }
                 // 对日期时间处理
@@ -336,10 +345,10 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
                 unset($tmp['collection']);
             }
             // 字典
-            if (! empty($column->dict_type)) {
+            if (!empty($column->dict_type)) {
                 $tmp['dict'] = [
-                    'name' => $column->dict_type,
-                    'props' => ['label' => 'title', 'value' => 'key'],
+                    'name'        => $column->dict_type,
+                    'props'       => ['label' => 'title', 'value' => 'key'],
                     'translation' => true,
                 ];
             }
@@ -351,12 +360,14 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
             // todo...
             $options[] = $tmp;
         }
-        return 'const columns = reactive(' . $this->jsonFormat($options) . ')';
+
+        return 'const columns = reactive('.$this->jsonFormat($options).')';
     }
 
     protected function getShowRecycle(): string
     {
-        return (strpos($this->tablesContract->getGenerateMenus(), 'recycle') > 0) ? 'true' : 'false';
+        return (strpos($this->tablesContract->getGenerateMenus(), 'recycle') > 0) ? 'true'
+            : 'false';
     }
 
     /**
@@ -382,6 +393,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
                 return $column->column_name;
             }
         }
+
         return '';
     }
 
@@ -394,6 +406,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         if (in_array('numberOperation', explode(',', $this->tablesContract->getGenerateMenus()))) {
             return str_replace('{BUSINESS_EN_NAME}', $this->getBusinessEnName(), $this->getOtherTemplate('numberOperation'));
         }
+
         return '';
     }
 
@@ -406,12 +419,13 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         if (in_array('changeStatus', explode(',', $this->tablesContract->getGenerateMenus()))) {
             return str_replace('{BUSINESS_EN_NAME}', $this->getBusinessEnName(), $this->getOtherTemplate('switchStatus'));
         }
+
         return '';
     }
 
     protected function getOtherTemplate(string $tpl): string
     {
-        return $this->filesystem->sharedGet($this->getStubDir() . "/Vue/{$tpl}.stub");
+        return $this->filesystem->sharedGet($this->getStubDir()."/Vue/{$tpl}.stub");
     }
 
     /**
@@ -420,33 +434,33 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     protected function getViewType(string $viewType): string
     {
         $viewTypes = [
-            'text' => 'input',
-            'password' => 'input-password',
-            'textarea' => 'textarea',
-            'inputNumber' => 'input-number',
-            'inputTag' => 'input-tag',
-            'mention' => 'mention',
-            'switch' => 'switch',
-            'slider' => 'slider',
-            'select' => 'select',
-            'radio' => 'radio',
-            'checkbox' => 'checkbox',
-            'treeSelect' => 'tree-select',
-            'date' => 'date',
-            'time' => 'time',
-            'rate' => 'rate',
-            'cascader' => 'cascader',
-            'transfer' => 'transfer',
-            'selectUser' => 'user-select',
-            'userInfo' => 'user-info',
-            'cityLinkage' => 'city-linkage',
-            'icon' => 'icon-picker',
-            'formGroup' => 'form-group',
-            'upload' => 'upload',
+            'text'           => 'input',
+            'password'       => 'input-password',
+            'textarea'       => 'textarea',
+            'inputNumber'    => 'input-number',
+            'inputTag'       => 'input-tag',
+            'mention'        => 'mention',
+            'switch'         => 'switch',
+            'slider'         => 'slider',
+            'select'         => 'select',
+            'radio'          => 'radio',
+            'checkbox'       => 'checkbox',
+            'treeSelect'     => 'tree-select',
+            'date'           => 'date',
+            'time'           => 'time',
+            'rate'           => 'rate',
+            'cascader'       => 'cascader',
+            'transfer'       => 'transfer',
+            'selectUser'     => 'user-select',
+            'userInfo'       => 'user-info',
+            'cityLinkage'    => 'city-linkage',
+            'icon'           => 'icon-picker',
+            'formGroup'      => 'form-group',
+            'upload'         => 'upload',
             'selectResource' => 'resource',
-            'editor' => 'editor',
-            'wangEditor' => 'wang-editor',
-            'codeEditor' => 'code-editor',
+            'editor'         => 'editor',
+            'wangEditor'     => 'wang-editor',
+            'codeEditor'     => 'code-editor',
         ];
 
         return $viewTypes[$viewType] ?? 'input';
@@ -463,6 +477,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         if ($removeValueQuotes) {
             $data = preg_replace('/(:\s)\"(.+)\"/', '\1\2', $data);
         }
+
         return $data;
     }
 }

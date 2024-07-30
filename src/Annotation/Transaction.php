@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -18,7 +17,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class Transaction extends AbstractAnnotation
 {
     /**
-     * @param int $retry 重试次数
+     * @param  int  $retry  重试次数
      */
-    public function __construct(public int $retry = 1, public ?string $connection = null) {}
+    public function __construct(public int $retry = 1, public ?string $connection = null) { }
 }

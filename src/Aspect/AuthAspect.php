@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -40,18 +39,18 @@ class AuthAspect extends AbstractAspect
 
         /* @var $auth Auth */
         if (isset($proceedingJoinPoint->getAnnotationMetadata()->class[Auth::class])) {
-            $auth = $proceedingJoinPoint->getAnnotationMetadata()->class[Auth::class];
+            $auth  = $proceedingJoinPoint->getAnnotationMetadata()->class[Auth::class];
             $scene = $auth->scene ?? 'default';
         }
 
         if (isset($proceedingJoinPoint->getAnnotationMetadata()->method[Auth::class])) {
-            $auth = $proceedingJoinPoint->getAnnotationMetadata()->method[Auth::class];
+            $auth  = $proceedingJoinPoint->getAnnotationMetadata()->method[Auth::class];
             $scene = $auth->scene ?? 'default';
         }
 
         $loginUser = user($scene);
 
-        if (! $loginUser->check(null, $scene)) {
+        if (!$loginUser->check(null, $scene)) {
             throw new TokenException(t('jwt.validate_fail'));
         }
 

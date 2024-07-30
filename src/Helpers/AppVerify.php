@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Helper;
 
@@ -30,12 +22,12 @@ class AppVerify
 
     /**
      * AppVerify constructor.
-     * @param string $scene 场景，默认为default
+     * @param  string  $scene  场景，默认为default
      */
     public function __construct(string $scene = 'api')
     {
         /* @var JWT $this ->jwt */
-        $this->jwt = static::getJwtGivenScene($scene);
+        $this->jwt     = static::getJwtGivenScene($scene);
         $this->request = static::getRequest();
     }
 
@@ -70,6 +62,7 @@ class AppVerify
     public function getAppInfo(): array
     {
         $params = $this->request->getQueryParams() ?? null;
+
         return $this->jwt->getParserData($params['access_token']);
     }
 
@@ -79,7 +72,8 @@ class AppVerify
     public function getApiId(): string
     {
         $accessToken = $this->request->query('access_token') ?? null;
-        return (string) $this->jwt->getParserData($accessToken)['id'];
+
+        return (string)$this->jwt->getParserData($accessToken)['id'];
     }
 
     /**
@@ -88,7 +82,8 @@ class AppVerify
     public function getAppId(): string
     {
         $accessToken = $this->request->getQueryParams()['access_token'] ?? null;
-        return (string) $this->jwt->getParserData($accessToken)['app_id'];
+
+        return (string)$this->jwt->getParserData($accessToken)['app_id'];
     }
 
     /**
@@ -106,6 +101,7 @@ class AppVerify
     public function refresh(): string
     {
         $accessToken = $this->request->getQueryParams()['access_token'] ?? null;
+
         return $this->jwt->refreshToken($accessToken);
     }
 

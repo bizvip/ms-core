@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Aop\AbstractAspect;
@@ -31,17 +30,18 @@ class ConfigCryptAspect extends AbstractAspect
     {
         $result = $proceedingJoinPoint->process();
         if (is_null($this->enable)) {
-            $this->enable = (bool) $result->get('mineadmin.config_encryption', false);
+            $this->enable = (bool)$result->get('mineadmin.config_encryption', false);
         }
         if ($this->enable) {
             $this->processConfig($result);
         }
+
         return $result;
     }
 
     private function processConfig($result)
     {
-        $config = (array) $result;
+        $config = (array)$result;
         $config = array_shift($config);
 
         foreach ($config as $key => $value) {
@@ -63,14 +63,14 @@ class ConfigCryptAspect extends AbstractAspect
                     if (preg_match('#ENC\((.*?)\)#is', $value, $matches)) {
                         if (is_null($this->key)) {
                             $this->key = $result->get('mineadmin.config_encryption_key', '');
-                            if (! empty($this->key)) {
+                            if (!empty($this->key)) {
                                 $this->key = @base64_decode($this->key);
                             }
                         }
 
                         if (is_null($this->iv)) {
                             $this->iv = $result->get('mineadmin.config_encryption_iv', '');
-                            if (! empty($this->iv)) {
+                            if (!empty($this->iv)) {
                                 $this->iv = @base64_decode($this->iv);
                             }
                         }
@@ -85,6 +85,7 @@ class ConfigCryptAspect extends AbstractAspect
                 }
             }
         }
+
         return $config;
     }
 }

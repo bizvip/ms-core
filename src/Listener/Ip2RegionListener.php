@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Listener;
 
 use Hyperf\Event\Contract\ListenerInterface;
@@ -18,7 +17,7 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class Ip2RegionListener implements ListenerInterface
 {
-    public function __construct(protected ContainerInterface $container) {}
+    public function __construct(protected ContainerInterface $container) { }
 
     public function listen(): array
     {

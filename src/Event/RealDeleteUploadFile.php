@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Event;
 
 use Hyperf\DbConnection\Model\Model;
@@ -22,7 +21,7 @@ class RealDeleteUploadFile
 
     public function __construct(Model $model, Filesystem $filesystem)
     {
-        $this->model = $model;
+        $this->model      = $model;
         $this->filesystem = $filesystem;
     }
 

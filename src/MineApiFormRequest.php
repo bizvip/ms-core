@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\Validation\Request\FormRequest;
@@ -36,8 +35,9 @@ class MineApiFormRequest extends FormRequest
     {
         $operation = $this->getOperation();
         $operation = explode('.', $operation);
-        $method = end($operation) . 'Rules';
-        $rules = ($operation && method_exists($this, $method)) ? $this->{$method}() : [];
+        $method    = end($operation).'Rules';
+        $rules     = ($operation && method_exists($this, $method)) ? $this->{$method}() : [];
+
         return array_merge($rules, $this->commonRules());
     }
 

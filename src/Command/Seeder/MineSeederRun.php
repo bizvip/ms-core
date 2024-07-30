@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command\Seeder;
 
 use Hyperf\Command\Annotation\Command;
@@ -58,7 +57,7 @@ class MineSeederRun extends BaseCommand
      */
     public function handle()
     {
-        if (! $this->confirmToProceed()) {
+        if (!$this->confirmToProceed()) {
             return;
         }
 
@@ -86,21 +85,34 @@ class MineSeederRun extends BaseCommand
     protected function getOptions(): array
     {
         return [
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The location where the seeders file stored'],
-            ['realpath', null, InputOption::VALUE_NONE, 'Indicate any provided seeder file paths are pre-resolved absolute paths'],
+            [
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The location where the seeders file stored',
+            ],
+            [
+                'realpath',
+                null,
+                InputOption::VALUE_NONE,
+                'Indicate any provided seeder file paths are pre-resolved absolute paths',
+            ],
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to seed'],
-            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when in production'],
+            [
+                'force',
+                null,
+                InputOption::VALUE_NONE,
+                'Force the operation to run when in production',
+            ],
         ];
     }
 
     protected function getSeederPath(): string
     {
-        if (! is_null($targetPath = $this->input->getOption('path'))) {
-            return ! $this->usingRealPath()
-                ? BASE_PATH . '/' . $targetPath
-                : $targetPath;
+        if (!is_null($targetPath = $this->input->getOption('path'))) {
+            return !$this->usingRealPath() ? BASE_PATH.'/'.$targetPath : $targetPath;
         }
 
-        return BASE_PATH . '/app/' . $this->module . '/Database/Seeders';
+        return BASE_PATH.'/app/'.$this->module.'/Database/Seeders';
     }
 }

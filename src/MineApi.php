@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Mine\Traits\ControllerTrait;
@@ -19,10 +18,7 @@ abstract class MineApi
 {
     use ControllerTrait;
 
-    public function __construct(
-        readonly protected MineRequest $request,
-        readonly protected MineResponse $response
-    ) {}
+    public function __construct(readonly protected MineRequest $request, readonly protected MineResponse $response) { }
 
     public function getResponse(): MineResponse
     {

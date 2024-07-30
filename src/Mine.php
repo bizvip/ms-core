@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\Support\Filesystem\Filesystem;
@@ -29,7 +28,7 @@ class Mine
      */
     public function __construct()
     {
-        $this->setAppPath(BASE_PATH . '/app');
+        $this->setAppPath(BASE_PATH.'/app');
         $this->scanModule();
     }
 
@@ -39,12 +38,12 @@ class Mine
      */
     public function scanModule(): void
     {
-        $modules = glob(self::getAppPath() . '*');
-        $fs = container()->get(Filesystem::class);
-        $infos = [];
+        $modules = glob(self::getAppPath().'*');
+        $fs      = container()->get(Filesystem::class);
+        $infos   = [];
         foreach ($modules as &$mod) {
             if (is_dir($mod)) {
-                $modInfo = $mod . DIRECTORY_SEPARATOR . 'config.json';
+                $modInfo = $mod.DIRECTORY_SEPARATOR.'config.json';
                 if (file_exists($modInfo)) {
                     $infos[basename($mod)] = json_decode($fs->sharedGet($modInfo), true);
                 }
@@ -70,11 +69,11 @@ class Mine
      */
     public function getAppPath(): string
     {
-        return $this->appPath . DIRECTORY_SEPARATOR;
+        return $this->appPath.DIRECTORY_SEPARATOR;
     }
 
     /**
-     * @param mixed $appPath
+     * @param  mixed  $appPath
      */
     public function setAppPath(string $appPath): void
     {
@@ -89,11 +88,12 @@ class Mine
         if (empty($name)) {
             return $this->moduleInfo;
         }
+
         return $this->moduleInfo[$name] ?? [];
     }
 
     /**
-     * @param mixed $moduleInfo
+     * @param  mixed  $moduleInfo
      */
     public function setModuleInfo($moduleInfo): void
     {
@@ -101,7 +101,7 @@ class Mine
     }
 
     /**
-     * @param false $save
+     * @param  false  $save
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -112,9 +112,11 @@ class Mine
             if (isset($this->moduleInfo[$mod], $this->moduleInfo[$mod][$name])) {
                 $this->moduleInfo[$mod][$name] = $value;
                 $save && $this->saveModuleConfig($mod);
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -124,10 +126,10 @@ class Mine
      */
     protected function saveModuleConfig(string $mod): void
     {
-        if (! empty($mod)) {
-            $fs = container()->get(Filesystem::class);
-            $modJson = $this->getAppPath() . $mod . DIRECTORY_SEPARATOR . 'config.json';
-            if (! $fs->isWritable($modJson)) {
+        if (!empty($mod)) {
+            $fs      = container()->get(Filesystem::class);
+            $modJson = $this->getAppPath().$mod.DIRECTORY_SEPARATOR.'config.json';
+            if (!$fs->isWritable($modJson)) {
                 $fs->chmod($modJson, 666);
             }
             $fs->put($modJson, \json_encode($this->getModuleInfo($mod), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));

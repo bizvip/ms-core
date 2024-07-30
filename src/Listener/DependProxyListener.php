@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Listener;
 
@@ -24,7 +16,7 @@ use Mine\Annotation\DependProxyCollector;
 
 class DependProxyListener implements ListenerInterface
 {
-    public function __construct(public ContainerInterface $container) {}
+    public function __construct(public ContainerInterface $container) { }
 
     public function listen(): array
     {
@@ -39,16 +31,16 @@ class DependProxyListener implements ListenerInterface
 
     private function handleComponent(): void
     {
-        $components = ComponentCollector::getComponent();
+        $components     = ComponentCollector::getComponent();
         $postConstructs = ComponentCollector::getPostConstruct();
-        $overrides = ComponentCollector::getOverride();
-        $container = $this->container;
+        $overrides      = ComponentCollector::getOverride();
+        $container      = $this->container;
         foreach ($components as $component) {
-            if (! empty($overrides[$component])) {
+            if (!empty($overrides[$component])) {
                 $container->define($component, ($overrides[$component])(...));
             } else {
                 $componentInstance = $container->make($component);
-                if (! empty($postConstructs[$component])) {
+                if (!empty($postConstructs[$component])) {
                     $constructs = $postConstructs[$component];
                     rsort($constructs, SORT_DESC);
                     foreach ($constructs as $construct) {
@@ -62,11 +54,10 @@ class DependProxyListener implements ListenerInterface
     private function handleDefined(): void
     {
         foreach (DependProxyCollector::list() as $collector) {
-            $targets = $collector->values;
+            $targets    = $collector->values;
             $definition = $collector->provider;
             foreach ($targets as $target) {
-                $this->container
-                    ->define($target, $definition);
+                $this->container->define($target, $definition);
             }
         }
     }

@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Annotation;
 
@@ -24,11 +16,11 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class DependProxy extends AbstractAnnotation
 {
-    public function __construct(public array $values = [], public ?string $provider = null) {}
+    public function __construct(public array $values = [], public ?string $provider = null) { }
 
     public function collectClass(string $className): void
     {
-        if (! $this->provider) {
+        if (!$this->provider) {
             $this->provider = $className;
         }
         if (count($this->values) == 0 && class_exists($className)) {
@@ -42,6 +34,7 @@ class DependProxy extends AbstractAnnotation
                 if (in_array($b->getName(), class_implements($a->getName()))) {
                     return -1;
                 }
+
                 return 0;
             });
             $this->values = [array_values($interfaces)[0]->getName()];

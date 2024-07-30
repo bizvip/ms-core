@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 use Hyperf\Config\Config;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Mine\Aspect\ConfigCryptAspect;

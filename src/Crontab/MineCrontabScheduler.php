@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab;
 
 class MineCrontabScheduler
@@ -26,7 +25,7 @@ class MineCrontabScheduler
      */
     public function __construct(MineCrontabManage $crontabManager)
     {
-        $this->schedules = new \SplQueue();
+        $this->schedules      = new \SplQueue();
         $this->crontabManager = $crontabManager;
     }
 
@@ -35,6 +34,7 @@ class MineCrontabScheduler
         foreach ($this->getSchedules() ?? [] as $schedule) {
             $this->schedules->enqueue($schedule);
         }
+
         return $this->schedules;
     }
 

@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command\Seeder;
 
 use Hyperf\Command\Annotation\Command;
@@ -46,7 +45,7 @@ class MineSeeder extends BaseCommand
     public function handle()
     {
         $this->module = ucfirst(trim($this->input->getOption('module')));
-        $name = Str::snake(trim($this->input->getArgument('name')));
+        $name         = Str::snake(trim($this->input->getArgument('name')));
 
         $this->writeMigration($name);
     }
@@ -67,7 +66,7 @@ class MineSeeder extends BaseCommand
 
     protected function ensureSeederDirectoryAlreadyExist(string $path): string
     {
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
 
@@ -84,20 +83,33 @@ class MineSeeder extends BaseCommand
     protected function getOptions(): array
     {
         return [
-            ['module', null, InputOption::VALUE_REQUIRED, 'Please enter the module to be generated'],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The location where the seeder file should be created'],
-            ['realpath', null, InputOption::VALUE_NONE, 'Indicate any provided seeder file paths are pre-resolved absolute paths'],
+            [
+                'module',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Please enter the module to be generated',
+            ],
+            [
+                'path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The location where the seeder file should be created',
+            ],
+            [
+                'realpath',
+                null,
+                InputOption::VALUE_NONE,
+                'Indicate any provided seeder file paths are pre-resolved absolute paths',
+            ],
         ];
     }
 
     protected function getSeederPath(): string
     {
-        if (! is_null($targetPath = $this->input->getOption('path'))) {
-            return ! $this->usingRealPath()
-                ? BASE_PATH . '/' . $targetPath
-                : $targetPath;
+        if (!is_null($targetPath = $this->input->getOption('path'))) {
+            return !$this->usingRealPath() ? BASE_PATH.'/'.$targetPath : $targetPath;
         }
 
-        return BASE_PATH . '/app/' . ucfirst($this->module) . '/Database/Seeders';
+        return BASE_PATH.'/app/'.ucfirst($this->module).'/Database/Seeders';
     }
 }

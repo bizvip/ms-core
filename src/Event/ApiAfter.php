@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Event;
 
 use Psr\Http\Message\ResponseInterface;
@@ -20,7 +19,7 @@ class ApiAfter
     public function __construct(?array $apiData, ResponseInterface $result)
     {
         $this->apiData = $apiData;
-        $this->result = $result;
+        $this->result  = $result;
     }
 
     public function getApiData(): ?array

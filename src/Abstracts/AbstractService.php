@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Abstracts;
 
 use Hyperf\Context\Context;
@@ -20,7 +19,7 @@ abstract class AbstractService
 
     /**
      * 魔术方法，从类属性里获取数据.
-     * @param mixed $name
+     * @param  mixed  $name
      * @return mixed|string
      */
     public function __get($name)

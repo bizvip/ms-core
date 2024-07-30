@@ -7,14 +7,6 @@
 /** @noinspection PhpSignatureMismatchDuringInheritanceInspection */
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -52,12 +44,13 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract): ControllerGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         $this->columns = $tablesContract->getColumns();
         $this->setNamespace($this->tablesContract->getNamespace());
+
         return $this->placeholderReplace();
     }
 
@@ -66,17 +59,19 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        $module = Str::title($this->tablesContract->getModuleName()[0]).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType() === GenerateTypeEnum::ZIP) {
-            $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Controller/";
+            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Controller/";
         } else {
-            $path = BASE_PATH . "/app/{$module}/Controller/";
+            $path = BASE_PATH."/app/{$module}/Controller/";
         }
-        if (! empty($this->tablesContract->getPackageName())) {
-            $path .= Str::title($this->tablesContract->getPackageName()) . '/';
+        if (!empty($this->tablesContract->getPackageName())) {
+            $path .= Str::title($this->tablesContract->getPackageName()).'/';
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
-        $this->filesystem->put($path . "{$this->getClassName()}.php", $this->replace()->getCodeContent());
+        $this->filesystem->put(
+            $path."{$this->getClassName()}.php", $this->replace()->getCodeContent()
+        );
     }
 
     /**
@@ -108,11 +103,11 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     public function getShortBusinessName(): string
     {
-        return Str::camel(str_replace(
-            Str::lower($this->tablesContract->getModuleName()),
-            '',
-            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName())
-        ));
+        return Str::camel(
+            str_replace(
+                Str::lower($this->tablesContract->getModuleName()), '', str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName())
+            )
+        );
     }
 
     /**
@@ -136,7 +131,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . 'Controller/main.stub';
+        return $this->getStubDir().'Controller/main.stub';
     }
 
     /**
@@ -152,11 +147,11 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): ControllerGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -209,7 +204,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
             $this->getControllerRoute(),
             $this->getFunctions(),
             $this->getRequestName(),
-            sprintf('%s, %s', Str::lower($this->tablesContract->getModuleName()) . ':' . $this->getShortBusinessName(), $this->getMethodRoute('index')),
+            sprintf('%s, %s', Str::lower($this->tablesContract->getModuleName()).':'.$this->getShortBusinessName(), $this->getMethodRoute('index')),
             $this->getMethodRoute('recycle'),
             $this->getMethodRoute('save'),
             $this->getMethodRoute('read'),
@@ -234,10 +229,11 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        $namespace = $this->getNamespace() . '\Controller';
-        if (! empty($this->tablesContract->getPackageName())) {
-            return $namespace . '\\' . Str::title($this->tablesContract->getPackageName());
+        $namespace = $this->getNamespace().'\Controller';
+        if (!empty($this->tablesContract->getPackageName())) {
+            return $namespace.'\\'.Str::title($this->tablesContract->getPackageName());
         }
+
         return $namespace;
     }
 
@@ -246,7 +242,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->tablesContract->getMenuName() . '控制器';
+        return $this->tablesContract->getMenuName().'控制器';
     }
 
     /**
@@ -265,7 +261,7 @@ UseNamespace;
      */
     protected function getClassName(): string
     {
-        return $this->getBusinessName() . 'Controller';
+        return $this->getBusinessName().'Controller';
     }
 
     /**
@@ -273,7 +269,7 @@ UseNamespace;
      */
     protected function getServiceName(): string
     {
-        return $this->getBusinessName() . 'Service';
+        return $this->getBusinessName().'Service';
     }
 
     /**
@@ -282,28 +278,31 @@ UseNamespace;
     protected function getControllerRoute(): string
     {
         return sprintf(
-            '%s/%s',
-            Str::lower($this->tablesContract->getModuleName()),
-            $this->getShortBusinessName()
+            '%s/%s', Str::lower($this->tablesContract->getModuleName()), $this->getShortBusinessName()
         );
     }
 
     protected function getFunctions(): string
     {
-        $menus = $this->tablesContract->getGenerateMenus() ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
-        $otherMenu = [$this->tablesContract->getType()->value === 'single' ? 'singleList' : 'treeList'];
+        $menus     = $this->tablesContract->getGenerateMenus()
+            ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
+        $otherMenu = [
+            $this->tablesContract->getType()->value === 'single' ? 'singleList' : 'treeList',
+        ];
         if (in_array('recycle', $menus)) {
-            $otherMenu[] = $this->tablesContract->getType()->value === 'single' ? 'singleRecycleList' : 'treeRecycleList';
+            $otherMenu[] = $this->tablesContract->getType()->value === 'single'
+                ? 'singleRecycleList' : 'treeRecycleList';
             array_push($otherMenu, ...['realDelete', 'recovery']);
             unset($menus[array_search('recycle', $menus)]);
         }
         array_unshift($menus, ...$otherMenu);
         $phpCode = '';
-        $path = $this->getStubDir() . 'Controller/';
+        $path    = $this->getStubDir().'Controller/';
         foreach ($menus as $menu) {
-            $content = $this->filesystem->sharedGet($path . $menu . '.stub');
+            $content = $this->filesystem->sharedGet($path.$menu.'.stub');
             $phpCode .= $content;
         }
+
         return $phpCode;
     }
 
@@ -313,19 +312,14 @@ UseNamespace;
     protected function getMethodRoute(string $route): string
     {
         return sprintf(
-            '%s:%s:%s',
-            Str::lower($this->tablesContract->getModuleName()),
-            $this->getShortBusinessName(),
-            $route
+            '%s:%s:%s', Str::lower($this->tablesContract->getModuleName()), $this->getShortBusinessName(), $route
         );
     }
 
     protected function getDtoClass(): string
     {
         return sprintf(
-            '\%s\Dto\%s::class',
-            $this->tablesContract->getNamespace(),
-            $this->getBusinessName() . 'Dto'
+            '\%s\Dto\%s::class', $this->tablesContract->getNamespace(), $this->getBusinessName().'Dto'
         );
     }
 
@@ -339,6 +333,7 @@ UseNamespace;
                 return $column->column_name;
             }
         }
+
         return '';
     }
 
@@ -372,6 +367,6 @@ UseNamespace;
      */
     protected function getRequestName(): string
     {
-        return $this->getBusinessName() . 'Request';
+        return $this->getBusinessName().'Request';
     }
 }

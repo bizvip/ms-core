@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -31,6 +23,7 @@ class ModuleGenerator extends MineGenerator
     public function setModuleInfo(array $moduleInfo): static
     {
         $this->moduleInfo = $moduleInfo;
+
         return $this;
     }
 
@@ -39,7 +32,7 @@ class ModuleGenerator extends MineGenerator
      */
     public function createModule(): bool
     {
-        if (! ($this->moduleInfo['name'] ?? false)) {
+        if (!($this->moduleInfo['name'] ?? false)) {
             throw new \RuntimeException('模块名称为空');
         }
 
@@ -48,19 +41,19 @@ class ModuleGenerator extends MineGenerator
         $mine = new Mine();
         $mine->scanModule();
 
-        if (! empty($mine->getModuleInfo($this->moduleInfo['name']))) {
+        if (!empty($mine->getModuleInfo($this->moduleInfo['name']))) {
             throw new \RuntimeException('同名模块已存在');
         }
 
-        $appPath = BASE_PATH . '/app/';
-        $modulePath = $appPath . $this->moduleInfo['name'] . '/';
+        $appPath    = BASE_PATH.'/app/';
+        $modulePath = $appPath.$this->moduleInfo['name'].'/';
 
         /** @var Filesystem $filesystem */
         $filesystem = make(Filesystem::class);
-        $filesystem->makeDirectory($appPath . $this->moduleInfo['name']);
+        $filesystem->makeDirectory($appPath.$this->moduleInfo['name']);
 
         foreach ($this->getGeneratorDirs() as $dir) {
-            $filesystem->makeDirectory($modulePath . $dir);
+            $filesystem->makeDirectory($modulePath.$dir);
         }
 
         $this->createConfigJson($filesystem);
@@ -73,20 +66,18 @@ class ModuleGenerator extends MineGenerator
      */
     protected function createConfigJson(Filesystem $filesystem)
     {
-        $json = $filesystem->sharedGet($this->getStubDir() . 'config.stub');
+        $json = $filesystem->sharedGet($this->getStubDir().'config.stub');
 
         $content = str_replace(
-            ['{NAME}', '{LABEL}', '{DESCRIPTION}', '{VERSION}'],
-            [
-                $this->moduleInfo['name'],
-                $this->moduleInfo['label'],
-                $this->moduleInfo['description'],
-                $this->moduleInfo['version'],
-            ],
-            $json
+            ['{NAME}', '{LABEL}', '{DESCRIPTION}', '{VERSION}'], [
+            $this->moduleInfo['name'],
+            $this->moduleInfo['label'],
+            $this->moduleInfo['description'],
+            $this->moduleInfo['version'],
+        ], $json
         );
 
-        $filesystem->put(BASE_PATH . '/app/' . $this->moduleInfo['name'] . '/config.json', $content);
+        $filesystem->put(BASE_PATH.'/app/'.$this->moduleInfo['name'].'/config.json', $content);
     }
 
     /**

@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Contract;
 
@@ -37,14 +29,10 @@ interface SaveOrUpdateDaoContract
 
     /**
      * 批量插入更新.
-     * @param null|array $whereKeys 对应的key值
-     * @param int $batchSize 分批处理数量
+     * @param  null|array  $whereKeys  对应的key值
+     * @param  int  $batchSize         分批处理数量
      * @return Collection<string,T>
      * @throws ServiceException
      */
-    public function batchSaveOrUpdate(
-        array $data,
-        ?array $whereKeys = null,
-        int $batchSize = 0
-    ): Collection;
+    public function batchSaveOrUpdate(array $data, ?array $whereKeys = null, int $batchSize = 0): Collection;
 }

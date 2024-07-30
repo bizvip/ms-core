@@ -10,10 +10,10 @@ declare(strict_types=1);
  * Please view the LICENSE file that was distributed with this source code,
  * For the full copyright and license information.
  * Thank you very much for using MineAdmin.
- *
  * @Author X.Mo<root@imoi.cn>
  * @Link   https://gitee.com/xmo/MineAdmin
  */
+
 namespace Mine\Translatable\Traits;
 
 use Hyperf\Database\Model\Relations\HasMany;
@@ -49,10 +49,10 @@ trait Relationship
         $modelName = get_class($this);
 
         if ($namespace = $this->getTranslationModelNamespace()) {
-            $modelName = $namespace . '\\' . class_basename(get_class($this));
+            $modelName = $namespace.'\\'.class_basename(get_class($this));
         }
 
-        return $modelName . config('translatable.translation_suffix', 'Translation');
+        return $modelName.config('translatable.translation_suffix', 'Translation');
     }
 
     /**
@@ -77,8 +77,7 @@ trait Relationship
 
     public function translation(): HasOne
     {
-        return $this
-            ->hasOne($this->getTranslationModelName(), $this->getTranslationRelationKey())
+        return $this->hasOne($this->getTranslationModelName(), $this->getTranslationRelationKey())
             ->where($this->getLocaleKey(), $this->localeOrFallback());
     }
 
@@ -89,8 +88,8 @@ trait Relationship
 
     private function localeOrFallback()
     {
-        return $this->useFallback() && ! $this->translations()->where($this->getLocaleKey(), $this->locale())->exists()
-            ? $this->getFallbackLocale()
+        return $this->useFallback() && !$this->translations()
+            ->where($this->getLocaleKey(), $this->locale())->exists() ? $this->getFallbackLocale()
             : $this->locale();
     }
 }

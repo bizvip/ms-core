@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\Database\Commands\Ast\ModelUpdateVisitor;
@@ -23,17 +22,17 @@ class MineModelVisitor extends ModelUpdateVisitor
     {
         return match ($type) {
             'tinyint', 'smallint', 'mediumint', 'int', 'bigint' => 'integer',
-            'decimal' => 'decimal:2',
-            'float', 'double', 'real' => 'float',
-            'bool', 'boolean' => 'boolean',
-            'json' => 'array',
-            default => null,
+            'decimal'                                           => 'decimal:2',
+            'float', 'double', 'real'                           => 'float',
+            'bool', 'boolean'                                   => 'boolean',
+            'json'                                              => 'array',
+            default                                             => null,
         };
     }
 
     protected function formatPropertyType(string $type, ?string $cast): ?string
     {
-        if (! isset($cast)) {
+        if (!isset($cast)) {
             $cast = $this->formatDatabaseType($type) ?? 'string';
         }
 

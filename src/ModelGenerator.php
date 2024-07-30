@@ -6,14 +6,6 @@
 
 /** @noinspection PhpSignatureMismatchDuringInheritanceInspection */
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -52,11 +44,12 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract): ModelGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         $this->setNamespace($this->tablesContract->getNamespace());
+
         return $this;
     }
 
@@ -67,21 +60,21 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        $module = Str::title($this->tablesContract->getModuleName()[0]).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Model/";
+            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Model/";
         } else {
-            $path = BASE_PATH . "/app/{$module}/Model/";
+            $path = BASE_PATH."/app/{$module}/Model/";
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
 
         $command = [
-            'command' => 'mine:model-gen',
+            'command'  => 'mine:model-gen',
             '--module' => $this->tablesContract->getModuleName(),
-            '--table' => str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()),
+            '--table'  => str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()),
         ];
 
-        if (! Str::contains($this->tablesContract->getTableName(), Str::lower($this->tablesContract->getModuleName()))) {
+        if (!Str::contains($this->tablesContract->getTableName(), Str::lower($this->tablesContract->getModuleName()))) {
             throw new NormalStatusException(t('setting.gen_model_error'), 500);
         }
 
@@ -89,7 +82,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
             throw new NormalStatusException(t('setting.gen_model_error'), 500);
         }
 
-        $input = new ArrayInput($command);
+        $input  = new ArrayInput($command);
         $output = new NullOutput();
 
         /** @var Application $application */
@@ -102,28 +95,26 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
             // 对模型文件处理
             $modelName = \Hyperf\Stringable\Str::singular($modelName);
             if ($modelName[strlen($modelName) - 1] == 's' && $modelName[strlen($modelName) - 2] != 's') {
-                $oldName = Str::substr($modelName, 0, strlen($modelName) - 1);
-                $oldPath = BASE_PATH . "/app/{$module}/Model/{$oldName}.php";
-                $sourcePath = BASE_PATH . "/app/{$module}/Model/{$modelName}.php";
+                $oldName    = Str::substr($modelName, 0, strlen($modelName) - 1);
+                $oldPath    = BASE_PATH."/app/{$module}/Model/{$oldName}.php";
+                $sourcePath = BASE_PATH."/app/{$module}/Model/{$modelName}.php";
                 $this->filesystem->put(
-                    $sourcePath,
-                    str_replace($oldName, $modelName, $this->filesystem->sharedGet($oldPath))
+                    $sourcePath, str_replace($oldName, $modelName, $this->filesystem->sharedGet($oldPath))
                 );
                 @unlink($oldPath);
             } else {
-                $sourcePath = BASE_PATH . "/app/{$module}/Model/{$modelName}.php";
+                $sourcePath = BASE_PATH."/app/{$module}/Model/{$modelName}.php";
             }
 
-            if (! empty($this->tablesContract->options['relations'])) {
+            if (!empty($this->tablesContract->options['relations'])) {
                 $this->filesystem->put(
-                    $sourcePath,
-                    preg_replace('/}$/', $this->getRelations() . '}', $this->filesystem->sharedGet($sourcePath))
+                    $sourcePath, preg_replace('/}$/', $this->getRelations().'}', $this->filesystem->sharedGet($sourcePath))
                 );
             }
 
             // 压缩包下载
             if ($this->tablesContract->getGenerateType()->value === 1) {
-                $toPath = BASE_PATH . "/runtime/generate/php/app/{$module}/Model/{$modelName}.php";
+                $toPath = BASE_PATH."/runtime/generate/php/app/{$module}/Model/{$modelName}.php";
 
                 $isFile = is_file($sourcePath);
 
@@ -175,7 +166,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . 'model.stub';
+        return $this->getStubDir().'model.stub';
     }
 
     /**
@@ -191,11 +182,11 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): ModelGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate(),
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate(),
+            )
+        );
 
         return $this;
     }
@@ -233,7 +224,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\Model';
+        return $this->getNamespace().'\Model';
     }
 
     /**
@@ -260,10 +251,10 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         //        $data = make(GenerateColumnServiceInterface::class)->getList(
         //            ['select' => 'column_name', 'table_id' => $this->tablesContract->id]
         //        );
-        $data = array_column($this->tablesContract->getColumns()->toArray(), 'column_name');
+        $data    = array_column($this->tablesContract->getColumns()->toArray(), 'column_name');
         $columns = [];
         foreach ($data as $column) {
-            $columns[] = "'" . $column . "'";
+            $columns[] = "'".$column."'";
         }
 
         return implode(', ', $columns);
@@ -272,20 +263,32 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
     protected function getRelations(): string
     {
         $prefix = env('DB_PREFIX', '');
-        if (! empty($this->tablesContract->getOptions()['relations'])) {
-            $path = $this->getStubDir() . 'ModelRelation/';
+        if (!empty($this->tablesContract->getOptions()['relations'])) {
+            $path    = $this->getStubDir().'ModelRelation/';
             $phpCode = '';
             foreach ($this->tablesContract->getOptions()['relations'] as $relation) {
-                $content = $this->filesystem->sharedGet($path . $relation['type'] . '.stub');
+                $content = $this->filesystem->sharedGet($path.$relation['type'].'.stub');
                 $content = str_replace(
-                    ['{RELATION_NAME}', '{MODEL_NAME}', '{TABLE_NAME}', '{FOREIGN_KEY}', '{LOCAL_KEY}'],
-                    [$relation['name'], $relation['model'], str_replace($prefix, '', $relation['table']), $relation['foreignKey'], $relation['localKey']],
-                    $content
+                    [
+                        '{RELATION_NAME}',
+                        '{MODEL_NAME}',
+                        '{TABLE_NAME}',
+                        '{FOREIGN_KEY}',
+                        '{LOCAL_KEY}',
+                    ], [
+                    $relation['name'],
+                    $relation['model'],
+                    str_replace($prefix, '', $relation['table']),
+                    $relation['foreignKey'],
+                    $relation['localKey'],
+                ], $content
                 );
                 $phpCode .= $content;
             }
+
             return $phpCode;
         }
+
         return '';
     }
 }

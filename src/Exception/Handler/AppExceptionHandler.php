@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Exception\Handler;
 
 use Hyperf\Codec\Json;
@@ -31,7 +30,7 @@ class AppExceptionHandler extends ExceptionHandler
     public function __construct()
     {
         $this->console = console();
-        $this->logger = container()->get(LoggerFactory::class)->get('mineAdmin');
+        $this->logger  = container()->get(LoggerFactory::class)->get('mineAdmin');
     }
 
     public function handle(\Throwable $throwable, ResponseInterface $response): ResponseInterface
@@ -41,18 +40,19 @@ class AppExceptionHandler extends ExceptionHandler
         $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
         $format = [
             'requestId' => RequestIdHolder::getId(),
-            'path' => container()->get(MineRequest::class)->getUri()->getPath(),
-            'success' => false,
-            'code' => 500,
-            'message' => $throwable->getMessage(),
+            'path'      => container()->get(MineRequest::class)->getUri()->getPath(),
+            'success'   => false,
+            'code'      => 500,
+            'message'   => $throwable->getMessage(),
         ];
+
         return $response->withHeader('Server', 'MineAdmin')
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader('Access-Control-Allow-Headers', 'accept-language,authorization,lang,uid,token,Keep-Alive,User-Agent,Cache-Control,Content-Type')
-            ->withAddedHeader('content-type', 'application/json; charset=utf-8')
-            ->withStatus(500)->withBody(new SwooleStream(Json::encode($format)));
+            ->withAddedHeader('content-type', 'application/json; charset=utf-8')->withStatus(500)
+            ->withBody(new SwooleStream(Json::encode($format)));
     }
 
     public function isValid(\Throwable $throwable): bool

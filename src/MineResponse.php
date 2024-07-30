@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -32,13 +31,14 @@ class MineResponse extends Response
     {
         $format = [
             'requestId' => RequestIdHolder::getId(),
-            'path' => container()->get(MineRequest::class)->getUri()->getPath(),
-            'success' => true,
-            'message' => $message ?: t('mineadmin.response_success'),
-            'code' => $code,
-            'data' => &$data,
+            'path'      => container()->get(MineRequest::class)->getUri()->getPath(),
+            'success'   => true,
+            'message'   => $message ?: t('mineadmin.response_success'),
+            'code'      => $code,
+            'data'      => &$data,
         ];
         $format = $this->toJson($format);
+
         return $this->handleHeader($this->getResponse())
             ->withAddedHeader('content-type', 'application/json; charset=utf-8')
             ->withBody(new SwooleStream($format));
@@ -52,17 +52,18 @@ class MineResponse extends Response
     {
         $format = [
             'requestId' => RequestIdHolder::getId(),
-            'path' => container()->get(MineRequest::class)->getUri()->getPath(),
-            'success' => false,
-            'code' => $code,
-            'message' => $message ?: t('mineadmin.response_error'),
+            'path'      => container()->get(MineRequest::class)->getUri()->getPath(),
+            'success'   => false,
+            'code'      => $code,
+            'message'   => $message ?: t('mineadmin.response_error'),
         ];
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             $format['data'] = &$data;
         }
 
         $format = $this->toJson($format);
+
         return $this->handleHeader($this->getResponse())
             ->withAddedHeader('content-type', 'application/json; charset=utf-8')
             ->withBody(new SwooleStream($format));
@@ -73,8 +74,7 @@ class MineResponse extends Response
      */
     public function responseImage(string $image, string $type = 'image/png'): ResponseInterface
     {
-        return $this->handleHeader($this->getResponse())
-            ->withAddedHeader('content-type', $type)
+        return $this->handleHeader($this->getResponse())->withAddedHeader('content-type', $type)
             ->withBody(new SwooleStream($image));
     }
 
@@ -94,6 +94,7 @@ class MineResponse extends Response
         foreach ($headers as $key => $value) {
             $response = $response->withHeader($key, $value);
         }
+
         return $response;
     }
 }

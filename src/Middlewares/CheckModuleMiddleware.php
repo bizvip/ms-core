@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Middlewares;
 
 use Hyperf\Di\Annotation\AnnotationCollector;
@@ -43,7 +42,7 @@ class CheckModuleMiddleware implements MiddlewareInterface
         if ($uri->getPath() !== '/favicon.ico' && mb_substr_count($uri->getPath(), '/') > 1) {
             [$empty, $moduleName, $controllerName] = explode('/', $uri->getPath());
 
-            $path = $moduleName . '/' . $controllerName;
+            $path = $moduleName.'/'.$controllerName;
 
             $moduleName = Str::lower($moduleName);
 
@@ -59,7 +58,7 @@ class CheckModuleMiddleware implements MiddlewareInterface
             $annotation = AnnotationCollector::getClassesByAnnotation('Hyperf\HttpServer\Annotation\Controller');
 
             foreach ($annotation as $item) {
-                if ($item->server === 'http' && $item->prefix === $path && ! $module['enabled']) {
+                if ($item->server === 'http' && $item->prefix === $path && !$module['enabled']) {
                     throw new NormalStatusException('模块被禁用', 500);
                 }
             }

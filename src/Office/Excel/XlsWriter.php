@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Office\Excel;
 
@@ -33,11 +25,12 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
 {
     public static function getSheetData(mixed $request)
     {
-        $file = $request->file('file');
-        $tempFileName = 'import_' . time() . '.' . $file->getExtension();
-        $tempFilePath = BASE_PATH . '/runtime/' . $tempFileName;
+        $file         = $request->file('file');
+        $tempFileName = 'import_'.time().'.'.$file->getExtension();
+        $tempFilePath = BASE_PATH.'/runtime/'.$tempFileName;
         file_put_contents($tempFilePath, $file->getStream()->getContents());
-        $xlsxObject = new Excel(['path' => BASE_PATH . '/runtime/']);
+        $xlsxObject = new Excel(['path' => BASE_PATH.'/runtime/']);
+
         return $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
     }
 
@@ -51,12 +44,12 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
     {
         $request = container()->get(MineRequest::class);
         if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $tempFileName = 'import_' . time() . '.' . $file->getExtension();
-            $tempFilePath = BASE_PATH . '/runtime/' . $tempFileName;
+            $file         = $request->file('file');
+            $tempFileName = 'import_'.time().'.'.$file->getExtension();
+            $tempFilePath = BASE_PATH.'/runtime/'.$tempFileName;
             file_put_contents($tempFilePath, $file->getStream()->getContents());
-            $xlsxObject = new Excel(['path' => BASE_PATH . '/runtime/']);
-            $data = $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
+            $xlsxObject = new Excel(['path' => BASE_PATH.'/runtime/']);
+            $data       = $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
 
             if ($this->orderByIndex) {
                 $importData = $this->getDataByIndex($data);
@@ -77,8 +70,10 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
                 @unlink($tempFilePath);
                 throw new \Exception($e->getMessage());
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -93,47 +88,44 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         is_array($closure) ? $data = &$closure : $data = $closure();
 
         $aligns = [
-            'left' => Format::FORMAT_ALIGN_LEFT,
+            'left'   => Format::FORMAT_ALIGN_LEFT,
             'center' => Format::FORMAT_ALIGN_CENTER,
-            'right' => Format::FORMAT_ALIGN_RIGHT,
+            'right'  => Format::FORMAT_ALIGN_RIGHT,
         ];
 
-        $columnName = [];
+        $columnName  = [];
         $columnField = [];
 
         foreach ($this->property as $item) {
-            $columnName[] = $item['value'];
+            $columnName[]  = $item['value'];
             $columnField[] = $item['name'];
         }
 
-        $tempFileName = 'export_' . time() . '.xlsx';
-        $xlsxObject = new Excel(['path' => BASE_PATH . '/runtime/']);
-        $fileObject = $xlsxObject->fileName($tempFileName)->header($columnName);
+        $tempFileName = 'export_'.time().'.xlsx';
+        $xlsxObject   = new Excel(['path' => BASE_PATH.'/runtime/']);
+        $fileObject   = $xlsxObject->fileName($tempFileName)->header($columnName);
         $columnFormat = new Format($fileObject->getHandle());
-        $rowFormat = new Format($fileObject->getHandle());
+        $rowFormat    = new Format($fileObject->getHandle());
 
         $i = 0;
         foreach ($this->property as $index => $item) {
             $fileObject->setColumn(
-                sprintf('%s1:%s1', $this->getColumnIndex($i), $this->getColumnIndex($i)),
-                $this->property[$index]['width'] ?? mb_strlen($columnName[$i]) * 5,
-                $columnFormat->align($this->property[$index]['align'] ? $aligns[$this->property[$index]['align']] : $aligns['left'])
-                    ->background($this->property[$index]['bgColor'] ?? Format::COLOR_WHITE)
-                    ->border(Format::BORDER_THIN)
-                    ->fontColor($this->property[$index]['color'] ?? Format::COLOR_BLACK)
-                    ->toResource()
+                sprintf('%s1:%s1', $this->getColumnIndex($i), $this->getColumnIndex($i)), $this->property[$index]['width'] ?? mb_strlen($columnName[$i]) * 5, $columnFormat->align(
+                $this->property[$index]['align'] ? $aligns[$this->property[$index]['align']]
+                    : $aligns['left']
+            )->background($this->property[$index]['bgColor'] ?? Format::COLOR_WHITE)
+                ->border(Format::BORDER_THIN)
+                ->fontColor($this->property[$index]['color'] ?? Format::COLOR_BLACK)->toResource()
             );
             ++$i;
         }
 
         // 表头加样式
         $fileObject->setRow(
-            sprintf('A1:%s1', $this->getColumnIndex(count($columnField))),
-            20,
-            $rowFormat->bold()->align(Format::FORMAT_ALIGN_CENTER, Format::FORMAT_ALIGN_VERTICAL_CENTER)
-                ->background(0x4AC1FF)->fontColor(Format::COLOR_BLACK)
-                ->border(Format::BORDER_THIN)
-                ->toResource()
+            sprintf('A1:%s1', $this->getColumnIndex(count($columnField))), 20, $rowFormat->bold()
+            ->align(Format::FORMAT_ALIGN_CENTER, Format::FORMAT_ALIGN_VERTICAL_CENTER)
+            ->background(0x4AC1FF)->fontColor(Format::COLOR_BLACK)->border(Format::BORDER_THIN)
+            ->toResource()
         );
         $exportData = [];
         foreach ($data as $item) {
@@ -144,13 +136,13 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             foreach ($this->property as $property) {
                 foreach ($item as $name => $value) {
                     if ($property['name'] == $name) {
-                        if (! empty($property['dictName'])) {
+                        if (!empty($property['dictName'])) {
                             $yield[] = $property['dictName'][$value];
-                        } elseif (! empty($property['dictData'])) {
+                        } elseif (!empty($property['dictData'])) {
                             $yield[] = $property['dictData'][$value];
-                        } elseif (! empty($property['path'])) {
+                        } elseif (!empty($property['path'])) {
                             $yield[] = Arr::get($item, $property['path']);
-                        } elseif (! empty($this->dictData[$name])) {
+                        } elseif (!empty($this->dictData[$name])) {
                             $yield[] = $this->dictData[$name][$value] ?? '';
                         } else {
                             $yield[] = $value;
@@ -186,10 +178,11 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         foreach ($data as $item) {
             $tmp = [];
             foreach ($item as $key => $value) {
-                $tmp[$this->property[$key]['name']] = (string) $value;
+                $tmp[$this->property[$key]['name']] = (string)$value;
             }
             $importData[] = $tmp;
         }
+
         return $importData;
     }
 
@@ -205,8 +198,8 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         $headerMap = [];
         // 获取表头
         foreach ($data[0] as $index => $value) {
-            $propertyIndex = $index; // 获得列索引
-            $value = trim((string) $value);
+            $propertyIndex             = $index; // 获得列索引
+            $value                     = trim((string)$value);
             $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
         }
 
@@ -216,14 +209,15 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             $temp = [];
             foreach ($row as $index => $value) {
                 $propertyIndex = $index; // 获得列索引
-                if (! empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
-                    $temp[$headerMap[$propertyIndex]] = trim((string) $value); // 映射表头标题到对应值
+                if (!empty($headerMap[$propertyIndex])) {                     // 确保列索引存在于表头数组中
+                    $temp[$headerMap[$propertyIndex]] = trim((string)$value); // 映射表头标题到对应值
                 }
             }
-            if (! empty($temp)) {
+            if (!empty($temp)) {
                 $importData[] = $temp;
             }
         }
+
         return $importData;
     }
 }

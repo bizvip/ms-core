@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 return [
     // 是否启用数据权限
     'data_scope_enabled' => true,

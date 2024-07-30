@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine;
 
 use App\System\Mapper\SystemUploadFileMapper;
@@ -43,19 +42,14 @@ class MineUpload
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __construct(
-        FilesystemFactory $factory,
-        EventDispatcherInterface $evDispatcher,
-        ConfigServiceInterface $configService,
-        MineRequest $mineRequest,
-        IdGeneratorInterface $idGenerator
-    ) {
-        $this->factory = $factory;
-        $this->evDispatcher = $evDispatcher;
+    public function __construct(FilesystemFactory $factory, EventDispatcherInterface $evDispatcher, ConfigServiceInterface $configService, MineRequest $mineRequest, IdGeneratorInterface $idGenerator)
+    {
+        $this->factory       = $factory;
+        $this->evDispatcher  = $evDispatcher;
         $this->configService = $configService;
-        $this->mineRequest = $mineRequest;
-        $this->filesystem = $factory->get($this->getMappingMode());
-        $this->idGenerator = $idGenerator;
+        $this->mineRequest   = $mineRequest;
+        $this->filesystem    = $factory->get($this->getMappingMode());
+        $this->idGenerator   = $idGenerator;
     }
 
     /**
@@ -84,45 +78,46 @@ class MineUpload
     {
         $uploadFile = $data['package'];
         /* @var UploadedFile $uploadFile */
-        $path = BASE_PATH . '/runtime/chunk/';
+        $path      = BASE_PATH.'/runtime/chunk/';
         $chunkName = "{$path}{$data['hash']}_{$data['total']}_{$data['index']}.chunk";
-        $fs = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
+        $fs        = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
         $fs->isDirectory($path) || $fs->makeDirectory($path);
         $uploadFile->moveTo($chunkName);
         if ($data['index'] === $data['total']) {
             $content = '';
             for ($i = 1; $i <= $data['total']; ++$i) {
                 $chunkFile = "{$path}{$data['hash']}_{$data['total']}_{$i}.chunk";
-                if (! $fs->isFile($chunkFile)) {
+                if (!$fs->isFile($chunkFile)) {
                     return ['chunk' => $data['index'], 'code' => 500, 'status' => 'fail'];
                 }
                 $content .= $fs->get($chunkFile);
                 $fs->delete($chunkFile);
             }
-            $fileName = $this->getNewName() . '.' . Str::lower($data['ext']);
+            $fileName    = $this->getNewName().'.'.Str::lower($data['ext']);
             $storagePath = $this->getPath(null, $this->getStorageMode() != 1);
             try {
-                $this->filesystem->write($storagePath . '/' . $fileName, $content);
+                $this->filesystem->write($storagePath.'/'.$fileName, $content);
             } catch (\Exception $e) {
-                throw new NormalStatusException('分块上传失败：' . $e->getMessage(), 500);
+                throw new NormalStatusException('分块上传失败：'.$e->getMessage(), 500);
             }
             $fileInfo = [
                 'storage_mode' => $this->getStorageMode(),
-                'origin_name' => $data['name'],
-                'object_name' => $fileName,
-                'mime_type' => $data['type'],
+                'origin_name'  => $data['name'],
+                'object_name'  => $fileName,
+                'mime_type'    => $data['type'],
                 'storage_path' => $storagePath,
-                'hash' => $data['hash'],
-                'suffix' => $data['ext'],
-                'size_byte' => $data['size'],
-                'size_info' => format_size((int) $data['size'] * 1024),
-                'url' => $this->assembleUrl(null, $fileName),
+                'hash'         => $data['hash'],
+                'suffix'       => $data['ext'],
+                'size_byte'    => $data['size'],
+                'size_info'    => format_size((int)$data['size'] * 1024),
+                'url'          => $this->assembleUrl(null, $fileName),
             ];
 
             $this->evDispatcher->dispatch(new UploadAfter($fileInfo));
 
             return $fileInfo;
         }
+
         return ['chunk' => $data['index'], 'code' => 201, 'status' => 'success'];
     }
 
@@ -134,41 +129,41 @@ class MineUpload
      */
     public function handleSaveNetworkImage(array $data): array
     {
-        $path = $this->getPath($data['path'] ?? null, $this->getStorageMode() != 1);
-        $filename = $this->getNewName() . '.jpg';
+        $path     = $this->getPath($data['path'] ?? null, $this->getStorageMode() != 1);
+        $filename = $this->getNewName().'.jpg';
 
         try {
             if (preg_match('/^\/\//', $data['url'])) {
-                $data['url'] = 'http:' . $data['url'];
+                $data['url'] = 'http:'.$data['url'];
             }
-            if (! preg_match('/^(http|https):\/\//i', $data['url'])) {
+            if (!preg_match('/^(http|https):\/\//i', $data['url'])) {
                 throw new NormalStatusException('图片地址请以 http 或 https 开头', 500);
             }
             $content = file_get_contents($data['url']);
 
             $handle = fopen($data['url'], 'rb');
-            $meta = stream_get_meta_data($handle);
+            $meta   = stream_get_meta_data($handle);
             fclose($handle);
 
             $dataInfo = $meta['wrapper_data']['headers'] ?? $meta['wrapper_data'];
-            $size = 0;
+            $size     = 0;
 
             foreach ($dataInfo as $va) {
                 if (preg_match('/length/iU', $va)) {
-                    $ts = explode(':', $va);
+                    $ts   = explode(':', $va);
                     $size = intval(trim(array_pop($ts)));
                     break;
                 }
             }
 
-            $realPath = BASE_PATH . '/runtime/' . $filename;
-            $fs = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
+            $realPath = BASE_PATH.'/runtime/'.$filename;
+            $fs       = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
             $fs->put($realPath, $content);
 
             $hash = md5_file($realPath);
             $fs->delete($realPath);
 
-            if (! $hash) {
+            if (!$hash) {
                 throw new \Exception(t('network_image_save_fail'));
             }
 
@@ -181,7 +176,7 @@ class MineUpload
             }
 
             try {
-                $this->filesystem->write($path . '/' . $filename, $content);
+                $this->filesystem->write($path.'/'.$filename, $content);
             } catch (\Exception $e) {
                 throw new \Exception(t('network_image_save_fail'));
             }
@@ -191,15 +186,15 @@ class MineUpload
 
         $fileInfo = [
             'storage_mode' => $this->getStorageMode(),
-            'origin_name' => md5((string) time()) . '.jpg',
-            'object_name' => $filename,
-            'mime_type' => 'image/jpg',
+            'origin_name'  => md5((string)time()).'.jpg',
+            'object_name'  => $filename,
+            'mime_type'    => 'image/jpg',
             'storage_path' => $path,
-            'suffix' => 'jpg',
-            'hash' => $hash,
-            'size_byte' => $size,
-            'size_info' => format_size($size * 1024),
-            'url' => $this->assembleUrl($data['path'] ?? null, $filename),
+            'suffix'       => 'jpg',
+            'hash'         => $hash,
+            'size_byte'    => $size,
+            'size_info'    => format_size($size * 1024),
+            'url'          => $this->assembleUrl($data['path'] ?? null, $filename),
         ];
 
         $this->evDispatcher->dispatch(new UploadAfter($fileInfo));
@@ -229,12 +224,13 @@ class MineUpload
     public function getDirectory(string $path, bool $isChildren): array
     {
         $contents = $this->filesystem->listContents($path, $isChildren);
-        $dirs = [];
+        $dirs     = [];
         foreach ($contents as $content) {
             if ($content['type'] == 'dir') {
                 $dirs[] = $content;
             }
         }
+
         return $dirs;
     }
 
@@ -243,7 +239,7 @@ class MineUpload
      */
     public function assembleUrl(?string $path, string $filename): string
     {
-        return $this->getPath($path, true) . '/' . $filename;
+        return $this->getPath($path, true).'/'.$filename;
     }
 
     /**
@@ -264,7 +260,7 @@ class MineUpload
      */
     public function getNewName(): string
     {
-        return (string) $this->idGenerator->generate();
+        return (string)$this->idGenerator->generate();
     }
 
     /**
@@ -276,27 +272,29 @@ class MineUpload
      */
     protected function handleUpload(UploadedFile $uploadedFile, array $config): array
     {
-        $tmpFile = $uploadedFile->getPath() . '/' . $uploadedFile->getFilename();
-        $path = $this->getPath($config['path'] ?? null, $this->getStorageMode() != 1);
-        $filename = $this->getNewName() . '.' . Str::lower($uploadedFile->getExtension());
+        $tmpFile  = $uploadedFile->getPath().'/'.$uploadedFile->getFilename();
+        $path     = $this->getPath($config['path'] ?? null, $this->getStorageMode() != 1);
+        $filename = $this->getNewName().'.'.Str::lower($uploadedFile->getExtension());
 
         try {
-            $this->filesystem->writeStream($path . '/' . $filename, $uploadedFile->getStream()->detach());
+            $this->filesystem->writeStream(
+                $path.'/'.$filename, $uploadedFile->getStream()->detach()
+            );
         } catch (\Exception $e) {
-            throw new NormalStatusException((string) $e->getMessage(), 500);
+            throw new NormalStatusException((string)$e->getMessage(), 500);
         }
 
         $fileInfo = [
             'storage_mode' => $this->getStorageMode(),
-            'origin_name' => $uploadedFile->getClientFilename(),
-            'object_name' => $filename,
-            'mime_type' => $uploadedFile->getClientMediaType(),
+            'origin_name'  => $uploadedFile->getClientFilename(),
+            'object_name'  => $filename,
+            'mime_type'    => $uploadedFile->getClientMediaType(),
             'storage_path' => $path,
-            'hash' => md5_file($tmpFile),
-            'suffix' => Str::lower($uploadedFile->getExtension()),
-            'size_byte' => $uploadedFile->getSize(),
-            'size_info' => format_size($uploadedFile->getSize() * 1024),
-            'url' => $this->assembleUrl($config['path'] ?? null, $filename),
+            'hash'         => md5_file($tmpFile),
+            'suffix'       => Str::lower($uploadedFile->getExtension()),
+            'size_byte'    => $uploadedFile->getSize(),
+            'size_info'    => format_size($uploadedFile->getSize() * 1024),
+            'url'          => $this->assembleUrl($config['path'] ?? null, $filename),
         ];
 
         $this->evDispatcher->dispatch(new UploadAfter($fileInfo));
@@ -305,12 +303,13 @@ class MineUpload
     }
 
     /**
-     * @param false $isContainRoot
+     * @param  false  $isContainRoot
      */
     protected function getPath(?string $path = null, bool $isContainRoot = false): string
     {
-        $uploadfile = $isContainRoot ? '/' . env('UPLOAD_PATH', 'uploadfile') . '/' : '';
-        return empty($path) ? $uploadfile . date('Ymd') : $uploadfile . $path;
+        $uploadfile = $isContainRoot ? '/'.env('UPLOAD_PATH', 'uploadfile').'/' : '';
+
+        return empty($path) ? $uploadfile.date('Ymd') : $uploadfile.$path;
     }
 
     /**
@@ -320,14 +319,14 @@ class MineUpload
     protected function getMappingMode(): string
     {
         return match ($this->getStorageMode()) {
-            '1' => 'local',
-            '2' => 'oss',
-            '3' => 'qiniu',
-            '4' => 'cos',
-            '5' => 'ftp',
-            '6' => 'memory',
-            '7' => 's3',
-            '8' => 'minio',
+            '1'     => 'local',
+            '2'     => 'oss',
+            '3'     => 'qiniu',
+            '4'     => 'cos',
+            '5'     => 'ftp',
+            '6'     => 'memory',
+            '7'     => 's3',
+            '8'     => 'minio',
             default => 'local',
         };
     }

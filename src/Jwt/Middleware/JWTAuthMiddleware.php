@@ -4,12 +4,6 @@
  * Author ORCID: https://orcid.org/0009-0003-8150-367X                        *
  ******************************************************************************/
 
-/**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2019-08-01
- * Time: 22:32
- */
 namespace Xmo\JWTAuth\Middleware;
 
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
@@ -38,12 +32,12 @@ class JWTAuthMiddleware implements MiddlewareInterface
     public function __construct(HttpResponse $response, JWT $jwt)
     {
         $this->response = $response;
-        $this->jwt = $jwt;
+        $this->jwt      = $jwt;
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
+     * @param  ServerRequestInterface  $request
+     * @param  RequestHandlerInterface  $handler
      * @return ResponseInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \Throwable

@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Config\Annotation\Value;
@@ -50,15 +49,15 @@ class DeleteCacheAspect extends AbstractAspect
 
         $result = $proceedingJoinPoint->process();
 
-        if (! empty($deleteCache->keys)) {
-            $keys = explode(',', $deleteCache->keys);
+        if (!empty($deleteCache->keys)) {
+            $keys     = explode(',', $deleteCache->keys);
             $iterator = null;
-            $n = [];
+            $n        = [];
             foreach ($keys as $key) {
-                if (! Str::contains($key, '*')) {
-                    $n[] = $this->prefix . $key;
+                if (!Str::contains($key, '*')) {
+                    $n[] = $this->prefix.$key;
                 } else {
-                    while (false !== ($k = $redis->scan($iterator, $this->prefix . $key, 100))) {
+                    while (false !== ($k = $redis->scan($iterator, $this->prefix.$key, 100))) {
                         $redis->del($k);
                     }
                 }

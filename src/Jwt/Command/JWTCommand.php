@@ -20,7 +20,6 @@ class JWTCommand extends HyperfCommand
 {
     /**
      * 执行的命令行.
-     *
      * @var string
      */
     protected ?string $name = 'jwt:publish';
@@ -30,7 +29,7 @@ class JWTCommand extends HyperfCommand
         // 从 $input 获取 config 参数
         $argument = $this->input->getOption('config');
         if ($argument) {
-            $this->copySource(__DIR__ . '/../../publish/jwt.php', BASE_PATH . '/config/autoload/jwt.php');
+            $this->copySource(__DIR__.'/../../publish/jwt.php', BASE_PATH.'/config/autoload/jwt.php');
             $this->line('The jwt-auth configuration file has been generated', 'info');
         }
     }
@@ -51,7 +50,6 @@ class JWTCommand extends HyperfCommand
 
     /**
      * 复制文件到指定的目录中.
-     *
      * @param $copySource
      * @param $toSource
      */

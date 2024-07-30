@@ -7,14 +7,6 @@
 /** @noinspection PhpExpressionResultUnusedInspection */
 /* @noinspection PhpSignatureMismatchDuringInheritanceInspection */
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -48,10 +40,11 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $generatorTablesContract): ApiGenerator
     {
         $this->tablesContract = $generatorTablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($generatorTablesContract->getModuleName()) || empty($generatorTablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
+
         return $this->placeholderReplace();
     }
 
@@ -61,9 +54,9 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
     public function generator(): void
     {
         $filename = Str::camel(str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTablename()));
-        $module = Str::lower($this->tablesContract->getModuleName());
-        $this->filesystem->makeDirectory(BASE_PATH . "/runtime/generate/vue/src/api/{$module}", 0755, true, true);
-        $path = BASE_PATH . "/runtime/generate/vue/src/api/{$module}/{$filename}.js";
+        $module   = Str::lower($this->tablesContract->getModuleName());
+        $this->filesystem->makeDirectory(BASE_PATH."/runtime/generate/vue/src/api/{$module}", 0755, true, true);
+        $path = BASE_PATH."/runtime/generate/vue/src/api/{$module}/{$filename}.js";
         $this->filesystem->put($path, $this->replace()->getCodeContent());
     }
 
@@ -80,11 +73,11 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     public function getShortBusinessName(): string
     {
-        return Str::camel(str_replace(
-            Str::lower($this->tablesContract->getModuleName()),
-            '',
-            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTablename())
-        ));
+        return Str::camel(
+            str_replace(
+                Str::lower($this->tablesContract->getModuleName()), '', str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTablename())
+            )
+        );
     }
 
     /**
@@ -108,7 +101,7 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . '/Api/main.stub';
+        return $this->getStubDir().'/Api/main.stub';
     }
 
     /**
@@ -124,11 +117,11 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): ApiGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -161,10 +154,13 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
 
     protected function getLoadApi(): string
     {
-        $menus = $this->tablesContract->getGenerateMenus() ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
+        $menus       = $this->tablesContract->getGenerateMenus()
+            ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
         $ignoreMenus = ['realDelete', 'recovery'];
 
-        array_unshift($menus, $this->tablesContract->getType()->value === 'single' ? 'singleList' : 'treeList');
+        array_unshift(
+            $menus, $this->tablesContract->getType()->value === 'single' ? 'singleList' : 'treeList'
+        );
 
         foreach ($ignoreMenus as $menu) {
             if (in_array($menu, $menus)) {
@@ -173,10 +169,10 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
         }
 
         $jsCode = '';
-        $path = $this->getStubDir() . '/Api/';
+        $path   = $this->getStubDir().'/Api/';
         foreach ($menus as $menu) {
-            $content = $this->filesystem->sharedGet($path . $menu . '.stub');
-            $jsCode .= $content;
+            $content = $this->filesystem->sharedGet($path.$menu.'.stub');
+            $jsCode  .= $content;
         }
 
         return $jsCode;
@@ -187,7 +183,7 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->getBusinessName() . ' API JS';
+        return $this->getBusinessName().' API JS';
     }
 
     /**
@@ -195,7 +191,7 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getRequestRoute(): string
     {
-        return Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()).'/'.$this->getShortBusinessName();
     }
 
     /**

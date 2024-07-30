@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Crontab\Mutex;
 
 use Hyperf\Collection\Arr;
@@ -44,16 +43,21 @@ class RedisServerMutex implements ServerMutex
             return false;
         }
 
-        $redis = $this->redisFactory->get($crontab->getMutexPool());
+        $redis     = $this->redisFactory->get($crontab->getMutexPool());
         $mutexName = $this->getMutexName($crontab);
 
-        $result = (bool) $redis->set($mutexName, $this->macAddress, ['NX', 'EX' => $crontab->getMutexExpires()]);
+        $result = (bool)$redis->set($mutexName, $this->macAddress, [
+            'NX',
+            'EX' => $crontab->getMutexExpires(),
+        ]);
 
         if ($result === true) {
             Coroutine::create(function () use ($crontab, $redis, $mutexName) {
-                $exited = CoordinatorManager::until(Constants::WORKER_EXIT)->yield($crontab->getMutexExpires());
+                $exited = CoordinatorManager::until(Constants::WORKER_EXIT)
+                    ->yield($crontab->getMutexExpires());
                 $exited && $redis->del($mutexName);
             });
+
             return true;
         }
 
@@ -65,14 +69,14 @@ class RedisServerMutex implements ServerMutex
      */
     public function get(MineCrontab $crontab): string
     {
-        return (string) $this->redisFactory->get($crontab->getMutexPool())->get(
+        return (string)$this->redisFactory->get($crontab->getMutexPool())->get(
             $this->getMutexName($crontab)
         );
     }
 
     protected function getMutexName(MineCrontab $crontab): string
     {
-        return 'MineAdmin' . DIRECTORY_SEPARATOR . 'crontab-' . sha1($crontab->getName() . $crontab->getRule()) . '-sv';
+        return 'MineAdmin'.DIRECTORY_SEPARATOR.'crontab-'.sha1($crontab->getName().$crontab->getRule()).'-sv';
     }
 
     protected function getMacAddress(): ?string
@@ -81,7 +85,7 @@ class RedisServerMutex implements ServerMutex
 
         foreach (Arr::wrap($macAddresses) as $name => $address) {
             if ($address && $address !== '00:00:00:00:00:00') {
-                return $name . ':' . str_replace(':', '', $address);
+                return $name.':'.str_replace(':', '', $address);
             }
         }
 

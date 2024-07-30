@@ -10,10 +10,10 @@ declare(strict_types=1);
  * Please view the LICENSE file that was distributed with this source code,
  * For the full copyright and license information.
  * Thank you very much for using MineAdmin.
- *
  * @Author X.Mo<root@imoi.cn>
  * @Link   https://gitee.com/xmo/MineAdmin
  */
+
 namespace Mine\Translatable\Validation;
 
 use Hyperf\Contract\ConfigInterface;
@@ -78,7 +78,7 @@ class RuleFactory
         }
 
         foreach ($locales as $locale) {
-            if (! $this->helper->has($locale)) {
+            if (!$this->helper->has($locale)) {
                 throw new InvalidArgumentException(sprintf('The locale [%s] is not defined in available locales.', $locale));
             }
         }
@@ -93,7 +93,7 @@ class RuleFactory
         $rules = [];
 
         foreach ($input as $key => $value) {
-            if (! $this->isTranslatable($key)) {
+            if (!$this->isTranslatable($key)) {
                 $rules[$key] = $value;
                 continue;
             }
@@ -112,8 +112,7 @@ class RuleFactory
     }
 
     /**
-     * @param mixed|string|string[] $rule
-     *
+     * @param  mixed|string|string[]  $rule
      * @return mixed|string|string[]
      */
     protected function formatRule(string $locale, $rule)
@@ -145,10 +144,10 @@ class RuleFactory
     {
         switch ($this->format) {
             case self::FORMAT_KEY:
-                return '$1:' . $locale;
+                return '$1:'.$locale;
             default:
             case self::FORMAT_ARRAY:
-                return $locale . '.$1';
+                return $locale.'.$1';
         }
     }
 
@@ -157,7 +156,7 @@ class RuleFactory
         $prefix = preg_quote($this->prefix);
         $suffix = preg_quote($this->suffix);
 
-        return '/' . $prefix . '([^\.' . $prefix . $suffix . ']+)' . $suffix . '/';
+        return '/'.$prefix.'([^\.'.$prefix.$suffix.']+)'.$suffix.'/';
     }
 
     protected function isTranslatable(string $key): bool

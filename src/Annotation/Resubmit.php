@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
@@ -21,5 +20,5 @@ class Resubmit extends AbstractAnnotation
      * @var int 限制时间（秒）
      * @var null|string 提示信息
      */
-    public function __construct(public int $second = 3, public ?string $message = null) {}
+    public function __construct(public int $second = 3, public ?string $message = null) { }
 }

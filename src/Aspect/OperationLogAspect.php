@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Aspect;
 
 use Hyperf\Di\Annotation\Aspect;
@@ -59,20 +58,22 @@ class OperationLogAspect extends AbstractAspect
     {
         $annotation = $proceedingJoinPoint->getAnnotationMetadata()->method[OperationLog::class];
         /* @var $result ResponseInterface */
-        $result = $proceedingJoinPoint->process();
+        $result     = $proceedingJoinPoint->process();
         $isDownload = false;
-        if (! empty($annotation->menuName) || ($annotation = $proceedingJoinPoint->getAnnotationMetadata()->method[Permission::class])) {
-            if (! empty($result->getHeader('content-description')) && ! empty($result->getHeader('content-transfer-encoding'))) {
+        if (!empty($annotation->menuName) || ($annotation = $proceedingJoinPoint->getAnnotationMetadata()->method[Permission::class])) {
+            if (!empty($result->getHeader('content-description')) && !empty($result->getHeader('content-transfer-encoding'))) {
                 $isDownload = true;
             }
             $evDispatcher = $this->container->get(EventDispatcherInterface::class);
             $evDispatcher->dispatch(new Operation($this->getRequestInfo([
-                'code' => ! empty($annotation->code) ? explode(',', $annotation->code)[0] : '',
-                'name' => $annotation->menuName ?? '',
+                'code'          => !empty($annotation->code) ? explode(',', $annotation->code)[0]
+                    : '',
+                'name'          => $annotation->menuName ?? '',
                 'response_code' => $result->getStatusCode(),
                 'response_data' => $isDownload ? '文件下载' : $result->getBody()->getContents(),
             ])));
         }
+
         return $result;
     }
 
@@ -82,18 +83,18 @@ class OperationLogAspect extends AbstractAspect
      */
     protected function getRequestInfo(array $data): array
     {
-        $request = $this->container->get(MineRequest::class);
+        $request   = $this->container->get(MineRequest::class);
         $loginUser = $this->container->get(LoginUser::class);
 
         $operationLog = [
-            'time' => date('Y-m-d H:i:s', $request->getServerParams()['request_time']),
-            'method' => $request->getServerParams()['request_method'],
-            'router' => $request->getServerParams()['path_info'],
-            'protocol' => $request->getServerParams()['server_protocol'],
-            'ip' => $request->ip(),
-            'ip_location' => $this->ip2region->search($request->ip()),
-            'service_name' => $data['name'] ?: $this->getOperationMenuName($data['code']),
-            'request_data' => $request->all(),
+            'time'          => date('Y-m-d H:i:s', $request->getServerParams()['request_time']),
+            'method'        => $request->getServerParams()['request_method'],
+            'router'        => $request->getServerParams()['path_info'],
+            'protocol'      => $request->getServerParams()['server_protocol'],
+            'ip'            => $request->ip(),
+            'ip_location'   => $this->ip2region->search($request->ip()),
+            'service_name'  => $data['name'] ?: $this->getOperationMenuName($data['code']),
+            'request_data'  => $request->all(),
             'response_code' => $data['response_code'],
             'response_data' => $data['response_data'],
         ];

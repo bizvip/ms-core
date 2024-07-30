@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Log;
 
 use Hyperf\Context\ApplicationContext;
@@ -36,7 +35,7 @@ class RequestIdHolder
             if (is_null($request_id)) {
                 // 没有去父协程 获取
                 $request_id = Context::get(self::REQUEST_ID, null, Coroutine::parentId());
-                if (! is_null($request_id)) {
+                if (!is_null($request_id)) {
                     // 写入本协程，以便本协程或本协程下的子协程获取
                     Context::set(self::REQUEST_ID, $request_id);
                 }
@@ -48,6 +47,7 @@ class RequestIdHolder
         } else {
             $request_id = self::getUniqueId();
         }
+
         return $request_id;
     }
 
@@ -56,8 +56,14 @@ class RequestIdHolder
         if (self::$type == 'uuid') {
             $uniqueId = Context::set(self::REQUEST_ID, Uuid::uuid4()->toString());
         } else {
-            $uniqueId = strval(Context::set(self::REQUEST_ID, ApplicationContext::getContainer()->get(IdGeneratorInterface::class)->generate()));
+            $uniqueId = strval(
+                Context::set(
+                    self::REQUEST_ID, ApplicationContext::getContainer()
+                    ->get(IdGeneratorInterface::class)->generate()
+                )
+            );
         }
+
         return $uniqueId;
     }
 }

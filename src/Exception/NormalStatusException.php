@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Exception;
 
-class NormalStatusException extends MineException {}
+class NormalStatusException extends MineException { }

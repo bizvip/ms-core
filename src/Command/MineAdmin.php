@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
@@ -30,7 +29,7 @@ class MineAdmin extends MineCommand
      */
     public function handle()
     {
-        $result = shell_exec('php ' . BASE_PATH . '/bin/hyperf.php | grep mine');
+        $result = shell_exec('php '.BASE_PATH.'/bin/hyperf.php | grep mine');
         $this->line($this->getInfo(), 'comment');
         $this->line(preg_replace('/\s+mine\s+/', '', $result), 'info');
     }

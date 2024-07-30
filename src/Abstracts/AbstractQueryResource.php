@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Abstracts;
 
 use Hyperf\Collection\Collection;
@@ -47,13 +46,13 @@ abstract class AbstractQueryResource implements QueryResourceServiceInterface
 
     public function handleSearch(Builder $query, array $params = [], array $extras = []): Builder
     {
-        $keywordKey = $this->getKeyword();
+        $keywordKey     = $this->getKeyword();
         $searchKeywords = $this->getSearchKeywords();
-        if (! empty($params[$keywordKey])) {
+        if (!empty($params[$keywordKey])) {
             $query->orWhere(function ($query) use ($params, $searchKeywords, $keywordKey) {
                 $searchbars = explode(',', $searchKeywords);
                 foreach ($searchbars as $searchbar) {
-                    $query->orWhere($searchbar, 'like', '%' . $params[$keywordKey] . '%');
+                    $query->orWhere($searchbar, 'like', '%'.$params[$keywordKey].'%');
                 }
             });
         }
@@ -74,10 +73,9 @@ abstract class AbstractQueryResource implements QueryResourceServiceInterface
     public function resource(array $params = [], array $extras = []): array
     {
         $query = $this->handleSearch(
-            $this->getQuery(),
-            $params,
-            $extras
+            $this->getQuery(), $params, $extras
         );
+
         return $this->formatResource(
             $query->get(),
         );
@@ -85,8 +83,8 @@ abstract class AbstractQueryResource implements QueryResourceServiceInterface
 
     protected function formatResource(Collection $list): array
     {
-        $field = $this->getField();
-        $value = $this->getValue();
+        $field    = $this->getField();
+        $value    = $this->getValue();
         $resource = [];
         foreach ($list as $k => $v) {
             $resource[] = [
@@ -94,6 +92,7 @@ abstract class AbstractQueryResource implements QueryResourceServiceInterface
                 'value' => $v[$value],
             ];
         }
+
         return $resource;
     }
 }

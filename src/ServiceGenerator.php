@@ -6,14 +6,6 @@
 
 /** @noinspection PhpIllegalStringOffsetInspection */
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -47,11 +39,12 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract): ServiceGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->menu_name)) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         $this->setNamespace($this->tablesContract->getNamespace());
+
         return $this->placeholderReplace();
     }
 
@@ -60,14 +53,16 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        $module = Str::title($this->tablesContract->getModuleName()[0]).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Service/";
+            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Service/";
         } else {
-            $path = BASE_PATH . "/app/{$module}/Service/";
+            $path = BASE_PATH."/app/{$module}/Service/";
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
-        $this->filesystem->put($path . "{$this->getClassName()}.php", $this->replace()->getCodeContent());
+        $this->filesystem->put(
+            $path."{$this->getClassName()}.php", $this->replace()->getCodeContent()
+        );
     }
 
     /**
@@ -115,7 +110,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . $this->getType() . '/service.stub';
+        return $this->getStubDir().$this->getType().'/service.stub';
     }
 
     /**
@@ -131,11 +126,11 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): ServiceGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -177,7 +172,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\Service';
+        return $this->getNamespace().'\Service';
     }
 
     /**
@@ -185,7 +180,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->tablesContract->getMenuName() . '服务类';
+        return $this->tablesContract->getMenuName().'服务类';
     }
 
     /**
@@ -203,7 +198,7 @@ UseNamespace;
      */
     protected function getClassName(): string
     {
-        return $this->getBusinessName() . 'Service';
+        return $this->getBusinessName().'Service';
     }
 
     /**
@@ -211,7 +206,7 @@ UseNamespace;
      */
     protected function getMapperName(): string
     {
-        return $this->getBusinessName() . 'Mapper';
+        return $this->getBusinessName().'Mapper';
     }
 
     /**
@@ -223,8 +218,10 @@ UseNamespace;
             if ($this->tablesContract->getOptions()['tree_id'] ?? false) {
                 return $this->tablesContract->getOptions()['tree_id'];
             }
+
             return 'id';
         }
+
         return '';
     }
 
@@ -237,8 +234,10 @@ UseNamespace;
             if ($this->tablesContract->getOptions()['tree_pid'] ?? false) {
                 return $this->tablesContract->getOptions()['tree_pid'];
             }
+
             return 'parent_id';
         }
+
         return '';
     }
 }

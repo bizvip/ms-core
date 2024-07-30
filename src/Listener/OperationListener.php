@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-
 namespace Mine\Listener;
 
 use Hyperf\Event\Annotation\Listener;
@@ -49,8 +48,8 @@ class OperationListener implements ListenerInterface
     public function process(object $event): void
     {
         $requestInfo = $event->getRequestInfo();
-        if (! in_array($requestInfo['router'], $this->ignoreRouter)) {
-            $service = $this->container->get(OperLogServiceInterface::class);
+        if (!in_array($requestInfo['router'], $this->ignoreRouter)) {
+            $service                     = $this->container->get(OperLogServiceInterface::class);
             $requestInfo['request_data'] = json_encode($requestInfo['request_data'], JSON_UNESCAPED_UNICODE);
             //            $requestInfo['response_data'] = $requestInfo['response_data'];
             $service->save($requestInfo);

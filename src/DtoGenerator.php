@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 
 namespace Mine\Generator;
 
@@ -45,7 +37,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
     public function setGenInfo(GeneratorTablesContract $tablesContract): DtoGenerator
     {
         $this->tablesContract = $tablesContract;
-        $this->filesystem = make(Filesystem::class);
+        $this->filesystem     = make(Filesystem::class);
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
@@ -61,14 +53,16 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        $module = Str::title($this->tablesContract->getModuleName()[0]).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Dto/";
+            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Dto/";
         } else {
-            $path = BASE_PATH . "/app/{$module}/Dto/";
+            $path = BASE_PATH."/app/{$module}/Dto/";
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
-        $this->filesystem->put($path . "{$this->getClassName()}.php", $this->replace()->getCodeContent());
+        $this->filesystem->put(
+            $path."{$this->getClassName()}.php", $this->replace()->getCodeContent()
+        );
     }
 
     public function preview(): string
@@ -105,7 +99,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTemplatePath(): string
     {
-        return $this->getStubDir() . '/dto.stub';
+        return $this->getStubDir().'/dto.stub';
     }
 
     /**
@@ -121,11 +115,11 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function placeholderReplace(): DtoGenerator
     {
-        $this->setCodeContent(str_replace(
-            $this->getPlaceHolderContent(),
-            $this->getReplaceContent(),
-            $this->readTemplate()
-        ));
+        $this->setCodeContent(
+            str_replace(
+                $this->getPlaceHolderContent(), $this->getReplaceContent(), $this->readTemplate()
+            )
+        );
 
         return $this;
     }
@@ -161,7 +155,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\Dto';
+        return $this->getNamespace().'\Dto';
     }
 
     /**
@@ -169,7 +163,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->tablesContract->getMenuName() . 'Dto （导入导出）';
+        return $this->tablesContract->getMenuName().'Dto （导入导出）';
     }
 
     /**
@@ -177,7 +171,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getClassName(): string
     {
-        return $this->getBusinessName() . 'Dto';
+        return $this->getBusinessName().'Dto';
     }
 
     protected function getList(): string
@@ -185,20 +179,21 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
         $phpCode = '';
         foreach ($this->columns as $index => $column) {
             $phpCode .= str_replace(
-                ['NAME', 'INDEX', 'FIELD'],
-                [$column['column_comment'] ?: $column['column_name'], $index, $column['column_name']],
-                $this->getCodeTemplate()
+                ['NAME', 'INDEX', 'FIELD'], [
+                $column['column_comment'] ?: $column['column_name'],
+                $index,
+                $column['column_name'],
+            ], $this->getCodeTemplate()
             );
         }
+
         return $phpCode;
     }
 
     protected function getCodeTemplate(): string
     {
         return sprintf(
-            "    %s\n    %s\n\n",
-            '#[ExcelProperty(value: "NAME", index: INDEX)]',
-            'public string $FIELD;'
+            "    %s\n    %s\n\n", '#[ExcelProperty(value: "NAME", index: INDEX)]', 'public string $FIELD;'
         );
     }
 }
