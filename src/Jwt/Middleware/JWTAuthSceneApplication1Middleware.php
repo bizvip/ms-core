@@ -1,4 +1,9 @@
 <?php
+/******************************************************************************
+ * Copyright (c) 2024. Archer++. All rights reserved.                         *
+ * Author ORCID: https://orcid.org/0009-0003-8150-367X                        *
+ ******************************************************************************/
+
 /**
  * Created by PhpStorm.
  * User: liyuzhao
@@ -20,7 +25,7 @@ use Xmo\JWTAuth\Exception\TokenValidException;
  * Class JWTAuthSceneDefaultMiddleware
  * @package Xmo\JWTAuth\Middleware
  */
-class JWTAuthSceneDefaultMiddleware implements MiddlewareInterface
+class JWTAuthSceneApplication1Middleware implements MiddlewareInterface
 {
     /**
      * @var HttpResponse
@@ -51,8 +56,8 @@ class JWTAuthSceneDefaultMiddleware implements MiddlewareInterface
         $token = $request->getHeaderLine('Authorization') ?? '';
         if (strlen($token) > 0) {
             $token = JWTUtil::handleToken($token);
-            // 验证该token是否为default场景配置生成的
-            if ($token !== false && $this->jwt->setScene('default')->checkToken($token, true, true, true)) {
+            // 验证该token是否为application1场景配置生成的
+            if ($token !== false && $this->jwt->setScene('application1')->checkToken($token, true, true, true)) {
                 $isValidToken = true;
             }
         }

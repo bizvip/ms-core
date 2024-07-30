@@ -1,4 +1,8 @@
 <?php
+/******************************************************************************
+ * Copyright (c) 2024. Archer++. All rights reserved.                         *
+ * Author ORCID: https://orcid.org/0009-0003-8150-367X                        *
+ ******************************************************************************/
 
 declare(strict_types=1);
 
@@ -16,7 +20,6 @@ class ConfigProvider
                 'scan' => [
                     'paths' => [
                         __DIR__,
-                        __DIR__.'/../src', // 添加 JWT 插件的路径
                     ],
                 ],
             ],
@@ -32,12 +35,6 @@ class ConfigProvider
                     // 建议默认配置放在 publish 文件夹中，文件命名和组件名称相同
                     'source'      => __DIR__.'/../publish/mineadmin.php',        // 对应的配置文件路径
                     'destination' => BASE_PATH.'/config/autoload/mineadmin.php', // 复制为这个路径下的该文件
-                ],
-                [
-                    'id'          => 'jwt',
-                    'description' => 'jwt-auth',
-                    'source'      => __DIR__.'/../publish/jwt.php',
-                    'destination' => BASE_PATH.'/config/autoload/jwt.php',
                 ],
             ],
             // 亦可继续定义其它配置，最终都会合并到与 ConfigInterface 对应的配置储存器中

@@ -1,4 +1,9 @@
 <?php
+/******************************************************************************
+ * Copyright (c) 2024. Archer++. All rights reserved.                         *
+ * Author ORCID: https://orcid.org/0009-0003-8150-367X                        *
+ ******************************************************************************/
+
 declare(strict_types=1);
 namespace Xmo\JWTAuth;
 
@@ -9,11 +14,7 @@ use Lcobucci\JWT\Token\RegisteredClaims;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
-/**
- * https://gitee.com/xmo/jwt-auth
- * 原作者 liyuzhao
- * 现维护者：xmo
- */
+
 class BlackList extends AbstractJWT
 {
     /**
