@@ -101,7 +101,7 @@
       "Mine\\Helper\\": "src/Helpers/"
     },
     "files": [
-      "src/functions.php"
+      "src/Helpers/functions.php"
     ]
   },
   "autoload-dev": {
