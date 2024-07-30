@@ -17,22 +17,6 @@ class MineModel extends Model
     use ModelMacroTrait;
 
     /**
-     * 重写默认的时间戳格式为 Unix 时间戳（毫秒级）
-     */
-    public function getDateFormat(): string
-    {
-        return 'U';
-    }
-
-    /**
-     * 为 created_at、updated_at、deleted_at 字段设置默认值
-     */
-    protected function serializeDate(\DateTimeInterface $date): float|int
-    {
-        return $date->getTimestamp() * 1000;
-    }
-
-    /**
      * 状态
      */
     public const ENABLE = 1;
