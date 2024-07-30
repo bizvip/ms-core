@@ -26,13 +26,7 @@ abstract class MineGenerator
      */
     public function __construct(protected ContainerInterface $container)
     {
-        $this->setStubDir(
-            realpath(
-                InstalledVersions::getInstallPath(
-                    'xmo/mine-generator'
-                )
-            ).DIRECTORY_SEPARATOR.'Stubs'.DIRECTORY_SEPARATOR
-        );
+        $this->setStubDir(realpath(InstalledVersions::getInstallPath('bizvip/ms-core')).DIRECTORY_SEPARATOR.'Stubs'.DIRECTORY_SEPARATOR);
     }
 
     public function getStubDir(): string
