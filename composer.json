@@ -10,7 +10,8 @@
     "language",
     "database",
     "hyperf",
-    "jwt"
+    "jwt",
+    "phar"
   ],
   "authors": [
     {
@@ -71,7 +72,9 @@
     "symfony/serializer": "^6.0",
     "tangwei/apidocs": "^3.0",
     "yurunsoft/phpmailer-swoole": "^1.0",
-    "zoujingli/ip2region": "~2.0.0"
+    "zoujingli/ip2region": "~2.0.0",
+    "nikic/php-parser": "^4.1",
+    "psr/container": "^1.0 || ^2.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",
@@ -98,7 +101,8 @@
       "Mine\\": "src/",
       "Xmo\\JWTAuth\\": "src/Jwt/",
       "Mine\\Generator\\": "src",
-      "Mine\\Helper\\": "src/Helpers/"
+      "Mine\\Helper\\": "src/Helpers/",
+      "Hyperf\\Phar\\": "src/Phar/"
     },
     "files": [
       "src/Helpers/functions.php"
@@ -125,7 +129,8 @@
         "Mine\\ConfigProvider",
         "Xmo\\JWTAuth\\ConfigProvider",
         "Mine\\Translatable\\ConfigProvider",
-        "Mine\\Generator\\GeneratorConfigProvider"
+        "Mine\\Generator\\GeneratorConfigProvider",
+        "Hyperf\\Phar\\ConfigProvider"
       ]
     }
   }
