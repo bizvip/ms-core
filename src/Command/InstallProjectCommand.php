@@ -41,7 +41,7 @@ class InstallProjectCommand extends MineCommand
     public function configure()
     {
         parent::configure();
-        $this->setHelp('run "php bin/hyperf.php mine:install" install MineAdmin system');
+        $this->setHelp('run "php bin/run mine:install" install MineAdmin system');
         $this->setDescription('MineAdmin system install command');
     }
 

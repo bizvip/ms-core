@@ -28,7 +28,7 @@ class CreateModel extends MineCommand
     public function configure()
     {
         parent::configure();
-        $this->setHelp('run "php bin/hyperf.php mine:model-gen <--module | -M <module>> [--table | -T [table]]"');
+        $this->setHelp('run "php bin/run mine:model-gen <--module | -M <module>> [--table | -T [table]]"');
         $this->setDescription('Generate model to module according to data table');
     }
 

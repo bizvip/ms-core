@@ -23,7 +23,7 @@ class LocalesNotDefinedException extends \Exception
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
         $message = empty($message)
-            ? 'Please make sure you have run `php bin/hyperf.php vendor:publish xmo/mine-translatable` and that the locales configuration is defined.'
+            ? 'Please make sure you have run `php bin/run vendor:publish xmo/mine-translatable` and that the locales configuration is defined.'
             : $message;
         parent::__construct($message, $code, $previous);
     }

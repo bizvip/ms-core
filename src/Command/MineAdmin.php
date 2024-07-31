@@ -29,7 +29,7 @@ class MineAdmin extends MineCommand
      */
     public function handle()
     {
-        $result = shell_exec('php '.BASE_PATH.'/bin/hyperf.php | grep mine');
+        $result = shell_exec('php '.BASE_PATH.'/bin/run | grep mine');
         $this->line($this->getInfo(), 'comment');
         $this->line(preg_replace('/\s+mine\s+/', '', $result), 'info');
     }

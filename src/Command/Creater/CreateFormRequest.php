@@ -27,7 +27,7 @@ class CreateFormRequest extends MineCommand
     public function configure()
     {
         parent::configure();
-        $this->setHelp('run "php bin/hyperf.php mine:module <module_name> <name>"');
+        $this->setHelp('run "php bin/run mine:module <module_name> <name>"');
         $this->setDescription('Generate validate form request class file');
         $this->addArgument(
             'module_name', InputArgument::REQUIRED, 'input module name'

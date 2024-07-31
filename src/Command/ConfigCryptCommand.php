@@ -28,7 +28,7 @@ class ConfigCryptCommand extends MineCommand
     public function configure()
     {
         parent::configure();
-        $this->setHelp('run "php bin/hyperf.php mine:config-crypt" encrypt');
+        $this->setHelp('run "php bin/run mine:config-crypt" encrypt');
         $this->setDescription('MineAdmin system config crypt command');
     }
 

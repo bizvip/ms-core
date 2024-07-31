@@ -13,7 +13,7 @@ composer require xmo/mine-translatable
 ## 发布配置
 
 ```shell script
-php bin/hyperf.php vendor:publish xmo/mine-translatable
+php bin/run vendor:publish xmo/mine-translatable
 ```
 
 > 文件位于 `config/autoload/translatable.php`。

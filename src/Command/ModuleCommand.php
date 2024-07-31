@@ -46,7 +46,7 @@ class ModuleCommand extends MineCommand
     {
         parent::configure();
         $this->mine = make(Mine::class);
-        $this->setHelp('run "php bin/hyperf.php mine:module --name cms --option install"');
+        $this->setHelp('run "php bin/run mine:module --name cms --option install"');
         $this->setDescription('install command of module MineAdmin');
         $this->addOption(
             'option', null, InputOption::VALUE_OPTIONAL, 'input "--option list" show module list, "-option install" install module or "-option uninstall" uninstall module', 'list'
@@ -98,7 +98,7 @@ class ModuleCommand extends MineCommand
                 $this->call('mine:seeder-run', ['name' => $name, '--force' => 'true']);
                 $this->line(
                     sprintf(
-                        ' "%s" module install complete, Please run it again "%s" command! ', $this->getGreenText($name), $this->getGreenText('php bin/hyperf.php start')
+                        ' "%s" module install complete, Please run it again "%s" command! ', $this->getGreenText($name), $this->getGreenText('php bin/run start')
                     )
                 );
             }
@@ -126,7 +126,7 @@ class ModuleCommand extends MineCommand
 
                 $service->deleteModule($name);
 
-                $this->line(sprintf('Uninstall complete, Please run it again "%s" command! ', $this->getGreenText('php bin/hyperf.php start')));
+                $this->line(sprintf('Uninstall complete, Please run it again "%s" command! ', $this->getGreenText('php bin/run start')));
             }
         } else {
             $this->line($this->getRedText(sprintf('The "%s" module does not exist....', $name)));

@@ -25,7 +25,7 @@ class ConfigCryptGenCommand extends MineCommand
     public function configure()
     {
         parent::configure();
-        $this->setHelp('run "php bin/hyperf.php mine:config-crypt-gen" create the key and iv for config encrypt');
+        $this->setHelp('run "php bin/run mine:config-crypt-gen" create the key and iv for config encrypt');
         $this->setDescription('MineAdmin system gen config crypt key and iv command');
     }
 

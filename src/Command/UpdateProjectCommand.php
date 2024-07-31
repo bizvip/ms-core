@@ -46,7 +46,7 @@ class UpdateProjectCommand extends MineCommand
     public function configure()
     {
         parent::configure();
-        $this->setHelp('run "php bin/hyperf.php mine:update" Update MineAdmin system');
+        $this->setHelp('run "php bin/run mine:update" Update MineAdmin system');
         $this->setDescription('MineAdmin system update command');
     }
 
