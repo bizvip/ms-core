@@ -29,26 +29,26 @@ class BuildCommand extends HyperfCommand
             ->addOption('mount', 'M', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The mount path or dir.');
     }
 
-    public function handle()
+    public function handle(): void
     {
         $this->assertWritable();
-        $name = $this->input->getOption('name');
-        $bin = $this->input->getOption('bin');
-        $path = $this->input->getOption('path');
+        $name    = $this->input->getOption('name');
+        $bin     = $this->input->getOption('bin');
+        $path    = $this->input->getOption('path');
         $version = $this->input->getOption('phar-version');
-        $mount = $this->input->getOption('mount');
+        $mount   = $this->input->getOption('mount');
 
         if (empty($path)) {
             $path = BASE_PATH;
         }
         $builder = $this->getPharBuilder($path);
-        if (! empty($bin)) {
+        if (!empty($bin)) {
             $builder->setMain($bin);
         }
-        if (! empty($name)) {
+        if (!empty($name)) {
             $builder->setTarget($name);
         }
-        if (! empty($version)) {
+        if (!empty($version)) {
             $builder->setVersion($version);
         }
         if (count($mount) > 0) {
@@ -61,7 +61,7 @@ class BuildCommand extends HyperfCommand
     /**
      * check readonly.
      */
-    public function assertWritable()
+    public function assertWritable(): void
     {
         if (ini_get('phar.readonly') === '1') {
             throw new UnexpectedValueException('Your configuration disabled writing phar files (phar.readonly = On), please update your configuration');
@@ -71,17 +71,18 @@ class BuildCommand extends HyperfCommand
     public function getPharBuilder(string $path): PharBuilder
     {
         if (is_dir($path)) {
-            $path = rtrim($path, '/') . '/composer.json';
+            $path = rtrim($path, '/').'/composer.json';
         }
-        if (! is_file($path)) {
+        if (!is_file($path)) {
             throw new InvalidArgumentException(sprintf('The given path %s is not a readable file', $path));
         }
         $pharBuilder = new PharBuilder($path, $this->container->get(LoggerInterface::class));
 
         $vendorPath = $pharBuilder->getPackage()->getVendorAbsolutePath();
-        if (! is_dir($vendorPath)) {
+        if (!is_dir($vendorPath)) {
             throw new RuntimeException('The project has not been initialized, please manually execute the command `composer install` to install the dependencies');
         }
+
         return $pharBuilder;
     }
 }

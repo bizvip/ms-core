@@ -222,7 +222,7 @@ EOD;
     /**
      * Compile the code into the Phar file.
      */
-    public function build()
+    public function build(): void
     {
         $this->logger->info('Creating phar <info>' . $this->getTarget() . '</info>');
         $time = microtime(true);
@@ -271,7 +271,7 @@ EOD;
                 ->in($this->package->getDirectory() . 'runtime/container');
             $targetPhar->addBundle($this->package->bundle($finder));
             $cache = file_get_contents($cacheFile);
-            $scanCache = unserialize($cache);
+            $scanCache = unserialize($cache, ['allowed_classes' => true]);
             $proxies = [];
             foreach ($scanCache[1] as $class => $path) {
                 $proxies[$class] = $this->getPathLocalToBase($path);
