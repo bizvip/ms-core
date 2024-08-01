@@ -12,7 +12,7 @@ use Hyperf\HttpServer\Server;
 
 class MineServer extends Server
 {
-    protected ?string $serverName = 'MineAdmin';
+    protected ?string $serverName = 'ms-core-server';
 
     protected $routes;
 
