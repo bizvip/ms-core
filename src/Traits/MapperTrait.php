@@ -15,6 +15,7 @@ use Hyperf\DbConnection\Db;
 use Hyperf\Tappable\HigherOrderTapProxy;
 use Mine\Exception\MineException;
 use Mine\Exception\NormalStatusException;
+use Mine\MillisModel;
 use Mine\MineCollection;
 use Mine\MineModel;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
@@ -26,7 +27,7 @@ use function Hyperf\Config\config;
 trait MapperTrait
 {
     /**
-     * @var MineModel
+     * @var class-string|MineModel|MillisModel
      */
     public $model;
 
