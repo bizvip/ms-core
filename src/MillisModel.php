@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Mine;
 
-use Carbon\Carbon;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
+use Mine\Helper\TimeHelper;
 use Mine\Traits\ModelMacroTrait;
 
 /**
@@ -21,74 +21,46 @@ class MillisModel extends Model
     use Cacheable;
     use ModelMacroTrait;
 
-    // ==============================毫秒时间戳==============================
-    public bool $timestamps = false;     // 关闭自动管理时间戳（created_at 和 updated_at）
+    // ==============================毫秒时间戳开始==============================
+
+    public bool $timestamps = true;      // 开关自动管理时间戳（created_at 和 updated_at）
     protected ?string $dateFormat = 'Uv';// 设置数据库存储数据格式为13位毫秒时间戳
 
     public function getCreatedAtAttribute($value): ?string
     {
-        return $this->convertMillisToDatetime($value);
+        return TimeHelper::convertMillisToDatetime($value);
     }
 
     public function getUpdatedAtAttribute($value): ?string
     {
-        return $this->convertMillisToDatetime($value);
+        return TimeHelper::convertMillisToDatetime($value);
     }
 
     public function getDeletedAtAttribute($value): ?string
     {
-        return $this->convertMillisToDatetime($value);
+        return TimeHelper::convertMillisToDatetime($value);
     }
 
     public function setCreatedAtAttribute($value): void
     {
-        $this->attributes['created_at'] = $this->convertDatetimeToMillis($value);
+        $this->attributes['created_at'] = TimeHelper::convertDatetimeToMillis($value);
     }
 
     public function setUpdatedAtAttribute($value): void
     {
-        $this->attributes['updated_at'] = $this->convertDatetimeToMillis($value);
+        $this->attributes['updated_at'] = TimeHelper::convertDatetimeToMillis($value);
     }
 
     public function setDeletedAtAttribute($value): void
     {
-        $this->attributes['deleted_at'] = $this->convertDatetimeToMillis($value);
+        $this->attributes['deleted_at'] = TimeHelper::convertDatetimeToMillis($value);
     }
 
-    // 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s.u
-    protected function convertMillisToDatetime($millis): ?string
-    {
-        if ($millis) {
-            $seconds = $millis / 1000;
+    // ==============================毫秒时间戳结束==============================
 
-            return Carbon::createFromTimestamp($seconds)->format('Y-m-d H:i:s.u');
-        }
-
-        return null;
-    }
-
-    // 将日期时间字符串转换为毫秒级时间戳
-    protected function convertDatetimeToMillis($datetime): ?int
-    {
-        if ($datetime) {
-            return (int)(Carbon::parse($datetime)->format('Uv'));
-        }
-
-        return null;
-    }
-
-    // ==============================毫秒时间戳==============================
-
-    /**
-     * 状态
-     */
     public const ENABLE = 1;
     public const DISABLE = 2;
-
-    /**
-     * 默认每页记录数.
-     */
-    public const PAGE_SIZE = 15;
+    public const PAGE_SIZE = 10;
 
     /**
      * 隐藏的字段列表.
@@ -117,7 +89,7 @@ class MillisModel extends Model
      * 设置主键的值
      * @param  int|string  $value
      */
-    public function setPrimaryKeyValue($value): void
+    public function setPrimaryKeyValue(int|string $value): void
     {
         $this->{$this->primaryKey} = $value;
     }
@@ -150,7 +122,6 @@ class MillisModel extends Model
     public function setDataScopeField(string $name): self
     {
         $this->dataScopeField = $name;
-
         return $this;
     }
 }
