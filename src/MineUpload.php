@@ -24,6 +24,13 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 use function Hyperf\Support\env;
 
+/**
+ * <====
+ * 使用 aws s3 需要：
+ * composer require aws/aws-sdk-php
+ * composer require league/flysystem-aws-s3-v3
+ * ====>
+ */
 class MineUpload
 {
     protected FilesystemFactory $factory;
@@ -62,9 +69,6 @@ class MineUpload
 
     /**
      * 上传文件.
-     * @throws FileExistsException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function upload(UploadedFile $uploadedFile, array $config = []): array
     {
@@ -123,9 +127,6 @@ class MineUpload
 
     /**
      * 保存网络图片.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws \Exception
      */
     public function handleSaveNetworkImage(array $data): array
     {
@@ -226,11 +227,10 @@ class MineUpload
         $contents = $this->filesystem->listContents($path, $isChildren);
         $dirs     = [];
         foreach ($contents as $content) {
-            if ($content['type'] == 'dir') {
+            if ($content['type'] === 'dir') {
                 $dirs[] = $content;
             }
         }
-
         return $dirs;
     }
 
@@ -244,9 +244,6 @@ class MineUpload
 
     /**
      * 获取存储方式.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws \RedisException
      */
     public function getStorageMode(): int|string
     {
@@ -255,8 +252,6 @@ class MineUpload
 
     /**
      * 获取编码后的文件名.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function getNewName(): string
     {
@@ -265,10 +260,6 @@ class MineUpload
 
     /**
      * 处理上传.
-     * @throws FileExistsException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws \Exception
      */
     protected function handleUpload(UploadedFile $uploadedFile, array $config): array
     {
@@ -308,14 +299,9 @@ class MineUpload
     protected function getPath(?string $path = null, bool $isContainRoot = false): string
     {
         $uploadfile = $isContainRoot ? '/'.env('UPLOAD_PATH', 'uploadfile').'/' : '';
-
         return empty($path) ? $uploadfile.date('Ymd') : $uploadfile.$path;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function getMappingMode(): string
     {
         return match ($this->getStorageMode()) {
@@ -331,10 +317,6 @@ class MineUpload
         };
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function getProtocol(): string
     {
         return $this->mineRequest->getScheme();
