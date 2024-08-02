@@ -374,7 +374,7 @@ trait MapperTrait
         return true;
     }
 
-    public function getModel(): MineModel
+    public function getModel(): MineModel|MillisModel
     {
         return new $this->model();
     }
