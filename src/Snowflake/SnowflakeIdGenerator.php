@@ -5,14 +5,6 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-/**
- *                       __
- *   ____   __  __  ____/ /
- *  /_  /  / / / / / __  /
- *   / /_ / /_/ / / /_/ /
- *  /___/ \__, /  \__,_/
- *       /____/          众熠达.
- */
 
 namespace Mine\Snowflake;
 
@@ -64,7 +56,10 @@ class SnowflakeIdGenerator implements IdGeneratorInterface
         $workerId     = $id >> $this->config->getWorkerIdShift();
 
         return new Meta(
-            $interval << $this->config->getDataCenterIdBits() ^ $dataCenterId, $dataCenterId << $this->config->getWorkerIdBits() ^ $workerId, $workerId << $this->config->getSequenceBits() ^ $id, $interval + $this->metaGenerator->getBeginTimestamp(), $this->metaGenerator->getBeginTimestamp()
+            $interval << $this->config->getDataCenterIdBits() ^ $dataCenterId,
+            $dataCenterId << $this->config->getWorkerIdBits() ^ $workerId,
+            $workerId << $this->config->getSequenceBits() ^ $id, $interval + $this->metaGenerator->getBeginTimestamp(),
+            $this->metaGenerator->getBeginTimestamp()
         );
     }
 

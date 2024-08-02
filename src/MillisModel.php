@@ -58,8 +58,8 @@ class MillisModel extends Model
 
     // ==============================毫秒时间戳结束==============================
 
-    public const ENABLE = 1;
-    public const DISABLE = 2;
+    public const ENABLE    = 1;
+    public const DISABLE   = 2;
     public const PAGE_SIZE = 10;
 
     /**
@@ -68,14 +68,9 @@ class MillisModel extends Model
      */
     protected array $hidden = ['deleted_at'];
 
-    /**
-     * 数据权限字段，表中需要有此字段.
-     */
+    // 数据权限字段，表中需要有此字段.
     protected string $dataScopeField = 'created_by';
 
-    /**
-     * MineModel constructor.
-     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -85,10 +80,7 @@ class MillisModel extends Model
         $this->registerUserDataScope();
     }
 
-    /**
-     * 设置主键的值
-     * @param  int|string  $value
-     */
+    // 设置主键的值
     public function setPrimaryKeyValue(int|string $value): void
     {
         $this->{$this->primaryKey} = $value;

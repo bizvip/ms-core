@@ -117,7 +117,9 @@ trait MapperTrait
             $pageName = $params['pageName'] ?? 'page';
             $pageSize = $params['pageSize'] ?? $this->model::PAGE_SIZE;
 
-            return $this->setPaginate($query->paginate($pageSize, $params['select'] ?? ['*'], $pageName, $params[$pageName] ?? 1), $params);
+            return $this->setPaginate(
+                $query->paginate($pageSize, $params['select'] ?? ['*'], $pageName, $params[$pageName] ?? 1), $params
+            );
         }
 
         return method_exists($this, 'handleItems')
@@ -132,7 +134,8 @@ trait MapperTrait
     {
         return [
             'items'    => method_exists($this, 'handlePageItems')
-                ? $this->handlePageItems($paginate->items(), $params) : $paginate->items(),
+                ? $this->handlePageItems($paginate->items(), $params)
+                : $paginate->items(),
             'pageInfo' => [
                 'total'       => $paginate->total(),
                 'currentPage' => $paginate->currentPage(),
@@ -146,8 +149,8 @@ trait MapperTrait
      */
     public function getTreeList(?array $params = null, bool $isScope = true, string $id = 'id', string $parentField = 'parent_id', string $children = 'children'): array
     {
-        $params['_mineadmin_tree']     = true;
-        $params['_mineadmin_tree_pid'] = $parentField;
+        $params['_archer_pp_tree']     = true;
+        $params['_archer_pp_tree_pid'] = $parentField;
         $data                          = $this->listQuerySetting($params, $isScope)->get();
 
         return $data->toTree([], $data[0]->{$parentField} ?? 0, $id, $parentField, $children);
@@ -158,8 +161,7 @@ trait MapperTrait
      */
     public function listQuerySetting(?array $params, bool $isScope): Builder
     {
-        $query = (($params['recycle'] ?? false) === true) ? $this->model::onlyTrashed()
-            : $this->model::query();
+        $query = (($params['recycle'] ?? false) === true) ? $this->model::onlyTrashed() : $this->model::query();
 
         if ($params['select'] ?? false) {
             $query->select($this->filterQueryAttributes($params['select']));
@@ -178,8 +180,8 @@ trait MapperTrait
     public function handleOrder(Builder $query, ?array &$params = null): Builder
     {
         // 对树型数据强行加个排序
-        if (isset($params['_mineadmin_tree'])) {
-            $query->orderBy($params['_mineadmin_tree_pid']);
+        if (isset($params['_archer_pp_tree'])) {
+            $query->orderBy($params['_archer_pp_tree_pid']);
         }
 
         if ($params['orderBy'] ?? false) {
@@ -248,6 +250,9 @@ trait MapperTrait
      */
     public function save(array $data): mixed
     {
+        if (false === $this->getModel()->incrementing) {
+            $data['id'] = snowflake_id();
+        }
         $this->filterExecuteAttributes($data, $this->getModel()->incrementing);
         $model = $this->model::create($data);
 
@@ -264,7 +269,6 @@ trait MapperTrait
 
     /**
      * 按条件读取一行数据.
-     * @return mixed
      */
     public function first(array $condition, array $column = ['*']): ?MineModel
     {
@@ -357,8 +361,9 @@ trait MapperTrait
      */
     public function disable(array $ids, string $field = 'status'): bool
     {
-        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)
-            ->update([$field => $this->model::DISABLE]);
+        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)->update(
+            [$field => $this->model::DISABLE]
+        );
 
         return true;
     }
@@ -368,8 +373,9 @@ trait MapperTrait
      */
     public function enable(array $ids, string $field = 'status'): bool
     {
-        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)
-            ->update([$field => $this->model::ENABLE]);
+        $this->model::query()->whereIn((new $this->model())->getKeyName(), $ids)->update(
+            [$field => $this->model::ENABLE]
+        );
 
         return true;
     }
