@@ -29,11 +29,7 @@ class SnowflakeIdGenerator implements IdGeneratorInterface
         $configuration       = new Configuration();
         $config              = ApplicationContext::getContainer()->get(ConfigInterface::class);
         $beginSecond         = $config->get('snowflake.begin_second', MetaGeneratorInterface::DEFAULT_BEGIN_SECOND);
-        $this->metaGenerator = make(RedisMilliSecondMetaGenerator::class, [
-            $configuration,
-            $beginSecond,
-            $config,
-        ]);
+        $this->metaGenerator = make(RedisMilliSecondMetaGenerator::class, [$configuration, $beginSecond, $config,]);
 
         $this->config = $this->metaGenerator->getConfiguration();
     }

@@ -252,7 +252,6 @@ trait MapperTrait
     {
         if (false === $this->getModel()->incrementing) {
             $data['id'] = snowflake_id();
-            print_r($data);
         }
         $this->filterExecuteAttributes($data, $this->getModel()->incrementing);
         $model = $this->model::create($data);
