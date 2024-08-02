@@ -13,7 +13,7 @@ use Carbon\Carbon;
 final class TimeHelper
 {
     // 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s.u
-    public static function convertMillisToDatetime(int|string $millis): ?string
+    public static function convertMillisToDatetime(int|string|null $millis): ?string
     {
         if ($millis) {
             $seconds = (int)$millis / 1000;
