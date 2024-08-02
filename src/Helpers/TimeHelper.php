@@ -23,7 +23,7 @@ final class TimeHelper
     }
 
     // 将日期时间字符串转换为毫秒级时间戳
-    public static function convertDatetimeToMillis(string $datetime): ?int
+    public static function convertDatetimeToMillis($datetime): ?int
     {
         if ($datetime) {
             return (int)(Carbon::parse($datetime)->format('Uv'));
