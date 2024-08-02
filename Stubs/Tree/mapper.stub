@@ -22,7 +22,7 @@ final class {CLASS_NAME} extends AbstractMapper
      */
     public $model;
 
-    public function assignModel()
+    public function assignModel(): void
     {
         $this->model = {MODEL}::class;
     }
