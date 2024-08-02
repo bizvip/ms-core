@@ -12,25 +12,12 @@ use Mine\MineModel;
 
 final class {CLASS_NAME} extends MineModel
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string|null
-     */
     protected ?string $table = '{TABLE_NAME}';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+
     protected array $fillable = [
         {FILL_ABLE}
     ];
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
+
     protected array $casts = [];
 
     {RELATIONS}

@@ -29,7 +29,6 @@ final class {CLASS_NAME} extends AbstractMapper
 
     /**
      * 获取前端选择树
-     * @return array
      */
     public function getSelectTree(): array
     {
@@ -41,18 +40,12 @@ final class {CLASS_NAME} extends AbstractMapper
 
     /**
      * 查询树名称
-     * @param array|null $ids
-     * @return array
      */
     public function getTreeName(array $ids = null): array
     {
         return $this->model::withTrashed()->whereIn('{FIELD_ID}', $ids)->pluck('{FIELD_NAME}')->toArray();
     }
 
-    /**
-     * @param int $id
-     * @return bool
-     */
     public function checkChildrenExists(int $id): bool
     {
         return $this->model::withTrashed()->where('{FIELD_PID}', $id)->exists();
@@ -60,9 +53,6 @@ final class {CLASS_NAME} extends AbstractMapper
 
     /**
      * 搜索处理器
-     * @param Builder $query
-     * @param array $params
-     * @return Builder
      */
     public function handleSearch(Builder $query, array $params): Builder
     {

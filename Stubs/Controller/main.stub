@@ -43,7 +43,6 @@ final class {CLASS_NAME} extends MineController
 
     /**
      * 远程万能通用列表接口
-     * @return ResponseInterface
      */
     #[PostMapping("remote"), RemoteState(true)]
     public function remote(): ResponseInterface

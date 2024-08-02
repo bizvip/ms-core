@@ -1,9 +1,6 @@
 
     /**
      * 数据导入
-     * @return ResponseInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     #[PostMapping("import"), Permission("{IMPORT_PERMISSION}")]
     public function import(): ResponseInterface
@@ -13,10 +10,6 @@
 
     /**
      * 下载导入模板
-     * @return ResponseInterface
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     #[PostMapping("downloadTemplate")]
     public function downloadTemplate(): ResponseInterface

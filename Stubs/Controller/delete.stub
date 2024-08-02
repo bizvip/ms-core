@@ -1,9 +1,6 @@
 
     /**
      * 单个或批量删除数据到回收站
-     * @return ResponseInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     #[DeleteMapping("delete"), Permission("{DELETE_PERMISSION}"), OperationLog]
     public function delete(): ResponseInterface

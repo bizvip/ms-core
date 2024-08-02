@@ -1,9 +1,6 @@
 
     /**
      * 单个或批量恢复在回收站的数据
-     * @return ResponseInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     #[PutMapping("recovery"), Permission("{RECOVERY_PERMISSION}"), OperationLog]
     public function recovery(): ResponseInterface

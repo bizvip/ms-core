@@ -1,7 +1,6 @@
 
     /**
      * 定义 {RELATION_NAME} 关联
-     * @return \Hyperf\Database\Model\Relations\belongsToMany
      */
     public function {RELATION_NAME}() : \Hyperf\Database\Model\Relations\belongsToMany
     {

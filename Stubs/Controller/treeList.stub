@@ -1,9 +1,6 @@
 
     /**
      * 获取列表树
-     * @return ResponseInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     #[GetMapping("index"), Permission("{INDEX_PERMISSION}")]
     public function index(): ResponseInterface
@@ -13,9 +10,6 @@
 
     /**
      * 前端选择树（不需要权限）
-     * @return ResponseInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     #[GetMapping("tree")]
     public function tree(): ResponseInterface
