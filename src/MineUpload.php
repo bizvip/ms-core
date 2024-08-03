@@ -16,6 +16,7 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\Filesystem;
 use Mine\Event\UploadAfter;
 use Mine\Exception\NormalStatusException;
+use Mine\Helper\Hash;
 use Mine\Helper\Str;
 use Mine\Interfaces\ServiceInterface\ConfigServiceInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -161,7 +162,7 @@ class MineUpload
             $fs       = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
             $fs->put($realPath, $content);
 
-            $hash = md5_file($realPath);
+            $hash = Hash::fileSha256($realPath);
             $fs->delete($realPath);
 
             if (!$hash) {
@@ -270,7 +271,7 @@ class MineUpload
         try {
             $this->filesystem->writeStream($path.'/'.$filename, $uploadedFile->getStream()->detach());
         } catch (\Exception $e) {
-            throw new NormalStatusException((string)$e->getMessage(), 500);
+            throw new NormalStatusException($e->getMessage(), 500);
         }
 
         $fileInfo = [
@@ -279,7 +280,7 @@ class MineUpload
             'object_name'  => $filename,
             'mime_type'    => $uploadedFile->getClientMediaType(),
             'storage_path' => $path,
-            'hash'         => md5_file($tmpFile),
+            'hash'         => Hash::fileSha256($tmpFile),
             'suffix'       => Str::lower($uploadedFile->getExtension()),
             'size_byte'    => $uploadedFile->getSize(),
             'size_info'    => format_size($uploadedFile->getSize() * 1024),
