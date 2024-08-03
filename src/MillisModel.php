@@ -23,8 +23,8 @@ class MillisModel extends Model
 
     // ==============================毫秒时间戳开始==============================
 
-    public bool $timestamps = true;      // 开关自动管理时间戳（created_at 和 updated_at）
-    protected ?string $dateFormat = 'Uv';// 设置数据库存储数据格式为13位毫秒时间戳
+    public bool $timestamps = false;      // 开关自动管理时间戳（created_at 和 updated_at）
+    protected ?string $dateFormat = 'Uv'; // 设置数据库存储数据格式为13位毫秒时间戳
 
     public function getCreatedAtAttribute($value): ?string
     {
