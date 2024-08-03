@@ -268,9 +268,7 @@ class MineUpload
         $filename = $this->getNewName().'.'.Str::lower($uploadedFile->getExtension());
 
         try {
-            $this->filesystem->writeStream(
-                $path.'/'.$filename, $uploadedFile->getStream()->detach()
-            );
+            $this->filesystem->writeStream($path.'/'.$filename, $uploadedFile->getStream()->detach());
         } catch (\Exception $e) {
             throw new NormalStatusException((string)$e->getMessage(), 500);
         }
@@ -305,7 +303,7 @@ class MineUpload
     protected function getMappingMode(): string
     {
         return match ($this->getStorageMode()) {
-            '1'     => 'local',
+            // '1'     => 'local', 合并进default
             '2'     => 'oss',
             '3'     => 'qiniu',
             '4'     => 'cos',
