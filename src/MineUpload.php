@@ -269,7 +269,9 @@ class MineUpload
         $filename = $this->getNewName().'.'.Str::lower($uploadedFile->getExtension());
 
         try {
-            $this->filesystem->writeStream($path.'/'.$filename, $uploadedFile->getStream()->detach());
+            $this->filesystem->writeStream(
+                $path.'/'.$filename, $uploadedFile->getStream()->detach()
+            );
         } catch (\Exception $e) {
             throw new NormalStatusException($e->getMessage(), 500);
         }
