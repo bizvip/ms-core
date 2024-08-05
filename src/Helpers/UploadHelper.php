@@ -10,10 +10,19 @@ namespace Mine\Helper;
 
 final class UploadHelper
 {
-    public static function fillUrl(string $url): string
+    public static function fillStorageDomain(string $url): string
     {
         if ($url !== '' && !str_starts_with($url, 'https')) {
             $url = \config('storage_domain').$url;
+        }
+        return $url;
+    }
+
+    public static function removeStorageDomain(string $url): string
+    {
+        $storageDomain = \config('storage_domain');
+        if (str_contains($url, $storageDomain)) {
+            $url = str_replace($storageDomain, '', $url);
         }
         return $url;
     }
