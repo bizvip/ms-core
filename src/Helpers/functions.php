@@ -233,3 +233,5 @@ if (!function_exists('filled')) {
         return !blank($value);
     }
 }
+if(!function_exists('fillUrl')){
+}

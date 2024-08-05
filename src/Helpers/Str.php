@@ -5,21 +5,13 @@
  ******************************************************************************/
 
 declare(strict_types=1);
-// | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006-2015 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: yunwuxin <448901948@qq.com>
-// +----------------------------------------------------------------------
 
 namespace Mine\Helper;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class Str
+final class Str
 {
     protected static array $snakeCache = [];
 
@@ -212,22 +204,22 @@ class Str
 
         if ($time >= 31556926) {
             $value['years'] = floor($time / 31556926);
-            $time           = ($time % 31556926);
+            $time           %= 31556926;
         }
 
         if ($time >= 86400) {
             $value['days'] = floor($time / 86400);
-            $time          = ($time % 86400);
+            $time          %= 86400;
         }
 
         if ($time >= 3600) {
             $value['hours'] = floor($time / 3600);
-            $time           = ($time % 3600);
+            $time           %= 3600;
         }
 
         if ($time >= 60) {
             $value['minutes'] = floor($time / 60);
-            $time             = ($time % 60);
+            $time             %= 60;
         }
 
         $value['seconds'] = floor($time);
