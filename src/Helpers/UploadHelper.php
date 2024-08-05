@@ -20,10 +20,19 @@ final class UploadHelper
 
     public static function removeStorageDomain(string $url): string
     {
+        if ($url === '') {
+            return $url;
+        }
+
+        if (!str_starts_with($url, 'http')) {
+            return $url;
+        }
+
         $storageDomain = \config('storage_domain');
         if (str_contains($url, $storageDomain)) {
             $url = str_replace($storageDomain, '', $url);
         }
+        
         return $url;
     }
 }
