@@ -11,7 +11,7 @@ namespace Mine;
 use Hyperf\Database\Model\Events\Updating;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
-use Mine\Helper\TimeHelper;
+use Mine\Helper\Dt;
 use Mine\Traits\ModelMacroTrait;
 
 /**
@@ -29,39 +29,38 @@ class MillisModel extends Model
 
     public function getCreatedAtAttribute($value): ?string
     {
-        return TimeHelper::convertMillisToDatetime($value);
+        return Dt::convertMillisToDatetime($value);
     }
 
     public function getUpdatedAtAttribute($value): ?string
     {
-        return TimeHelper::convertMillisToDatetime($value);
+        return Dt::convertMillisToDatetime($value);
     }
 
     public function getDeletedAtAttribute($value): ?string
     {
-        return TimeHelper::convertMillisToDatetime($value);
+        return Dt::convertMillisToDatetime($value);
     }
 
     public function setCreatedAtAttribute($value): void
     {
-        $this->attributes['created_at'] = TimeHelper::convertDatetimeToMillis($value);
+        $this->attributes['created_at'] = Dt::convertDatetimeToMillis($value);
     }
 
     public function setUpdatedAtAttribute($value): void
     {
-        $this->attributes['updated_at'] = TimeHelper::convertDatetimeToMillis($value);
+        $this->attributes['updated_at'] = Dt::convertDatetimeToMillis($value);
     }
 
     public function setDeletedAtAttribute($value): void
     {
-        $this->attributes['deleted_at'] = TimeHelper::convertDatetimeToMillis($value);
+        $this->attributes['deleted_at'] = Dt::convertDatetimeToMillis($value);
     }
 
     public function updating(Updating $event): void
     {
-        $this->setUpdatedAtAttribute(TimeHelper::convertDatetimeToMillis(microtime(true) * 1000));
+        $this->setUpdatedAtAttribute(Dt::getMillis());
     }
-
 
     // ==============================毫秒时间戳结束==============================
 

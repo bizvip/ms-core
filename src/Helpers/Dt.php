@@ -10,7 +10,7 @@ namespace Mine\Helper;
 
 use Carbon\Carbon;
 
-final class TimeHelper
+final class Dt
 {
     // 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s.u
     public static function convertMillisToDatetime($millis): ?string
@@ -29,5 +29,11 @@ final class TimeHelper
             return (int)(Carbon::parse($datetime)->format('Uv'));
         }
         return null;
+    }
+
+    // 获取毫秒时间戳
+    public static function getMillis(): int
+    {
+        return (int)((new \DateTime())->format('U.u') * 1000);
     }
 }
