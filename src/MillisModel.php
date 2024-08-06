@@ -87,7 +87,7 @@ class MillisModel extends Model
      * 隐藏的字段列表.
      * @var string[]
      */
-    protected array $hidden = ['deleted_at'];
+    protected array $hidden = ['pwd', 'secPwd'];
 
     // 数据权限字段，表中需要有此字段.
     protected string $dataScopeField = 'created_by';
