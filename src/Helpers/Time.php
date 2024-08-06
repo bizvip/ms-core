@@ -8,25 +8,33 @@ declare(strict_types=1);
 
 namespace Mine\Helper;
 
-use Carbon\Carbon;
-
 final class Time
 {
-    // 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s.u
+    /**
+     * 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s
+     * @param $millis
+     * @return string|null
+     */
     public static function millisToDatetime($millis): ?string
     {
         if ($millis) {
-            $seconds = $millis / 1000;
-            return Carbon::createFromTimestamp($seconds)->format('Y-m-d H:i:s.u');
+            $dt = new \DateTime();
+            $dt->setTimestamp((int)($millis / 1000));
+            $microSeconds = sprintf("%06d", $millis % 1000 * 1000);
+            return $dt->format('Y-m-d H:i:s').'.'.$microSeconds;
         }
         return null;
     }
 
-    // 将日期时间字符串转换为毫秒级时间戳
+    /**
+     * 将日期时间字符串转换为毫秒级时间戳
+     * @throws \Exception
+     */
     public static function datetimeToMillis($datetime): ?int
     {
         if ($datetime) {
-            return (int)(Carbon::parse($datetime)->format('Uv'));
+            $dt = new \DateTime($datetime);
+            return (int)($dt->format('U') * 1000) + (int)$dt->format('v');
         }
         return null;
     }
