@@ -48,6 +48,6 @@ final class Time
     // 获取毫秒时间戳
     public static function getMillis(): int
     {
-        return (int)((new \DateTime())->format('U.v'));
+        return (int)((new \DateTime())->format('Uv'));
     }
 }
