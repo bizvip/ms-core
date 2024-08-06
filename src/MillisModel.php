@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Mine;
 
+use Hyperf\Database\Model\Events\Creating;
+use Hyperf\Database\Model\Events\Saving;
 use Hyperf\Database\Model\Events\Updating;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
@@ -57,9 +59,22 @@ class MillisModel extends Model
         $this->attributes['deleted_at'] = Dt::convertDatetimeToMillis($value);
     }
 
+    public function creating(Creating $event): void
+    {
+        echo __METHOD__, PHP_EOL;
+        $this->setCreatedAt(Dt::getMillis());
+    }
+
     public function updating(Updating $event): void
     {
-        $this->setUpdatedAtAttribute(Dt::getMillis());
+        echo __METHOD__, PHP_EOL;
+        $this->setUpdatedAt(Dt::getMillis());
+    }
+
+    public function saving(Saving $event): void
+    {
+        echo __METHOD__, PHP_EOL;
+        $this->setUpdatedAt(Dt::getMillis());
     }
 
     // ==============================毫秒时间戳结束==============================
