@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Mine;
 
+use Hyperf\Database\Model\Events\Updating;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
 use Mine\Helper\TimeHelper;
@@ -55,6 +56,12 @@ class MillisModel extends Model
     {
         $this->attributes['deleted_at'] = TimeHelper::convertDatetimeToMillis($value);
     }
+
+    public function updating(Updating $event): void
+    {
+        $this->setUpdatedAtAttribute(TimeHelper::convertDatetimeToMillis(microtime(true) * 1000));
+    }
+
 
     // ==============================毫秒时间戳结束==============================
 
