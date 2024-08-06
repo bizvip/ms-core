@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Mine\Helper;
 
+use Carbon\Carbon;
+
 final class Time
 {
     /**
@@ -22,7 +24,7 @@ final class Time
             $dt->setTimestamp((int)($millis / 1000));
             // $microSeconds = sprintf("%06d", $millis % 1000 * 1000);
             // return $dt->format('Y-m-d H:i:s').'.'.$microSeconds;
-            return $dt->format('Y-m-d H:i:s');
+            return $dt->format('Y-m-d H:i:s.v');
         }
         return null;
     }
@@ -34,6 +36,9 @@ final class Time
     public static function datetimeToMillis($datetime): ?int
     {
         if ($datetime) {
+            if ($datetime instanceof Carbon) {
+                $datetime = $datetime->toDateTimeString('millisecond');
+            }
             $dt = new \DateTime($datetime);
             return (int)($dt->format('U') * 1000) + (int)$dt->format('v');
         }
