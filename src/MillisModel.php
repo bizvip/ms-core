@@ -61,19 +61,16 @@ class MillisModel extends Model
 
     public function creating(Creating $event): void
     {
-        echo __METHOD__, PHP_EOL;
         $this->setCreatedAt(Time::getMillis());
     }
 
     public function updating(Updating $event): void
     {
-        echo __METHOD__, PHP_EOL;
         $this->setUpdatedAt(Time::getMillis());
     }
 
     public function saving(Saving $event): void
     {
-        echo __METHOD__, PHP_EOL;
         $this->setUpdatedAt(Time::getMillis());
     }
 
