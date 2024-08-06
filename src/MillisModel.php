@@ -13,7 +13,7 @@ use Hyperf\Database\Model\Events\Saving;
 use Hyperf\Database\Model\Events\Updating;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
-use Mine\Helper\Dt;
+use Mine\Helper\Time;
 use Mine\Traits\ModelMacroTrait;
 
 /**
@@ -31,50 +31,50 @@ class MillisModel extends Model
 
     public function getCreatedAtAttribute($value): ?string
     {
-        return Dt::convertMillisToDatetime($value);
+        return Time::millisToDatetime($value);
     }
 
     public function getUpdatedAtAttribute($value): ?string
     {
-        return Dt::convertMillisToDatetime($value);
+        return Time::millisToDatetime($value);
     }
 
     public function getDeletedAtAttribute($value): ?string
     {
-        return Dt::convertMillisToDatetime($value);
+        return Time::millisToDatetime($value);
     }
 
     public function setCreatedAtAttribute($value): void
     {
-        $this->attributes['created_at'] = Dt::convertDatetimeToMillis($value);
+        $this->attributes['created_at'] = Time::datetimeToMillis($value);
     }
 
     public function setUpdatedAtAttribute($value): void
     {
-        $this->attributes['updated_at'] = Dt::convertDatetimeToMillis($value);
+        $this->attributes['updated_at'] = Time::datetimeToMillis($value);
     }
 
     public function setDeletedAtAttribute($value): void
     {
-        $this->attributes['deleted_at'] = Dt::convertDatetimeToMillis($value);
+        $this->attributes['deleted_at'] = Time::datetimeToMillis($value);
     }
 
     public function creating(Creating $event): void
     {
         echo __METHOD__, PHP_EOL;
-        $this->setCreatedAt(Dt::getMillis());
+        $this->setCreatedAt(Time::getMillis());
     }
 
     public function updating(Updating $event): void
     {
         echo __METHOD__, PHP_EOL;
-        $this->setUpdatedAt(Dt::getMillis());
+        $this->setUpdatedAt(Time::getMillis());
     }
 
     public function saving(Saving $event): void
     {
         echo __METHOD__, PHP_EOL;
-        $this->setUpdatedAt(Dt::getMillis());
+        $this->setUpdatedAt(Time::getMillis());
     }
 
     // ==============================毫秒时间戳结束==============================
