@@ -22,7 +22,7 @@ use Swoole\Server;
 
 class MineCrontabProcess extends AbstractProcess
 {
-    public string $name = 'MineAdmin Crontab';
+    public string $name = 'WT-Wallet Crontab';
 
     #[Inject]
     protected MineCrontabManage $mineCrontabManage;
@@ -98,7 +98,7 @@ class MineCrontabProcess extends AbstractProcess
     {
         $current = date('s', time());
         $sleep   = 60 - $current;
-        $this->logger->debug('MineAdmin Crontab dispatcher sleep '.$sleep.'s.');
+        $this->logger->debug('Crontab dispatcher sleep '.$sleep.'s.');
         $sleep > 0 && Coroutine::sleep($sleep);
     }
 }
