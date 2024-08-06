@@ -43,17 +43,14 @@ class UpdateProjectCommand extends MineCommand
         $this->seed     = $seed;
     }
 
-    public function configure()
+    public function configure(): void
     {
         parent::configure();
-        $this->setHelp('run "php bin/run mine:update" Update MineAdmin system');
+        $this->setHelp('run "php bin/run mine:update" Update system');
         $this->setDescription('MineAdmin system update command');
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function handle()
+    public function handle(): void
     {
         $modules  = make(Mine::class)->getModuleInfo();
         $basePath = BASE_PATH.'/app/';

@@ -35,7 +35,7 @@ class ValidationExceptionHandler extends ExceptionHandler
             'code'      => MineCode::VALIDATE_FAILED,
         ];
 
-        return $response->withHeader('Server', 'MineAdmin')
+        return $response->withHeader('Server', 'Admin')
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
             ->withHeader('Access-Control-Allow-Credentials', 'true')

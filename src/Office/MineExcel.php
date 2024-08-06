@@ -107,7 +107,7 @@ abstract class MineExcel
     protected function downloadExcel(string $filename, string $content): ResponseInterface
     {
         return container()->get(MineResponse::class)->getResponse()
-            ->withHeader('Server', 'MineAdmin')
+            ->withHeader('Server', 'Admin')
             ->withHeader('access-control-expose-headers', 'content-disposition')
             ->withHeader('content-description', 'File Transfer')
             ->withHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

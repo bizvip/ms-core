@@ -29,7 +29,7 @@ class ConfigCryptCommand extends MineCommand
     {
         parent::configure();
         $this->setHelp('run "php bin/run mine:config-crypt" encrypt');
-        $this->setDescription('MineAdmin system config crypt command');
+        $this->setDescription('system config crypt command');
     }
 
     /**

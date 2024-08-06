@@ -57,7 +57,7 @@ class HttpCoreMiddleware extends CoreMiddleware
             'message' => t('mineadmin.not_found'),
         ];
 
-        return $this->response()->withHeader('Server', 'MineAdmin')
+        return $this->response()->withHeader('Server', 'Admin')
             ->withAddedHeader('content-type', 'application/json; charset=utf-8')->withStatus(404)
             ->withBody(new SwooleStream(Json::encode($format)));
     }
@@ -75,7 +75,7 @@ class HttpCoreMiddleware extends CoreMiddleware
             'message' => t('mineadmin.allow_method', ['method' => implode(',', $methods)]),
         ];
 
-        return $this->response()->withHeader('Server', 'MineAdmin')
+        return $this->response()->withHeader('Server', 'Admin')
             ->withAddedHeader('content-type', 'application/json; charset=utf-8')->withStatus(405)
             ->withBody(new SwooleStream(Json::encode($format)));
     }
