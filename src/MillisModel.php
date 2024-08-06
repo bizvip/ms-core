@@ -89,7 +89,7 @@ class MillisModel extends Model
      */
     protected array $hidden = ['pwd', 'secPwd'];
 
-    // 数据权限字段，表中需要有此字段.
+    // 数据权限字段，表中需要有此字段
     protected string $dataScopeField = 'created_by';
 
     public function __construct(array $attributes = [])
