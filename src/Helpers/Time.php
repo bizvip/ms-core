@@ -15,13 +15,14 @@ final class Time
      * @param $millis
      * @return string|null
      */
-    public static function millisToDatetime($millis): ?string
+    public static function millisToYmdHis($millis): ?string
     {
         if ($millis) {
             $dt = new \DateTime();
             $dt->setTimestamp((int)($millis / 1000));
-            $microSeconds = sprintf("%06d", $millis % 1000 * 1000);
-            return $dt->format('Y-m-d H:i:s').'.'.$microSeconds;
+            // $microSeconds = sprintf("%06d", $millis % 1000 * 1000);
+            // return $dt->format('Y-m-d H:i:s').'.'.$microSeconds;
+            return $dt->format('Y-m-d H:i:s');
         }
         return null;
     }

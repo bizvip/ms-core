@@ -31,17 +31,17 @@ class MillisModel extends Model
 
     public function getCreatedAtAttribute($value): ?string
     {
-        return Time::millisToDatetime($value);
+        return Time::millisToYmdHis($value);
     }
 
     public function getUpdatedAtAttribute($value): ?string
     {
-        return Time::millisToDatetime($value);
+        return Time::millisToYmdHis($value);
     }
 
     public function getDeletedAtAttribute($value): ?string
     {
-        return Time::millisToDatetime($value);
+        return Time::millisToYmdHis($value);
     }
 
     public function setCreatedAtAttribute($value): void
