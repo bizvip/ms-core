@@ -44,7 +44,10 @@ final class Time
         return null;
     }
 
-    // 获取毫秒时间戳
+    /**
+     * 获取毫秒时间戳
+     * @return string
+     */
     public static function getNowMillis(): string
     {
         return (new \DateTime())->format('Uv');
