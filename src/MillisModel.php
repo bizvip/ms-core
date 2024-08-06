@@ -61,17 +61,17 @@ class MillisModel extends Model
 
     public function creating(Creating $event): void
     {
-        $this->setCreatedAt(Time::getMillis());
+        $this->setCreatedAt(Time::getNowMillis());
     }
 
     public function updating(Updating $event): void
     {
-        $this->setUpdatedAt(Time::getMillis());
+        $this->setUpdatedAt(Time::getNowMillis());
     }
 
     public function saving(Saving $event): void
     {
-        $this->setUpdatedAt(Time::getMillis());
+        $this->setUpdatedAt(Time::getNowMillis());
     }
 
     // ==============================毫秒时间戳结束==============================

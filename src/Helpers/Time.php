@@ -13,7 +13,7 @@ use Carbon\Carbon;
 final class Time
 {
     /**
-     * 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s
+     * 将毫秒级时间戳转换为日期时间字符串，格式为 Y-m-d H:i:s.v
      * @param $millis
      * @return string|null
      */
@@ -33,21 +33,20 @@ final class Time
      * 将日期时间字符串转换为毫秒级时间戳
      * @throws \Exception
      */
-    public static function datetimeToMillis($datetime): ?int
+    public static function datetimeToMillis($datetime): ?string
     {
         if ($datetime) {
             if ($datetime instanceof Carbon) {
                 $datetime = $datetime->toDateTimeString('millisecond');
             }
-            $dt = new \DateTime($datetime);
-            return (int)($dt->format('U') * 1000) + (int)$dt->format('v');
+            return (new \DateTime($datetime))->format('Uv');
         }
         return null;
     }
 
     // 获取毫秒时间戳
-    public static function getMillis(): int
+    public static function getNowMillis(): string
     {
-        return (int)((new \DateTime())->format('Uv'));
+        return (new \DateTime())->format('Uv');
     }
 }
