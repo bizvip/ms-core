@@ -22,9 +22,6 @@ final class Time
      */
     public static function millisToYmdHis($millis): ?string
     {
-        echo __METHOD__, PHP_EOL;
-        print_r($millis);
-        echo PHP_EOL;
         if ($millis) {
             return Carbon::createFromTimestampMs($millis)->format('Y-m-d H:i:s.v');
         }
@@ -37,9 +34,6 @@ final class Time
      */
     public static function datetimeToMillis($datetime): ?string
     {
-        echo __METHOD__, PHP_EOL;
-        print_r($datetime);
-        echo PHP_EOL;
         if (empty($datetime)) {
             return null;
         }
