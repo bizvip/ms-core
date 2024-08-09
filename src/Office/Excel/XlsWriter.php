@@ -27,9 +27,9 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
     {
         $file         = $request->file('file');
         $tempFileName = 'import_'.time().'.'.$file->getExtension();
-        $tempFilePath = BASE_PATH.'/runtime/'.$tempFileName;
+        $tempFilePath = RUNTIME_PATH.'/'.$tempFileName;
         file_put_contents($tempFilePath, $file->getStream()->getContents());
-        $xlsxObject = new Excel(['path' => BASE_PATH.'/runtime/']);
+        $xlsxObject = new Excel(['path' => RUNTIME_PATH.'/']);
 
         return $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
     }
@@ -46,9 +46,9 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         if ($request->hasFile('file')) {
             $file         = $request->file('file');
             $tempFileName = 'import_'.time().'.'.$file->getExtension();
-            $tempFilePath = BASE_PATH.'/runtime/'.$tempFileName;
+            $tempFilePath = RUNTIME_PATH.'/'.$tempFileName;
             file_put_contents($tempFilePath, $file->getStream()->getContents());
-            $xlsxObject = new Excel(['path' => BASE_PATH.'/runtime/']);
+            $xlsxObject = new Excel(['path' => RUNTIME_PATH.'/']);
             $data       = $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
 
             if ($this->orderByIndex) {
@@ -102,7 +102,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         }
 
         $tempFileName = 'export_'.time().'.xlsx';
-        $xlsxObject   = new Excel(['path' => BASE_PATH.'/runtime/']);
+        $xlsxObject   = new Excel(['path' => RUNTIME_PATH.'/']);
         $fileObject   = $xlsxObject->fileName($tempFileName)->header($columnName);
         $columnFormat = new Format($fileObject->getHandle());
         $rowFormat    = new Format($fileObject->getHandle());

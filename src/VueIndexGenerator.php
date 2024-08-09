@@ -74,9 +74,9 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     public function generator(): void
     {
         $module = Str::lower($this->tablesContract->getModuleName());
-        $path   = BASE_PATH."/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}/index.vue";
+        $path   = RUNTIME_PATH."/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}/index.vue";
         $this->filesystem->makeDirectory(
-            BASE_PATH."/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}",
+            RUNTIME_PATH."/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}",
             0755,
             true,
             true

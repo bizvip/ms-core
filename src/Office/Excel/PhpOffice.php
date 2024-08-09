@@ -38,7 +38,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
         if ($request->hasFile('file')) {
             $file         = $request->file('file');
             $tempFileName = 'import_'.time().'.'.$file->getExtension();
-            $tempFilePath = BASE_PATH.'/runtime/'.$tempFileName;
+            $tempFilePath = RUNTIME_PATH.'/'.$tempFileName;
             file_put_contents($tempFilePath, $file->getStream()->getContents());
             $reader = IOFactory::createReader(IOFactory::identify($tempFilePath));
             $reader->setReadDataOnly(true);

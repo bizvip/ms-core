@@ -62,7 +62,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
     {
         $module = Str::title($this->tablesContract->getModuleName()[0]).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Model/";
+            $path = RUNTIME_PATH."/generate/php/app/{$module}/Model/";
         } else {
             $path = BASE_PATH."/app/{$module}/Model/";
         }
@@ -114,7 +114,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
 
             // 压缩包下载
             if ($this->tablesContract->getGenerateType()->value === 1) {
-                $toPath = BASE_PATH."/runtime/generate/php/app/{$module}/Model/{$modelName}.php";
+                $toPath = RUNTIME_PATH."/generate/php/app/{$module}/Model/{$modelName}.php";
 
                 $isFile = is_file($sourcePath);
 

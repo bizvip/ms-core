@@ -55,8 +55,8 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
     {
         $filename = Str::camel(str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTablename()));
         $module   = Str::lower($this->tablesContract->getModuleName());
-        $this->filesystem->makeDirectory(BASE_PATH."/runtime/generate/vue/src/api/{$module}", 0755, true, true);
-        $path = BASE_PATH."/runtime/generate/vue/src/api/{$module}/{$filename}.js";
+        $this->filesystem->makeDirectory(RUNTIME_PATH."/generate/vue/src/api/{$module}", 0755, true, true);
+        $path = RUNTIME_PATH."/generate/vue/src/api/{$module}/{$filename}.js";
         $this->filesystem->put($path, $this->replace()->getCodeContent());
     }
 

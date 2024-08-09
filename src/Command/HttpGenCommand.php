@@ -34,7 +34,7 @@ class HttpGenCommand extends MineCommand
     public function handle()
     {
         $fileSystem = make(Filesystem::class);
-        $outputDir  = BASE_PATH.'/runtime/http';
+        $outputDir  = RUNTIME_PATH.'/http';
         $fileSystem->exists($outputDir) && $fileSystem->deleteDirectory($outputDir);
         $fileSystem->makeDirectory($outputDir);
         $httpJsonFile = config('api_docs.output_dir').'/http.json';
@@ -101,6 +101,6 @@ class HttpGenCommand extends MineCommand
           }
         }
         JSON;
-        $fileSystem->put(BASE_PATH.'/runtime/http/http-client.env.json', $content);
+        $fileSystem->put(RUNTIME_PATH.'/http/http-client.env.json', $content);
     }
 }

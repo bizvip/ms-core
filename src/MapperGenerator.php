@@ -62,9 +62,9 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
                 $this->tablesContract->getModuleName()[0]
             ).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Mapper/";
+            $path = RUNTIME_PATH.'/generate/php/app/{$module}/Mapper/';
         } else {
-            $path = BASE_PATH."/app/{$module}/Mapper/";
+            $path = BASE_PATH.'/app/{$module}/Mapper/';
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
         $this->filesystem->put(

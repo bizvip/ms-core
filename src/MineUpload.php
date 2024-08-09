@@ -83,7 +83,7 @@ class MineUpload
     {
         $uploadFile = $data['package'];
         /* @var UploadedFile $uploadFile */
-        $path      = BASE_PATH.'/runtime/chunk/';
+        $path      = RUNTIME_PATH.'/chunk/';
         $chunkName = "{$path}{$data['hash']}_{$data['total']}_{$data['index']}.chunk";
         $fs        = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
         $fs->isDirectory($path) || $fs->makeDirectory($path);
@@ -158,7 +158,7 @@ class MineUpload
                 }
             }
 
-            $realPath = BASE_PATH.'/runtime/'.$filename;
+            $realPath = RUNTIME_PATH.'/'.$filename;
             $fs       = container()->get(\Hyperf\Support\Filesystem\Filesystem::class);
             $fs->put($realPath, $content);
 

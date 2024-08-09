@@ -55,7 +55,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
     {
         $module = Str::title($this->tablesContract->getModuleName()[0]).mb_substr($this->tablesContract->getModuleName(), 1);
         if ($this->tablesContract->getGenerateType()->value === 1) {
-            $path = BASE_PATH."/runtime/generate/php/app/{$module}/Dto/";
+            $path = RUNTIME_PATH."/generate/php/app/{$module}/Dto/";
         } else {
             $path = BASE_PATH."/app/{$module}/Dto/";
         }
