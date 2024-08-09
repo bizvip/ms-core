@@ -55,7 +55,7 @@ class InstallProjectCommand extends MineCommand
     protected function welcome(): void
     {
         $this->line('-----------------------------------------------------------', 'comment');
-        $this->line('Hello, welcome use MineAdmin system.', 'comment');
+        $this->line('Hello, welcome use management system.', 'comment');
         $this->line('The installation is about to start, just a few steps', 'comment');
         $this->line('-----------------------------------------------------------', 'comment');
     }

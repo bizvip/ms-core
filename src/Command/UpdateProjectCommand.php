@@ -47,7 +47,7 @@ class UpdateProjectCommand extends MineCommand
     {
         parent::configure();
         $this->setHelp('run "php bin/run mine:update" Update system');
-        $this->setDescription('MineAdmin system update command');
+        $this->setDescription('system update command');
     }
 
     public function handle(): void
