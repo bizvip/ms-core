@@ -1,9 +1,0 @@
-
-    /**
-     * 读取数据
-     */
-    #[GetMapping("read/{id}"), Permission("{READ_PERMISSION}")]
-    public function read(int $id): ResponseInterface
-    {
-        return $this->success($this->service->read($id));
-    }

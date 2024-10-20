@@ -1,9 +1,0 @@
-
-    /**
-     * 回收站列表树
-     */
-    #[GetMapping("recycle"), Permission("{RECYCLE_PERMISSION}")]
-    public function recycle():ResponseInterface
-    {
-        return $this->success($this->service->getTreeListByRecycle($this->request->all()));
-    }

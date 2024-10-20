@@ -1,9 +1,0 @@
-
-    /**
-     * 回收站列表
-     */
-    #[GetMapping("recycle"), Permission("{RECYCLE_PERMISSION}")]
-    public function recycle(): ResponseInterface
-    {
-        return $this->success($this->service->getPageListByRecycle($this->request->all()));
-    }
